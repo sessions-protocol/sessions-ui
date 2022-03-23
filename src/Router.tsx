@@ -1,12 +1,14 @@
 import { Route, BrowserRouter, Routes, } from 'react-router-dom';
-import Home from '@/pages/Home';
+import HomePage from '@/pages/Home';
+import BookPage from '@/pages/BookPage';
 
 export default function Router() {
   return (
     <div className='Router'>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Home />} />
+          <Route index element={<HomePage />} />
+          <Route path='/book' element={<BookPage />} />
         </Routes>
       </BrowserRouter>
     </div>
