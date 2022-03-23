@@ -15,6 +15,7 @@ import {
 import classNames from "classnames";
 
 export interface SessionDayPickerProps {
+  availableDates: string[];
   selected: Date | null;
   onSelect: (date: Date) => void;
 }
@@ -48,6 +49,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
     ).map((i) => {
       const date = add(firstDayInMonth, { days: i - 1 });
       const selected = isSameDay(date, selectedDate);
+      const available = props.availableDates.some((d) => isSameDay(date, new Date(d)))
       const whichMonth = (() => {
         if (isSameMonth(date, yearMonth)) {
           return "current" as const;
@@ -62,6 +64,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
         date: date,
         label: getDate(date),
         selected,
+        available,
         whichMonth,
       };
     });
@@ -73,7 +76,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
   }, [yearMonth, selectedDate]);
 
   return (
-    <div className="SessionDayPicker max-w-[455px]">
+    <div className="SessionDayPicker max-w-[420px]">
       <div className="mb-4 flex text-xl font-light text-gray-600">
         <span className="w-1/2 text-left text-gray-600 dark:text-white">
           <strong className="text-gray-900 dark:text-white">{monthLabel}</strong>{" "}
@@ -125,10 +128,15 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
                 key={day.key}
                 onClick={() => {
                   if (day.whichMonth !== 'current') return;
+                  if (!props.availableDates.some((i) => isSameDay(day.date, new Date(i)))) return;
                   props.onSelect(day.date);
                 }}
               >
-                <div className={classNames("absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center select-none text-gray-400", {
+                <div className={classNames(
+                  "absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center select-none text-gray-400 font-medium",
+                  day.available ? "rounded cursor-pointer bg-gray-100 dark:bg-gray-600 dark:text-white hover:border-brand hover:border dark:hover:border-white" : "",
+                  day.selected ? "bg-brand text-brandcontrast dark:bg-darkmodebrand dark:text-darkmodebrandcontrast" : "",
+                  {
                   'hidden': day.whichMonth !== 'current',
                 })}>
                   {day.label}

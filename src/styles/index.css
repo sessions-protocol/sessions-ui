@@ -1,5 +1,12 @@
 @import "./tailwindcss.css";
 
+:root {
+  --brand-color: #292929;
+  --brand-text-color: #ffffff;
+  --brand-color-dark-mode: #fafafa;
+  --brand-text-color-dark-mode: #292929;
+}
+
 html {
   height: 100vh;
   background-color: black;
