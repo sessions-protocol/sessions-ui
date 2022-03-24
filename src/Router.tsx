@@ -1,6 +1,7 @@
 import { Route, BrowserRouter, Routes, } from 'react-router-dom';
 import HomePage from '@/pages/Home';
-import BookPage from '@/pages/BookPage';
+import SessionAvailablePage from '@/pages/SessionAvailablePage';
+import SessionBookPage from './pages/SessionBookPage';
 
 export default function Router() {
   return (
@@ -8,7 +9,10 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path='/book' element={<BookPage />} />
+          <Route path='/session/:sessionId'>
+            <Route path='available' element={<SessionAvailablePage />} />
+            <Route path='book' element={<SessionBookPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

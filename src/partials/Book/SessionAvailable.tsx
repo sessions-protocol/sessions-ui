@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { SessionDayPicker } from "./components/SessionDayPicker";
 import { ClockIcon } from "@heroicons/react/solid";
-import { BookPagePropsContext } from "@/pages/BookPage.param";
+import { SessionAvailablePagePropsContext } from "@/pages/SessionAvailablePage.param";
 import { useQuery } from "react-query";
 import { Session, SessionSlot } from "@/types/Session";
 import { SessionSlotList } from "./components/SessionSlotList";
 import { add } from "date-fns";
+import { useCallback } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 
 
-export function Book() {
-  const { params } = BookPagePropsContext.usePageContext()
-
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+export function SessionAvailable() {
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { params } = SessionAvailablePagePropsContext.usePageContext()
+  console.log({params})
 
   const {
     data: session,
@@ -35,18 +38,30 @@ export function Book() {
   const {
     data: slots,
     isLoading: isLoadingSlots,
-  } = useQuery<SessionSlot[]>(`SessionSlots:${params.sessionId}:${selectedDate}`, async () => {
+  } = useQuery<SessionSlot[]>(`SessionSlots:${params.sessionId}:${params.date}`, async () => {
     return [
       { time: "09:00", booked: false },
       { time: "09:30", booked: false },
       { time: "10:00", booked: false },
     ]
   }, {
-    enabled: !!selectedDate,
+    enabled: !!params.date,
   })
 
+  const setSelectedDate = useCallback((date: Date) => {
+    setSearchParams({
+      ...searchParams,
+      date: date.toISOString(),
+    })
+  }, [searchParams, setSearchParams])
+
+  const gotoBookPage = useCallback((slot: string) => {
+    if (!params.date) return;
+    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
+  }, [navigate, params.date, params.sessionId])
+
   return (
-    <div className="Book transition-all mx-auto duration-500 ease-in-out my-28">
+    <div className="SessionAvailable transition-all mx-auto duration-500 ease-in-out my-28">
       <div className="flex flex-row p-4 rounded-sm border-gray-600 bg-gray-900 border">
         <div className="max-w-96">
           <div className="pr-8 border-r dark:border-gray-800 flex flex-col items-start text-left h-full">
@@ -62,7 +77,7 @@ export function Book() {
             </p>
             {session?.description && (
               <p className="mt-3 mb-8 text-gray-600 dark:text-gray-200">
-                Session Description
+                {session?.description}
               </p>
             )}
           </div>
@@ -70,19 +85,21 @@ export function Book() {
         <div className="px-8">
           <SessionDayPicker
             availableDates={session?.availableDates || []}
-            selected={selectedDate}
+            selected={(params.date && new Date(params.date)) || null}
             onSelect={(date) => {
               setSelectedDate(date);
             }}
           />
         </div>
-        {selectedDate && (
+        {params.date && (
           <div className="mx-2">
             <SessionSlotList
-              selectedDate={selectedDate}
+              selectedDate={new Date(params.date)}
               slots={slots}
               loading={isLoadingSlots}
-              onSelect={(slot) => {}}
+              onSelect={(slot) => {
+                gotoBookPage(slot);
+              }}
             />
           </div>
         )}

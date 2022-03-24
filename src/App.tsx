@@ -16,12 +16,14 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <div className="App">
-      <QueryClientProvider client={queryClient}>
+      <div className="text-black dark:text-white">
+        <QueryClientProvider client={queryClient}>
 
-        <Router />
+          <Router />
 
-      <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </div>
     </div>
   )
 }

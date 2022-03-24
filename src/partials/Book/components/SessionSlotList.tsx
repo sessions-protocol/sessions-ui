@@ -25,15 +25,19 @@ export function SessionSlotList(props: SessionSlotListProps) {
         {!props.loading &&
           props.slots?.map((slot) => {
             return (
-              <div key={slot.time}>
-                  <a
-                    className={classNames(
-                      "text-primary-500 mb-2 block rounded-sm border bg-white py-4 font-medium dark:border-transparent dark:bg-gray-600 dark:text-neutral-200 dark:hover:border-black cursor-pointer",
-                      "hover:bg-brand hover:text-brandcontrast dark:hover:bg-darkmodebrand dark:hover:text-darkmodebrandcontrast hover:text-white",
-                    )}
-                    data-testid="time">
-                    {slot.time}
-                  </a>
+              <div
+                key={slot.time}
+                className={classNames(
+                  "text-primary-500 mb-2 block rounded-sm border bg-white py-4 font-medium dark:border-transparent dark:bg-gray-600 dark:text-neutral-200 dark:hover:border-black cursor-pointer",
+                  "hover:bg-brand hover:text-brandcontrast dark:hover:bg-darkmodebrand dark:hover:text-darkmodebrandcontrast hover:text-white",
+                )}
+                data-testid="time"
+                onClick={() => {
+                  console.log({slot})
+                  props.onSelect(slot.time);
+                }}
+              >
+                {slot.time}
               </div>
             );
           })}
