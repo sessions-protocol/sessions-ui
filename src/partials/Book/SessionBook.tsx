@@ -1,14 +1,9 @@
-import { SessionDayPicker } from "./components/SessionDayPicker";
-import { ClockIcon } from "@heroicons/react/solid";
 import { SessionBookPagePropsContext } from "@/pages/SessionBookPage.param";
-import { useQuery } from "react-query";
 import { Session, SessionSlot } from "@/types/Session";
-import { SessionSlotList } from "./components/SessionSlotList";
+import { ClockIcon } from "@heroicons/react/solid";
 import { add } from "date-fns";
-import { useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-
-
+import { useQuery } from "react-query";
+import { SessionBookFlow } from "./components/SessionBookFlow";
 
 export function SessionBook() {
   const { params } = SessionBookPagePropsContext.usePageContext()
@@ -47,9 +42,9 @@ export function SessionBook() {
   return (
     <div className="SessionBook transition-all mx-auto duration-500 ease-in-out my-28">
       <div className="flex flex-row p-4 rounded-sm border-gray-600 bg-gray-900 border min-h-[356px]">
-        <div className="max-w-96 min-w-[300px]">
+        <div className="max-w-96 min-w-[240px]">
           <div className="pr-8 border-r dark:border-gray-800 flex flex-col items-start text-left h-full">
-            <h2 className="mt-3 font-medium text-gray-500 dark:text-gray-300">
+            <h2 className="font-medium text-gray-500 dark:text-gray-300">
               {session?.user.email}
             </h2>
             <h1 className="font-cal mb-4 text-3xl font-semibold text-gray-800 dark:text-white">
@@ -66,8 +61,10 @@ export function SessionBook() {
             )}
           </div>
         </div>
-        <div className="px-8 min-w-[300px]">
-          book form
+        <div className="pl-8 min-w-[360px]">
+
+          <SessionBookFlow />
+
         </div>
       </div>
     </div>
