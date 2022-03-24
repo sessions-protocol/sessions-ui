@@ -25,7 +25,7 @@ export function Book() {
         address: "0x28Ba69e289c15f8a751eb929D81ec35e891A80e2",
       },
       title: "Session 1",
-      duration: 60 * 50,
+      duration: 60 * 30,
       availableDates: [
         new Date().toISOString(),
         add(new Date(), { days: 1}).toISOString(),
@@ -82,8 +82,7 @@ export function Book() {
               selectedDate={selectedDate}
               slots={slots}
               loading={isLoadingSlots}
-              onSelect={(slot) => {
-              }}
+              onSelect={(slot) => {}}
             />
           </div>
         )}

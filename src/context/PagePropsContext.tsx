@@ -64,7 +64,7 @@ export function createPagePropsContext<
       } catch (error: any) {
         return error
       }
-    }, [params, config.validation])
+    }, [params])
 
     const value = useMemo(() => {
       return {
@@ -72,7 +72,7 @@ export function createPagePropsContext<
         data: props.data,
         params: params as any,
       } as unknown as T
-    }, [config.key, params])
+    }, [params, props.data])
 
     return (
       <Context.Provider value={value}>

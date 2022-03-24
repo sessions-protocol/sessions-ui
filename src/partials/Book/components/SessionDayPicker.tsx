@@ -21,9 +21,7 @@ export interface SessionDayPickerProps {
 }
 
 export function SessionDayPicker(props: SessionDayPickerProps) {
-  const selectedDate = props.selected || new Date()
-
-  const [yearMonth, setYearMonth] = useState<Date>(selectedDate);
+  const [yearMonth, setYearMonth] = useState<Date>(props.selected || new Date());
 
   const yearLabel = format(yearMonth, 'yyyy')
   const monthLabel = format(yearMonth, 'MMM')
@@ -48,7 +46,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
       1 - weekdayOfFirstDayInMonth + 6 * 7
     ).map((i) => {
       const date = add(firstDayInMonth, { days: i - 1 });
-      const selected = isSameDay(date, selectedDate);
+      const selected = isSameDay(date, props.selected || new Date());
       const available = props.availableDates.some((d) => isSameDay(date, new Date(d)))
       const whichMonth = (() => {
         if (isSameMonth(date, yearMonth)) {
@@ -73,7 +71,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
       weekdays,
       days,
     };
-  }, [yearMonth, selectedDate]);
+  }, [yearMonth, props.selected, props.availableDates]);
 
   return (
     <div className="SessionDayPicker max-w-[420px]">
