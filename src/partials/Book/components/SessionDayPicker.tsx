@@ -46,7 +46,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
       1 - weekdayOfFirstDayInMonth + 6 * 7
     ).map((i) => {
       const date = add(firstDayInMonth, { days: i - 1 });
-      const selected = isSameDay(date, props.selected || new Date());
+      const selected = !!(props.selected && isSameDay(date, props.selected));
       const available = props.availableDates.some((d) => isSameDay(date, new Date(d)))
       const whichMonth = (() => {
         if (isSameMonth(date, yearMonth)) {

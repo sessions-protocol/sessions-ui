@@ -1,10 +1,34 @@
-import './App.css';
-import Router from './Router';
+import { ChakraProvider, extendTheme, localStorageManager } from '@chakra-ui/react';
+import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { Toaster } from "react-hot-toast";
+import './App.css';
+import { AppColorModeScript, APP_INITIAL_COLOR_MODE } from './components/AppColorModeScript';
+import Router from './Router';
 import { ConnectProvider } from './web3/components/ConnectProvider';
 import { useEagerConnect, useInactiveListener } from './web3/components/hooks';
+import { mode } from '@chakra-ui/theme-tools'
+
+const theme = extendTheme({
+  config: {
+    useSystemColorMode: true,
+    initialColorMode: APP_INITIAL_COLOR_MODE,
+  },
+  styles: {
+    global: (props: any) => ({
+      body: {
+        bg: mode('#f5f5f5', '#292929')(props),
+      },
+    }),
+  },
+  breakpoints: {
+    'sm': '640px',
+    'md': '768px',
+    'lg': '1024px',
+    'xl': '1280px',
+    '2xl': '1536px',
+  },
+});
 
 // Create a client
 const queryClient = new QueryClient({
@@ -26,7 +50,10 @@ function App() {
 
   return (
     <div className="App">
-      <div className="text-black dark:text-white">
+      <div className="text-gray-700 dark:text-white">
+        <AppColorModeScript />
+
+        <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
         <ConnectProvider>
         <QueryClientProvider client={queryClient}>
 
@@ -37,6 +64,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
         </ConnectProvider>
+        </ChakraProvider>
       </div>
     </div>
   )
