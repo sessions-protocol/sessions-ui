@@ -10,7 +10,7 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path='/session/:sessionId'>
+          <Route path='/session/:profileId/:sessionId'>
             <Route path='available' element={<SessionAvailablePage />} />
             <Route path='book' element={<SessionBookPage />} />
             <Route path='scheduled' element={<SessionScheduledPage />} />

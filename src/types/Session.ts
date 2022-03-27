@@ -13,4 +13,9 @@ export interface Session {
   description?: string;
   duration: number;
   availableDates: string[];
+  token: {
+    symbol: string,
+    amount: any,
+    decimals: number
+  }
 }
