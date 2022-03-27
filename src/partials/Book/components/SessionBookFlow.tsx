@@ -7,10 +7,13 @@ import { TextAbbrLabel } from "../../../components/TextAbbrLabel";
 import { useFormik } from "formik";
 import { ClockIcon, CurrencyDollarIcon, CalendarIcon, GlobeAltIcon } from "@heroicons/react/solid";
 import { ethers, utils } from "ethers";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import sessionsABI from "../../../web3/abis/sessions.json";
-import Router from "@/Router";
 
 export function SessionBookFlow() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { chainId, account, deactivate, library } = useWeb3React()
   const { params } = SessionBookPagePropsContext.usePageContext()
 
@@ -43,9 +46,9 @@ export function SessionBookFlow() {
 
       await tx.wait();
 
-      return Router.apply(`/session/${params.sessionId}/scheduled`)
+      navigate(`/session/${params.sessionId}/scheduled${location.search}`);
     }
-  }, [library])
+  }, [library, navigate, location, params.sessionId])
 
   return (
     <div>
@@ -111,11 +114,12 @@ export function SessionBookFlow() {
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              1 MATIC
+              0.1 MATIC
             </p>
             <div className="flex-grow mb-2"></div>
             <Button
               isFullWidth
+              disabled={waitingTransaction}
               colorScheme={"green"}
               onClick={() => {
                 setWaitingTransaction(true)
@@ -129,3 +133,4 @@ export function SessionBookFlow() {
 
   );
 }
+
