@@ -21,6 +21,7 @@
     "date-fns": "^2.28.0",
     "dayjs": "^1.11.0",
     "dayjs-business-time": "^1.0.4",
+    "ethers": "^5.6.2",
     "events": "^3.3.0",
     "formik": "^2.2.9",
     "framer-motion": "^6",

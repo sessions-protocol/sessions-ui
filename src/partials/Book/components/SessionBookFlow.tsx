@@ -6,12 +6,16 @@ import { useMemo, useState } from "react";
 import { TextAbbrLabel } from "../../../components/TextAbbrLabel";
 import { useFormik } from "formik";
 import { ClockIcon, CurrencyDollarIcon, CalendarIcon, GlobeAltIcon } from "@heroicons/react/solid";
+import { ethers, utils } from "ethers";
+import sessionsABI from "../../../web3/abis/sessions.json";
+import Router from "@/Router";
 
 export function SessionBookFlow() {
-  const { chainId, account, deactivate } = useWeb3React()
+  const { chainId, account, deactivate, library } = useWeb3React()
   const { params } = SessionBookPagePropsContext.usePageContext()
 
   const [profile, setProfile] = useState<{ username: string } | null>(null)
+  const [waitingTransaction, setWaitingTransaction] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -21,6 +25,27 @@ export function SessionBookFlow() {
       setProfile({ username: values.username })
     }
   });
+
+
+  const bookSession = useMemo(() => {
+    return async () => {
+      const signer = await library.getSigner()
+
+      const sessionsContract = new ethers.Contract(
+        "0x6dc0424c5beb6bfadd150633e2e99522ddc0802d",
+        sessionsABI,
+        signer
+      );
+      const calldata = ["1127", "1659479037", "1"];
+      const tx =  await sessionsContract.book(...calldata, {
+        value: utils.parseEther("0.1"),
+      });
+
+      await tx.wait();
+
+      return Router.apply(`/session/${params.sessionId}/scheduled`)
+    }
+  }, [library])
 
   return (
     <div>
@@ -93,8 +118,10 @@ export function SessionBookFlow() {
               isFullWidth
               colorScheme={"green"}
               onClick={() => {
+                setWaitingTransaction(true)
+                return bookSession()
               }}
-            >Confirm Booking</Button>
+            >{ waitingTransaction ? `Waiting Transaction...` : `Confirm Booking`}</Button>
           </div>
         )}
       </div>
