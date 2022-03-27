@@ -10,8 +10,9 @@ import { ethers, utils } from "ethers";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import sessionsABI from "../../../web3/abis/sessions.json";
+import { Session } from "@/types/Session";
 
-export function SessionBookFlow() {
+export function SessionBookFlow({ session }: { session: Session | null }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { chainId, account, deactivate, library } = useWeb3React()
@@ -103,7 +104,7 @@ export function SessionBookFlow() {
         )} */}
         {chainId && account && (
           <div className="text-left flex flex-col h-full">
-            <div className="text-lg font-medium mb-4">Book your session with @jack</div>
+            <div className="text-lg font-medium mb-4">Book your session with {session?.user.handle}</div>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CalendarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
               Monday, March 28, 2020
@@ -114,7 +115,7 @@ export function SessionBookFlow() {
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              0.1 MATIC
+              { session?.token.amount ? utils.formatEther(session?.token.amount) : "" } {session?.token.symbol || "..."}
             </p>
             <div className="flex-grow mb-2"></div>
             <Button

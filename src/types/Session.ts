@@ -7,7 +7,7 @@ export interface Session {
   id: string;
   user: {
     address: string;
-    email: string;
+    handle: string;
   };
   title: string;
   description?: string;

@@ -53,7 +53,7 @@ export function SessionBook() {
       setSession({
         id: sessionType.id,
         user: {
-          email: profile.handle,
+          handle: profile.handle,
           address: sessionType.recipient,
         },
         title: sessionType.title,
@@ -100,7 +100,7 @@ export function SessionBook() {
               <div className="max-w-96 min-w-[240px]">
                 <div className="pr-8 border-r dark:border-gray-800 flex flex-col items-start text-left h-full">
                   <h2 className="font-medium text-gray-500 dark:text-gray-300">
-                    {session?.user.email || "..."}
+                    {session?.user.handle || "..."}
                   </h2>
                   <h1 className="font-cal mb-4 text-3xl font-semibold">
                     {session?.title || "Loading..."}
@@ -122,7 +122,7 @@ export function SessionBook() {
               </div>
               <div className="pl-8 min-w-[360px]">
 
-                <SessionBookFlow />
+                <SessionBookFlow session={session}/>
 
               </div>
             </div>
