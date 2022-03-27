@@ -5,6 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useMemo, useState } from "react";
 import { TextAbbrLabel } from "../../../components/TextAbbrLabel";
 import { useFormik } from "formik";
+import { ClockIcon, CurrencyDollarIcon, CalendarIcon, GlobeAltIcon } from "@heroicons/react/solid";
 
 export function SessionBookFlow() {
   const { chainId, account, deactivate } = useWeb3React()
@@ -25,7 +26,7 @@ export function SessionBookFlow() {
     <div>
       <div className="text-left">
         {chainId && account && (
-          <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 mb-2">
+          <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-2 mb-2">
             <div className="text-xs dark:text-gray-300">Wallet Connected</div>
             <div className="flex flex-row items-center">
               <div className="text-sm"><TextAbbrLabel text={account} front={6} end={4} /></div>
@@ -49,7 +50,7 @@ export function SessionBookFlow() {
             <ConnectorList />
           </div>
         )}
-        {chainId && account && !profile && (
+        {/* {chainId && account && !profile && (
           <div>
             <div className="text-lg font-medium mb-4">Create Lens Profile</div>
             <form onSubmit={formik.handleSubmit}>
@@ -71,16 +72,29 @@ export function SessionBookFlow() {
               </VStack>
             </form>
           </div>
-        )}
-        {chainId && account && profile && (
-          <div>
-            <div className="text-lg font-medium mb-4">Confirm Session Slot</div>
+        )} */}
+        {chainId && account && (
+          <div className="text-left flex flex-col h-full">
+            <div className="text-lg font-medium mb-4">Book your session with @jack</div>
+            <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
+              <CalendarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+              Monday, March 28, 2020
+            </p>
+            <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
+              <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+              9:00 AM to 9:30 AM (Asia/Tokyo)
+            </p>
+            <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
+              <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+              1 MATIC
+            </p>
+            <div className="flex-grow mb-2"></div>
             <Button
               isFullWidth
               colorScheme={"green"}
               onClick={() => {
               }}
-            >Book</Button>
+            >Confirm Booking</Button>
           </div>
         )}
       </div>

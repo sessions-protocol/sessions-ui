@@ -1,7 +1,7 @@
 import { SessionBookPagePropsContext } from "@/pages/SessionBookPage.param";
 import { Session, SessionSlot } from "@/types/Session";
 import { Box, Button, Center, Container } from "@chakra-ui/react";
-import { ClockIcon } from "@heroicons/react/solid";
+import { ClockIcon, CurrencyDollarIcon } from "@heroicons/react/solid";
 import { add } from "date-fns";
 import { useQuery } from "react-query";
 import { ColorModeSwitcher } from "../../components/ColorModeSwitcher";
@@ -20,10 +20,10 @@ export function SessionBook() {
     return {
       id: "1",
       user: {
-        email: "user@example.com",
+        email: "@jack",
         address: "0x28Ba69e289c15f8a751eb929D81ec35e891A80e2",
       },
-      title: "Session 1",
+      title: "Tech Mentoring",
       duration: 60 * 30,
       availableDates: [
         new Date().toISOString(),
@@ -65,6 +65,10 @@ export function SessionBook() {
                     <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
                     {(session?.duration || 0) / 60} minutes
                   </p>
+                  <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
+                    <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+                    1 MATIC
+                  </p>
                   {session?.description && (
                     <p className="mt-3 mb-8 text-gray-600 dark:text-gray-200">
                       {session?.description}
@@ -79,6 +83,7 @@ export function SessionBook() {
               </div>
             </div>
           </div>
+          <div className="text-right text-xs mt-2 opacity-50">Powered by Sessions Protocol</div>
         </div>
       </div>
     </SessionLayout>

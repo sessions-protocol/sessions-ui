@@ -19,7 +19,15 @@ const CHAIN_POLYGON: Chain = {
     "https://polygon-rpc.com/",
     "https://matic-mainnet-full-rpc.bwarelabs.com/",
   ],
-  name: 'Mainnet',
+  name: 'Polygon',
+}
+
+const CHAIN_POLYGON_TESTNET: Chain = {
+  id: 80001,
+  urls: [
+    "https://rpc-mumbai.matic.today",
+  ],
+  name: 'Mumbai',
 }
 
 export const CHAINS: { [chainId: number]: Chain } = {
@@ -27,6 +35,8 @@ export const CHAINS: { [chainId: number]: Chain } = {
   1: CHAIN_ETH,
   // Polygon
   137: CHAIN_POLYGON,
+  // Polygon
+  80001: CHAIN_POLYGON_TESTNET,
 }
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<{ [chainId: number]: string[] }>(
@@ -42,4 +52,4 @@ export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<
   {}
 )
 
-export const SUPPORTED_CHAINS = [1]
+export const SUPPORTED_CHAINS = [137, 80001]

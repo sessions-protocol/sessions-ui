@@ -1,7 +1,8 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { SUPPORTED_CHAINS } from './chains'
 
-export const metamask = new InjectedConnector({ supportedChainIds: [1] })
+export const metamask = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAINS })
 
 export const walletconnect = new WalletConnectConnector({
   rpc: {

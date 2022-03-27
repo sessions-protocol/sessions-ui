@@ -25,10 +25,10 @@ export function SessionAvailable() {
     return {
       id: "1",
       user: {
-        email: "user@example.com",
+        email: "@jack",
         address: "0x28Ba69e289c15f8a751eb929D81ec35e891A80e2",
       },
-      title: "Session 1",
+      title: "Tech Mentoring",
       duration: 60 * 30,
       availableDates: [
         new Date().toISOString(),
@@ -111,6 +111,7 @@ export function SessionAvailable() {
                 </div>
               )}
             </div>
+            <div className="text-right text-xs mt-2 opacity-50">Powered by Sessions Protocol</div>
           </div>
         </div>
       </div>
