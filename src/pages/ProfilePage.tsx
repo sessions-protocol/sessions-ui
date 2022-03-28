@@ -1,3 +1,4 @@
+import { useProfileState } from '@/context/ProfileContext';
 import { getAddressFromSigner } from '@/lens/ethers.service';
 import { createProfile, Profile, profiles } from '@/lens/profile';
 import { SessionBookFlow } from '@/partials/Book/components/SessionBookFlow';
@@ -28,6 +29,8 @@ import toast, { Toaster } from "react-hot-toast";
 
 export function ProfilePage() {
   const { chainId, account, deactivate, library } = useWeb3React()
+
+  const [profileState, setProfileState] = useProfileState();
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [creatingSite, setCreatingSite] = useState<boolean>(false);
@@ -89,7 +92,7 @@ export function ProfilePage() {
       const profile = (await profiles(
         { handles: [profileNameRef.current?.value] },
       )).items[0];
-      profileId = profile.id;
+      setProfileState({ profile });
     } catch (e: any) {
       console.log("create profile error", e);
       if (e.message === "HANDLE_TAKEN") {
@@ -234,10 +237,9 @@ export function ProfilePage() {
           {!isLoadingProfiles ? (
             profilesData && profilesData?.items?.length > 0 ? (
               profilesData.items.map((profile) => (
-                <Link to={`/site/${profile.id}`} key={profile.id}>
-                  <a>
-                    <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
-                      {/*<div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none">
+                <a key={profile.id}  onClick={() => setProfileState({ profile })}>
+                  <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
+                    {/*<div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none">
                         {profile.image ? (
                           <BlurImage
                             src={profile.image}
@@ -251,9 +253,9 @@ export function ProfilePage() {
                           </div>
                         )}
                       </div>*/}
-                      <div className="relative p-10">
-                        <h2 className="font-cal text-3xl">{profile.handle}</h2>
-                        {/*<p className="text-base my-5 line-clamp-3">
+                    <div className="relative p-10">
+                      <h2 className="font-cal text-3xl">{profile.handle}</h2>
+                      {/*<p className="text-base my-5 line-clamp-3">
                           {profile.description}
                         </p>
                         <a
@@ -264,10 +266,9 @@ export function ProfilePage() {
                         >
                           {server(site.subdomain)} ↗
                         </a>*/}
-                      </div>
                     </div>
-                  </a>
-                </Link>
+                  </div>
+                </a>
               ))
             ) : (
               <>
