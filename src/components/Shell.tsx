@@ -116,15 +116,14 @@ export default function Shell(props: {
                 ))}
               </nav>}
             </div>
-            <div className="rounded-sm pb-2 pl-3 pt-2 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2">
+            <div className="rounded-sm mb-2 pb-2 pl-3 pt-2 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2">
               <div className="text-left">
                 {profile && (
-                  <Fragment>
                     <Link to={'/profile'}>
                       <div
                         className={classNames(
-                          "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
-                          "group flex-1 flex-shrink-1 flex justify-center items-center rounded-sm py-2 my-2 rounded text-sm font-medium"
+                          "text-neutral-500 hover:text-neutral-900",
+                          "group flex-1 flex-shrink-1 flex justify-center items-center py-2 my-2 text-sm font-medium"
                         )}>
                         {profilePictureSrc ? (
                           <img className="h-6 w-6 rounded-full" src={profilePictureSrc} />
@@ -154,7 +153,6 @@ export default function Shell(props: {
 
                       </div>
                     </Link>
-                  </Fragment>
                 )}
 
               </div>
