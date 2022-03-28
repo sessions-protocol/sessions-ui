@@ -24,15 +24,16 @@ import {
   Textarea,
   Spinner,
 } from "@chakra-ui/react";
-import { ClockIcon } from "@heroicons/react/solid";
+import { ExternalLinkIcon, ClockIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import { ethers, utils } from "ethers";
 import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { sessionApi } from "../../api/SessionApi";
+import { Icon } from "@chakra-ui/icon";
 
 import Shell from "../../components/Shell";
 import { useProfileState } from "../../context/ProfileContext";
@@ -95,6 +96,7 @@ function SessionTypeItem({
   sessionType: { id: string } & ISessionTypeReturnData;
   onUpdated: () => void;
 }) {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const durationInSlotOptions = range(1, 20);
   const { account, library } = useWeb3React();
@@ -105,17 +107,26 @@ function SessionTypeItem({
   console.log('price ', formData.price)
   return (
     <>
-      <div
-        className="border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
-        onClick={onOpen}
-      >
-        <div className="">{sessionType.title}</div>
-        <div className="text-gray-600 text-sm">
-          <div className="text-gray-400 ">{sessionType.description}</div>
-          <div className="mt-2 flex items-center">
-            <ClockIcon className="mr-1" width={14} color="#888" />
-            {sessionType.durationInSlot * 6} mins
+      <div className="flex flex-row border-b border-gray-200 text-gray-700 p-4 cursor-pointer" onClick={onOpen}>
+        <div className="flex-grow">
+          <div className="">{sessionType.title}</div>
+          <div className="text-gray-600 text-sm">
+            <div className="text-gray-400 ">{sessionType.description}</div>
+            <div className="mt-2 flex items-center">
+              <ClockIcon className="mr-1" width={14} color="#888" />
+              {sessionType.durationInSlot * 6} mins
+            </div>
           </div>
+        </div>
+        <div className="flex justify-center items-center" onClick={(e) => {e.stopPropagation()}}>
+          <Link to={`/session/${sessionType.id}/available`} target="_blank" rel="noopener noreferrer">
+            <Button
+              size="sm"
+              colorScheme={"dark"}
+              variant="outline"
+              leftIcon={<Icon as={ExternalLinkIcon} />}
+            >Open Book Page</Button>
+          </Link>
         </div>
       </div>
 

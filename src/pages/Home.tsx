@@ -39,7 +39,7 @@ export default function HomePage() {
 
             <a
               className="border border-black rounded-full px-8 py-3 cursor-pointer text-xl text-black mx-2"
-              href="/session/1/available"
+              href="/session/7/available"
               >
               Try the Demo
             </a>
