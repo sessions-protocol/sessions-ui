@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import sessionsABI from "../../../web3/abis/sessions.json";
 import { Session } from "@/types/Session";
 
-export function SessionBookFlow({ session }: { session: Session | null }) {
+export function SessionBookFlow({ session }: { session?: Session | null }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { chainId, account, deactivate, library } = useWeb3React()
