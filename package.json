@@ -8,8 +8,11 @@
     "preview": "vite preview",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src"
   },
+  "resolutions": {
+    "csstype": "3.0.10"
+  },
   "dependencies": {
-    "@chakra-ui/react": "^1.8.6",
+    "@chakra-ui/react": "^1.8.7",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@ethersproject/providers": "^5.6.1",
