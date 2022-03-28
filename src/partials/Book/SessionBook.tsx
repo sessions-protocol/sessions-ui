@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { TimezoneSwitcher } from "../../components/TimezoneSwitcher";
 import { useTimezoneSettings } from "../../hooks/useTimezoneSettings";
 import { SessionBookFlow } from "./components/SessionBookFlow";
+import { Spinner } from '@chakra-ui/react'
 
 export function SessionBook() {
   const timezoneSettings = useTimezoneSettings()
@@ -33,7 +34,7 @@ export function SessionBook() {
             {!session && (
               <div className="flex flex-row justify-center items-center min-h-[360px] min-w-[600px] p-4 rounded-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border">
                 {isLoadingSession && (
-                  <div className="ml-2">Loading...</div>
+                  <Spinner />
                 )}
                 {errorSession && (
                   <div>

@@ -1,4 +1,5 @@
 import { Availability, Session } from "@/types/Session";
+import { Spinner } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import { add, format, getDate, getDay, isBefore, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from "date-fns";
@@ -76,18 +77,12 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
           <span className="text-gray-500">{yearLabel}</span>
         </span>
         <div className="w-1/2 text-right text-gray-600 dark:text-gray-400">
-          {props.isLoading && (
-            <button
-              onClick={() => {
-                props.onYearMonthChange(add(props.yearMonth, { months: -1 }));
-              }}
-              className={classNames(
-                "group p-1 ltr:mr-2 rtl:ml-2 text-sm",
-              )}
-            >
-              loading...
-            </button>
+          <div className="inline-block align-top mx-2">
+          {props.isLoading || true && (
+            <Spinner size={'xs'}/>
           )}
+          </div>
+          
           <button
             onClick={() => {
               props.onYearMonthChange(add(props.yearMonth, { months: -1 }));

@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, Popover, PopoverContent, PopoverTrigger, Switch, Select, useColorMode } from "@chakra-ui/react";
-import { ChevronUpIcon, GlobeIcon } from "@heroicons/react/solid";
+import { ChevronUpIcon, GlobeAltIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 import { useTimezoneSettings } from "../hooks/useTimezoneSettings";
@@ -23,7 +23,7 @@ export function TimezoneSwitcher() {
     >
       <PopoverTrigger>
         <div className="flex flex-row items-center text-gray-500 cursor-pointer">
-          <GlobeIcon height={16} />
+          <GlobeAltIcon height={16} />
           <div className="ml-1 text-base font-normal">{settings.timezone}</div>
           <ChevronUpIcon className={classNames("ml-1 mt-[1px]", popoverOpen ? "rotate-0" : "rotate-180")} height={16} />
         </div>
@@ -31,11 +31,11 @@ export function TimezoneSwitcher() {
       <PopoverContent bgColor={colorMode === 'dark' ? "#595959" : undefined} border={ colorMode === 'dark' ? "none" : undefined}>
         <div className="flex flex-col m-2">
           <div className="flex flex-row justify-between items-center">
-            <div className="text-lg font-medium">Timezone</div>
+            <div className="text-base font-medium">Timezone</div>
             <div>
               <FormControl display='flex' alignItems='center'>
                 <FormLabel htmlFor='clock24hour' mb='0'>
-                  12H
+                  <span className="text-sm">12H</span>
                 </FormLabel>
                 <Switch
                   id='clock24hour'
@@ -46,7 +46,7 @@ export function TimezoneSwitcher() {
                   }}
                 />
                 <FormLabel  htmlFor='clock24hour' ml='2' mb='0'>
-                  24H
+                  <span className="text-sm">24H</span>
                 </FormLabel>
               </FormControl>
             </div>

@@ -13,6 +13,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTimezoneSettings } from "../../hooks/useTimezoneSettings";
 import { SessionDayPicker } from "./components/SessionDayPicker";
 import { SessionSlotList } from "./components/SessionSlotList";
+import { Spinner } from '@chakra-ui/react'
 
 
 export function SessionAvailable() {
@@ -163,7 +164,7 @@ export function SessionAvailable() {
             {!session && (
               <div className="flex flex-row justify-center items-center min-h-[360px] min-w-[600px] p-4 rounded-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border">
                 {isLoadingSession && (
-                  <div className="ml-2">Loading...</div>
+                  <Spinner />
                 )}
                 {errorSession && (
                   <div>
