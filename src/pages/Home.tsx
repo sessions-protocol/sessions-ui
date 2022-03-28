@@ -1,18 +1,16 @@
 import LogoDark from "@/assets/logo-dark.svg";
 import BG from "@/assets/bg.svg";
 import Demo from "@/assets/demo.svg";
-import { Button, LightMode } from "@chakra-ui/react";
 
 export default function HomePage() {
   return (
-    <LightMode>
     <div className="Home">
       <div className="bg-white">
         <div className="Home-header container mx-auto flex flex-row items-center justify-between py-4">
           <img className="max-w-full h-12" src={LogoDark} alt={`Sessions Logo`} />
           <a
             className="bg-black rounded-full px-6 py-2 cursor-pointer"
-            href="/seller"
+            href="/session-types"
             >
             Seller Management
           </a>
@@ -27,30 +25,24 @@ export default function HomePage() {
           }}>Start selling sessions online <u>today</u></h1>
 
           <p className="text-lg text-gray-600 font-medium text-center inline-block" style={{
-            lineHeight: "2.5rem",
+            lineHeight: "2.2rem",
             maxWidth: "42rem",
           }}>With Sessions Protocol, you can sell 1:1 sessions to anyone with crypto payments. It's permissionless and unstopable.</p>
 
           <div className="text-center text-2xl my-12">
-            <Button
-              className="inline-block mx-2"
-              onClick={() => {
-                //TODO: back
-              }}
-              variant='solid'
-              colorScheme="blue">
+            <a
+              className="bg-black rounded-full px-8 py-3 cursor-pointer text-xl text-white mx-2"
+              href="/session-types"
+              >
               Start Selling Now
-            </Button>
+            </a>
 
-            <Button
-              className="inline-block mx-2"
-              onClick={() => {
-                //TODO: back
-              }}
-              variant='outline'
-              colorScheme="blue">
+            <a
+              className="border border-black rounded-full px-8 py-3 cursor-pointer text-xl text-black mx-2"
+              href="/session/1/available"
+              >
               Try the Demo
-            </Button>
+            </a>
           </div>
         </div>
       </div>
@@ -62,6 +54,5 @@ export default function HomePage() {
         <img className="max-w-full h-96" src={Demo} alt={`Sessions Booking Demo`} />
       </div>
     </div>
-    </LightMode>
   )
 }
