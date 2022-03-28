@@ -65,7 +65,7 @@ export function SessionScheduled() {
                         <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${params.time}&details=${session?.description}&location=New%20Earth&text=${session?.title}`} target="_blank"  className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Google</a>
                       </li>
                       <li>
-                        <a  href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.time}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.time}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Outlook.com</a>
+                        <a  href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.time}&enddt=${params.time}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Outlook.com</a>
                       </li>
                       <li>
                         <a href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.time}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.time}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Office 365</a>

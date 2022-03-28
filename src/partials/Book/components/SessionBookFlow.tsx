@@ -55,7 +55,7 @@ export function SessionBookFlow({ session }: { session: Session }) {
       }
 
       const calldata = [
-        "1648730747",
+        new Date(params.time).getTime() / 1000,
         params.sessionId
       ];
       const tx = await sessionsContract.book(...calldata, {
