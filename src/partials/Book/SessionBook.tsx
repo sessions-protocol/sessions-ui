@@ -27,7 +27,7 @@ export function SessionBook() {
 
   const sessionsContract = useMemo(() => {
     return new ethers.Contract(
-      "0x6dc0424c5beb6bfadd150633e2e99522ddc0802d",
+      "0xF3bF2EA8Df05716a2e5EC39A747Cb54726a49fcE",
       sessionsABI,
       provider
     );
@@ -45,10 +45,10 @@ export function SessionBook() {
 
   const loadSession = useMemo(() => {
     return async () => {
-      const sessionType = await sessionsContract.getSessionType(params.profileId, params.sessionId)
+      const sessionType = await sessionsContract.getSessionType(params.sessionId)
       console.log("sessionType", sessionType)
 
-      const profile = await lensHubContract.getProfile(params.profileId)
+      const profile = await lensHubContract.getProfile(sessionType.lensProfileId)
 
       setSession({
         id: sessionType.id,
@@ -57,7 +57,7 @@ export function SessionBook() {
           address: sessionType.recipient,
         },
         title: sessionType.title,
-        duration: 60 * sessionType.durationInSlot,
+        duration: 60 * 6 * sessionType.durationInSlot,
         availableDates: [
           new Date().toISOString(),
           add(new Date(), { days: 1}).toISOString(),
@@ -69,7 +69,7 @@ export function SessionBook() {
         }
       })
     }
-  }, [sessionsContract, params.profileId, params.sessionId, lensHubContract])
+  }, [sessionsContract, params.sessionId,  lensHubContract])
 
   useEffect(() => {
     loadSession()
@@ -78,7 +78,7 @@ export function SessionBook() {
   const {
     data: slots,
     isLoading: isLoadingSlots,
-  } = useQuery<SessionSlot[]>(`Profile:${params.profileId}:SessionSlots:${params.sessionId}:${params.date}`, async () => {
+  } = useQuery<SessionSlot[]>(`SessionSlots:${params.sessionId}:${params.date}`, async () => {
     return [
       { time: "09:00", booked: false },
       { time: "09:30", booked: false },

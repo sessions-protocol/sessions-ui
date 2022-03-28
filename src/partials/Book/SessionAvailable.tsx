@@ -21,7 +21,7 @@ export function SessionAvailable() {
   const {
     data: session,
     isLoading: isLoadingSession,
-  } = useQuery<Session>(`Profile:${params.profileId}:Session:${params.sessionId}`, async () => {
+  } = useQuery<Session>(`Session:${params.sessionId}`, async () => {
     return {
       id: "1",
       user: {
@@ -63,7 +63,7 @@ export function SessionAvailable() {
 
   const gotoBookPage = useCallback((slot: string) => {
     if (!params.date) return;
-    navigate(`/session/${params.profileId}/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
+    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
   }, [navigate, params])
 
   return (
