@@ -67,6 +67,15 @@ class SessionApi {
       }
     })
   }
+
+  async getAvailabilitiesByProfile(profileId: string) {
+    const availabilities = await this.sessionsContract.getAvailablitysByProfile(profileId)
+    const data = availabilities.availabilityIds.map((id: any, i: number) => ({
+      id:id.toString(),
+      ...availabilities.availabilitysByProfile[i]
+    })).reverse()
+    return data
+  }
   async getSessionTypesByProfileId(profileId: string) {
     const sessionTypes = await this.sessionsContract.getSessionTypesByProfile(profileId)
     const data = sessionTypes.sessionTypeIds.map((id: any, i: number) => ({

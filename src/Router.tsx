@@ -6,6 +6,7 @@ import SessionAvailablePage from '@/pages/SessionAvailablePage';
 import SessionBookPage from './pages/SessionBookPage';
 import SessionScheduledPage from './pages/SessionScheduledPage';
 import SessionTypesPage from './pages/SessionTypes';
+import AvailabilityPage from './pages/Availability';
 
 export default function Router() {
   return (
@@ -15,7 +16,8 @@ export default function Router() {
           <Route index element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/create" element={<ProfileCreatePage />} />
-          <Route path="/session-types" element={<SessionTypesPage/>} />
+          <Route path="/session-types" element={<SessionTypesPage />} />
+          <Route path="/availability" element={<AvailabilityPage />} />
           <Route path='/session/:sessionId'>
             <Route path='available' element={<SessionAvailablePage />} />
             <Route path='book' element={<SessionBookPage />} />

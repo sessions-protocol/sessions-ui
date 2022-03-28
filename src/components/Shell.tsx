@@ -19,7 +19,8 @@ import Loader from './Loader'
 import Logo from "@/assets/logo-dark.svg";
 import FavIcon from "@/assets/favicon.svg";
 
-
+import { TextAbbrLabel } from "./TextAbbrLabel";
+import { useProfileState } from "../context/ProfileContext";
 export default function Shell(props: {
   centered?: boolean;
   large?: boolean;
@@ -40,7 +41,7 @@ export default function Shell(props: {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 1000)
+    }, 100)
   }, [])
 
   const navigation = [
