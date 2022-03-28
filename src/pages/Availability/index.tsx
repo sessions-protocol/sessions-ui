@@ -62,14 +62,23 @@ export default function AvailabilitiesPage() {
       subtitle="Configure times when you are available for bookings."
       CTA={<CreateAvailability onCreated={fetchList} />}
     >
-      <div className="bg-white border border-gray-200">
+      <div className="bg-white border border-gray-200 border-b-0">
         {loading ? (
-          <Spinner />
+           <div
+           className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
+           >
+             <Spinner />
+           </div>
         ) : (
-          list.map((item) => (
-            // <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
-            <Item data={item} key={item.id}/>
-          ))
+          list.length > 0 ? (
+            list.map((item) => (
+              <Item data={item} key={item.id}/>
+            ))
+          ) : (
+            <div className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer">
+              <p>No availability created yet.</p>
+            </div>
+          )
         )}
       </div>
     </Shell>

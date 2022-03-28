@@ -80,9 +80,15 @@ export default function SessionTypesPage() {
             <Spinner />
           </div>
         ) : (
-          sessionTypes.map((s) => (
-            <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
-          ))
+          sessionTypes.length > 0 ? (
+            sessionTypes.map((s) => (
+              <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
+            ))
+          ) : (
+            <div className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer">
+              <p>No session types created yet.</p>
+            </div>
+          )
         )}
       </div>
     </Shell>
