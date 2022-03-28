@@ -3,13 +3,11 @@ import * as Yup from 'yup';
 
 export const SessionScheduledPagePropsContext = createPagePropsContext<{
   sessionId: string;
-  date: string;
-  slot: string;
+  time: string;
 }, {}>({
   key: 'SessionScheduledPage',
   validation: {
     sessionId: Yup.string().required(),
-    date: Yup.string().required(),
-    slot: Yup.string().required(),
+    time: Yup.string().required(),
   },
 })

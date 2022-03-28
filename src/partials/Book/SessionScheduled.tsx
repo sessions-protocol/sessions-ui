@@ -1,16 +1,17 @@
 import { sessionApi } from "@/api/SessionApi";
 import { SessionScheduledPagePropsContext } from "@/pages/SessionScheduledPage.param";
-import { Session, SessionSlot } from "@/types/Session";
-import { Box, Button, Center, Container } from "@chakra-ui/react";
-import { ClockIcon, CurrencyDollarIcon, BadgeCheckIcon } from "@heroicons/react/solid";
+import { Session } from "@/types/Session";
+import { Button } from "@chakra-ui/react";
+import { BadgeCheckIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { ColorModeSwitcher } from "../../components/ColorModeSwitcher";
-import { useAppColorMode } from "../../hooks/useColorMode";
 import { SessionLayout } from "../../layout/SessionLayout";
+import { formatInTimeZone } from 'date-fns-tz';
+import { useTimezoneSettings } from "../../hooks/useTimezoneSettings";
+import { add } from "date-fns";
 
 export function SessionScheduled() {
-  const { toggleColorMode } = useAppColorMode()
+  const timezoneSettings = useTimezoneSettings()
   const { params } = SessionScheduledPagePropsContext.usePageContext()
   const [ addToCalendar, setAddToCalendar ] = useState(false)
   const {
@@ -20,7 +21,7 @@ export function SessionScheduled() {
   } = useQuery<Session, Error>(`Session:${params.sessionId}`, async () => {
     return await sessionApi.getSession(params.sessionId)
   })
-  
+
 
   return (
     <SessionLayout>
@@ -40,7 +41,17 @@ export function SessionScheduled() {
                   <div className="font-medium">What</div>
                   <div className="col-span-2 mb-6">{session?.title} with @{session?.user.handle}</div>
                   <div className="font-medium">When</div>
-                  <div className="col-span-2">Monday, March 28, 2020<br/>9:00 AM to 9:30 AM <span className="text-gray-500">(Asia/Tokyo)</span>
+                  <div className="col-span-2">
+                    {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "EEEE, MMMM d, yyyy")}
+                    <br/>
+                    {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "h:mm aaa")}
+                    {session && (
+                      <>
+                        {" to "}
+                        {formatInTimeZone(add(new Date(params.time), { minutes: (session?.sessionType.durationInSlot || 1) * 6 }), timezoneSettings.settings.timezone, "h:mm aaa")}
+                      </>
+                    )}
+                    <span className="text-gray-500">{` (${timezoneSettings.settings.timezone})`}</span>
                   </div>
                 </div>
                 <div className="relative">
@@ -51,15 +62,15 @@ export function SessionScheduled() {
                   <div className={`${addToCalendar ? "" : "hidden"} bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow  absolute w-full`}>
                     <ul className="py-1">
                       <li>
-                        <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${params.date}&details=${session?.description}&location=New%20Earth&text=${session?.title}`} target="_blank"  className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Google</a>
+                        <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${params.time}&details=${session?.description}&location=New%20Earth&text=${session?.title}`} target="_blank"  className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Google</a>
                       </li>
                       <li>
-                        <a  href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.date}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.date}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Outlook.com</a>
+                        <a  href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.time}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.time}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Outlook.com</a>
                       </li>
                       <li>
-                        <a href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.date}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.date}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Office 365</a>
+                        <a href={`https://outlook.office.com/calendar/0/deeplink/compose?body=${session?.description}&enddt=${params.time}&location=New%20Earth&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=${params.time}&subject=${session?.title}`} target="_blank" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2" rel="noreferrer">Office 365</a>
                       </li>
-                      
+
                     </ul>
                   </div>
                 </div>
