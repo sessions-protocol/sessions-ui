@@ -1,7 +1,7 @@
-import { ethers } from 'ethers';
 import lensHubABI from "@/web3/abis/lensHub.json";
 import sessionsABI from "@/web3/abis/sessions.json";
 import { add } from 'date-fns';
+import { ethers } from 'ethers';
 
 class SessionApi {
   private provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
@@ -30,7 +30,7 @@ class SessionApi {
       duration: 60 * 6 * sessionType.durationInSlot,
       availableDates: [
         new Date().toISOString(),
-        add(new Date(), { days: 1}).toISOString(),
+        add(new Date(), { days: 1 }).toISOString(),
       ],
       lensProfileId: sessionType.lensProfileId,
       validateFollow: sessionType.validateFollow,
@@ -51,6 +51,11 @@ class SessionApi {
         date: new Date(i.date.toNumber() * 1000).toISOString(),
       }
     })
+  }
+  async getSessionTypesByProfileId(profileId: string) {
+    const sessionTypes = await this.sessionsContract.getSessionTypesByProfile(profileId)
+    console.log(sessionTypes)
+    return sessionTypes
   }
 }
 
