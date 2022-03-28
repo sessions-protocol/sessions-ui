@@ -147,6 +147,8 @@ export interface ProfilesRequest {
 export interface Profile {
   id: string;
   handle: string;
+  name: string | null;
+  picture: null | { uri?: string; url?: string } ;
   ownedBy: string;
 }
 

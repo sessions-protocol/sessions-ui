@@ -1,10 +1,14 @@
 import { useProfileState } from '@/context/ProfileContext';
+import { SessionLayout } from '@/layout/SessionLayout';
 import { getAddressFromSigner } from '@/lens/ethers.service';
 import { createProfile, Profile, profiles } from '@/lens/profile';
 import { SessionBookFlow } from '@/partials/Book/components/SessionBookFlow';
 import { ConnectorList } from '@/web3/components/ConnectorList';
+import { Button } from '@chakra-ui/react';
+import { UserCircleIcon } from '@heroicons/react/solid';
+import { CheckCircleIcon } from '@heroicons/react/outline';
 import { useWeb3React } from '@web3-react/core';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FunctionComponent } from 'react';
 import Layout from "@/components/app/Layout";
 import BlurImage from "@/components/BlurImage";
 import Modal from "@/components/Modal";
@@ -28,8 +32,43 @@ export const server = (subdomain?: string | null): string => {
 import toast, { Toaster } from "react-hot-toast";
 
 export function ProfilePage() {
-  const { chainId, account, deactivate, library } = useWeb3React()
+  const { chainId, account, deactivate, library } = useWeb3React();
+  return (
+    <SessionLayout>
+      <div className="flex flex-row justify-center">
+        <div className="flex flex-col justify-center mb-12">
+          <div className="SessionScheduled transition-all duration-500 ease-in-out">
+            <div className="flex flex-col text-center p-4 rounded-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border min-h-[356px] min-w-[480px]">
 
+              <div className="flex flex-col text-center text-green-500 my-4">
+                <UserCircleIcon className="mx-auto -mt-1 inline-block h-12 w-12" />
+              </div>
+              <div className="flex flex-col text-center h-full px-4">
+                <h2 className="font-bold text-2xl text-gray-700 dark:text-gray-200">
+                  Profiles
+                </h2>
+
+                {(!chainId || !account) ? (
+                  <div>
+                    <div className="text-lg font-medium mb-4">Connect Wallet</div>
+                    <ConnectorList />
+                  </div>
+                ) : (
+                  <ProfileListView />
+                )}
+
+              </div>
+            </div>
+          </div>
+          <div className="text-right text-xs mt-2 opacity-50">Powered by Sessions Protocol</div>
+        </div>
+      </div>
+    </SessionLayout>
+  );
+}
+
+
+const ProfileListView: FunctionComponent = () => {
   const [profileState, setProfileState] = useProfileState();
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -127,7 +166,7 @@ export function ProfilePage() {
   }
 
   return (
-    <Layout>
+    <>
       <Modal showModal={showModal} setShowModal={setShowModal}>
         <form
           onSubmit={(event) => {
@@ -215,98 +254,68 @@ export function ProfilePage() {
         </form>
       </Modal>
 
-      <div className="py-20 max-w-screen-xl mx-auto px-10 sm:px-20 border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border">
-        {(!chainId || !account) && (
-          <div>
-            <div className="text-lg font-medium mb-4">Connect Wallet</div>
-            <ConnectorList />
-          </div>
+      <div className="my-10 grid">
+        {loadProfilesError && (
+          <p className="px-5 text-left text-red-500">
+            {loadProfilesError}
+          </p>
         )}
-
-        <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 justify-between items-center">
-          <h1 className="font-cal text-5xl">My Profiles</h1>
-          <button
-            onClick={() => setShowModal(true)}
-            className="font-cal text-lg w-3/4 sm:w-44 tracking-wide text-white bg-black border-black border-2 px-5 py-3 hover:bg-white hover:text-black transition-all ease-in-out duration-150"
-          >
-            New Profile <span className="ml-2">＋</span>
-          </button>
-        </div>
-
-        <div className="my-10 grid gap-y-10">
-          {!isLoadingProfiles ? (
-            profilesData && profilesData?.items?.length > 0 ? (
-              profilesData.items.map((profile) => (
-                <a key={profile.id}  onClick={() => setProfileState({ profile })}>
-                  <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
-                    {/*<div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none">
-                        {profile.image ? (
-                          <BlurImage
-                            src={profile.image}
-                            layout="fill"
-                            objectFit="cover"
-                            alt={profile.name ?? "Site thumbnail"}
-                          />
-                        ) : (
-                          <div className="absolute flex items-center justify-center w-full h-full bg-gray-100 text-gray-500 text-4xl select-none">
-                            ?
-                          </div>
-                        )}
-                      </div>*/}
-                    <div className="relative p-10">
-                      <h2 className="font-cal text-3xl">{profile.handle}</h2>
-                      {/*<p className="text-base my-5 line-clamp-3">
-                          {profile.description}
-                        </p>
-                        <a
-                          onClick={(e) => e.stopPropagation()}
-                          href={server(site.subdomain)}
-                          target="_blank"
-                          className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
-                        >
-                          {server(site.subdomain)} ↗
-                        </a>*/}
-                    </div>
+        {!isLoadingProfiles ? (
+          profilesData && profilesData?.items?.length > 0 ? (
+            profilesData.items.map((profile) => (
+              <a key={profile.id}  onClick={() => setProfileState({ profile })}>
+                <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
+                  <img className="h-12 w-12 rounded-full" src={profile.picture?.uri || profile.picture?.url}/>
+                  <div className="col-span-3">
+                    <div className="mb-6">{profile.name}</div>
+                    <div className="mb-6">@{profile.handle}</div>
                   </div>
-                </a>
-              ))
-            ) : (
-              <>
-                <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
-                  <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300" />
-                  <div className="relative p-10 grid gap-5">
-                    <div className="w-28 h-10 rounded-md bg-gray-300" />
-                    <div className="w-48 h-6 rounded-md bg-gray-300" />
-                    <div className="w-48 h-6 rounded-md bg-gray-300" />
-                    <div className="w-48 h-6 rounded-md bg-gray-300" />
+                  <div className="flex justify-end items-center h-12 w-12">
+                    {profileState.profile?.id === profile.id && (<CheckCircleIcon className="mx-auto -mt-1 inline-block h-6 w-6" />)}
                   </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-cal text-gray-600">
-                    No profiles yet. Click "New Profile" to create one.
-                  </p>
-                </div>
-              </>
-            )
+              </a>
+            ))
           ) : (
-            [0, 1].map((i) => (
-              <div
-                key={i}
-                className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200"
-              >
-                <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300 animate-pulse" />
+            <>
+              <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
+                <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300" />
                 <div className="relative p-10 grid gap-5">
-                  <div className="w-28 h-10 rounded-md bg-gray-300 animate-pulse" />
-                  <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
-                  <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
-                  <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
+                  <div className="w-28 h-10 rounded-md bg-gray-300" />
+                  <div className="w-48 h-6 rounded-md bg-gray-300" />
+                  <div className="w-48 h-6 rounded-md bg-gray-300" />
+                  <div className="w-48 h-6 rounded-md bg-gray-300" />
                 </div>
               </div>
-            ))
-          )}
-        </div>
+              <div className="text-center">
+                <p className="text-2xl font-cal text-gray-600">
+                  No profiles yet. Click "New Profile" to create one.
+                </p>
+              </div>
+            </>
+          )
+        ) : (
+          [0, 1].map((i) => (
+            <div
+              key={i}
+              className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200"
+            >
+              <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300 animate-pulse" />
+              <div className="relative p-10 grid gap-5">
+                <div className="w-28 h-10 rounded-md bg-gray-300 animate-pulse" />
+                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
+                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
+                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
+              </div>
+            </div>
+          ))
+        )}
       </div>
+
+      <Button isFullWidth colorScheme={"green"} onClick={() => setShowModal(true)}>Create New Profile</Button>
+
       <Toaster />
-    </Layout>
+    </>
   );
-}
+};
+
