@@ -10,19 +10,17 @@ export default function HomePage() {
       <div className="bg-white">
         <div className="Home-header container mx-auto flex flex-row items-center justify-between py-4">
           <img className="max-w-full h-12" src={LogoDark} alt={`Sessions Logo`} />
-          <Button
-            onClick={() => {
-              //TODO: back
-            }}
-            variant='solid'
-            colorScheme="gray">
+          <a
+            className="bg-black rounded-full px-6 py-2 cursor-pointer"
+            href="/seller"
+            >
             Seller Management
-          </Button>
+          </a>
         </div>
       </div>
       <div className="bg-gray-100 py-6">
         <div className="container mx-auto px-6">
-          <h1 className="text-xl font-bold inline-block my-12 text-center" style={{
+          <h1 className="text-xl font-bold inline-block my-12 text-center text-black" style={{
             fontSize: "4.5rem",
             lineHeight: "6.5rem",
             maxWidth: "56rem",
