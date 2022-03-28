@@ -17,7 +17,7 @@ export const getSigner = () => {
     return singer;
   } else {
     // client side
-    const p: any = window.ethereum;
+    const p: any = (window as unknown as { ethereum?: any }).ethereum;
     const provider = new ethers.providers.Web3Provider(p);
     return provider.getSigner();
   }
