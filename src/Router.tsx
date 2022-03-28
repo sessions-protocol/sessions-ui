@@ -1,5 +1,5 @@
 import { Route, BrowserRouter, Routes, } from 'react-router-dom';
-// import HomePage from '@/pages/Home';
+import HomePage from '@/pages/Home';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ProfileCreatePage } from '@/pages/ProfileCreatePage';
 import SessionAvailablePage from '@/pages/SessionAvailablePage';
@@ -12,8 +12,8 @@ export default function Router() {
     <div className='Router'>
       <BrowserRouter>
         <Routes>
-          {/*<Route index element={<HomePage />} />*/}
-          <Route index element={<ProfilePage />} />
+          <Route index element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/create" element={<ProfileCreatePage />} />
           <Route path="/session-types" element={<SessionTypesPage/>} />
           <Route path='/session/:sessionId'>
