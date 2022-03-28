@@ -14,13 +14,13 @@ import {
 } from "react-router-dom";
 import { useProfileValue } from '@/context/ProfileContext';
 import { getProfilePictureSrc } from '@/lens/profile';
-import Loader from './Loader'
 
 import Logo from "@/assets/logo-dark.svg";
 import FavIcon from "@/assets/favicon.svg";
 
 import { TextAbbrLabel } from "./TextAbbrLabel";
 import { useProfileState } from "../context/ProfileContext";
+import { Spinner } from "@chakra-ui/react";
 export default function Shell(props: {
   centered?: boolean;
   large?: boolean;
@@ -67,7 +67,7 @@ export default function Shell(props: {
   if (loading) {
     return (
       <div className="absolute z-50 flex h-screen w-full items-center bg-gray-50">
-        <Loader />
+        <Spinner />
       </div>
     );
   }

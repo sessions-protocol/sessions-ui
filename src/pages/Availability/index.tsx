@@ -22,6 +22,7 @@ import {
   NumberInputStepper,
   Select,
   Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 import { ClockIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
@@ -31,7 +32,6 @@ import { omit, range } from "lodash";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { sessionApi } from "../../api/SessionApi";
-import Loader from "../../components/Loader";
 import Shell from "../../components/Shell";
 import { useProfileState } from "../../context/ProfileContext";
 import CreateAvailability from "./CreateAvailability";
@@ -64,7 +64,7 @@ export default function AvailabilitiesPage() {
     >
       <div className="bg-white border border-gray-200">
         {loading ? (
-          <Loader />
+          <Spinner />
         ) : (
           list.map((item) => (
             // <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
