@@ -12,6 +12,7 @@
     "csstype": "3.0.10"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.10",
     "@chakra-ui/react": "^1.8.7",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
@@ -31,7 +32,9 @@
     "events": "^3.3.0",
     "formik": "^2.2.9",
     "framer-motion": "^6",
+    "graphql": "^16.3.0",
     "lodash": "^4.17.21",
+    "omit-deep": "^0.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.2.0",
