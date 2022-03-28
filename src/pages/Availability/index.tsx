@@ -1,40 +1,14 @@
-import sessionsABI from "@/web3/abis/sessions.json";
-import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
-import { useDisclosure } from "@chakra-ui/hooks";
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/modal";
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  Switch,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
-  Textarea,
-  Spinner,
+  Spinner
 } from "@chakra-ui/react";
-import { ClockIcon } from "@heroicons/react/solid";
-import { useWeb3React } from "@web3-react/core";
-import { ethers, utils } from "ethers";
-import { Field, Form, Formik } from "formik";
-import { omit, range } from "lodash";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { forwardRef, ReactElement, Ref, useEffect, useState } from "react";
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { sessionApi } from "../../api/SessionApi";
 import Shell from "../../components/Shell";
 import { useProfileState } from "../../context/ProfileContext";
 import CreateAvailability from "./CreateAvailability";
+import Schedule, { DEFAULT_SCHEDULE } from "./Schedule";
 
 export default function AvailabilitiesPage() {
   const [{ profile }] = useProfileState();
@@ -85,12 +59,62 @@ export default function AvailabilitiesPage() {
   );
 }
 
-function Item ({ data }: { data: { id: string, name: string, availableSlots: string[] } }) {
-  const [open, setOpen] = useState(false)
-  return <div onClick={() => setOpen(open => !open)} className="border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
+function Item({ data }: { data: { id: string, name: string, availableSlots: string[] } }) {
+  return <div className="border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
   >
     <div>{data.name}</div>
-    <div className={!open ? 'hidden': ''}>
-    </div>
+    <AvailabilityForm />
   </div>
+}
+
+type FormProps<T> = { form: UseFormReturn<T>; handleSubmit: SubmitHandler<T> } & Omit<
+  JSX.IntrinsicElements["form"],
+  "onSubmit"
+>;
+
+const PlainForm = <T extends FieldValues>(props: FormProps<T>, ref: Ref<HTMLFormElement>) => {
+  const { form, handleSubmit, ...passThrough } = props;
+
+  return (
+    <FormProvider {...form}>
+      <form
+        ref={ref}
+        onSubmit={(event) => {
+          form
+            .handleSubmit(handleSubmit)(event)
+            .catch((err) => {
+            });
+        }}
+        {...passThrough}>
+        {props.children}
+      </form>
+    </FormProvider>
+  );
+};
+
+const Form = forwardRef(PlainForm) as <T extends FieldValues>(
+  p: FormProps<T> & { ref?: Ref<HTMLFormElement> }
+) => ReactElement
+
+function AvailabilityForm(props: any) {
+  const form = useForm({
+    defaultValues: {
+      schedule: props.availability || DEFAULT_SCHEDULE,
+    },
+  });
+  return <Form
+    form={form}
+    handleSubmit={async (values) => {
+      console.log(values)
+    }}
+    className="grid grid-cols-3 gap-2">
+    <div className="col-span-3 space-y-2 lg:col-span-2">
+      <div className="divide-y px-4 py-5 sm:p-6">
+        <Schedule name="schedule" />
+      </div>
+      <div className="space-x-2 text-right">
+        <Button type="submit">Save</Button>
+      </div>
+    </div>
+  </Form>
 }

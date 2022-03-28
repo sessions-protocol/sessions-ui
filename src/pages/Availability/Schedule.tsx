@@ -16,7 +16,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 /** Begin Time Increments For Select */
-const increment = 15;
+const increment = 12;
 type TimeRange = {
 	start: Date;
 	end: Date;
@@ -31,7 +31,16 @@ const defaultDayRange: TimeRange = {
 	start: new Date(new Date().setUTCHours(9, 0, 0, 0)),
 	end: new Date(new Date().setUTCHours(17, 0, 0, 0)),
 };
-
+type Schedule = TimeRange[][];
+export const DEFAULT_SCHEDULE: Schedule = [
+  [],
+  [defaultDayRange],
+  [defaultDayRange],
+  [defaultDayRange],
+  [defaultDayRange],
+  [defaultDayRange],
+  [],
+];
 /**
  * Creates an array of times on a 15 minute interval from
  * 00:00:00 (Start of day) to
