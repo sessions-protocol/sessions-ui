@@ -48,7 +48,7 @@ export function ProfilePage() {
               </div>
             </div>
           </div>
-          <div className="text-right text-xs mt-2 opacity-50">Powered by Sessions Protocol</div>
+          <div className="text-right text-xs mt-2 opacity-50">Powered by Lens Protocol</div>
         </div>
       </div>
     </SessionLayout>
@@ -101,16 +101,8 @@ const ProfileListView: FunctionComponent = () => {
           ) : (
             // TODO empty: No profiles yet
             <>
-              <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
-                <div className="mx-4 my-2 h-12 w-12 rounded-full bg-gray-300 animate-pulse" />
-                <div className="flex-grow">
-                  <div className="flex-1 mb-2 h-3 bg-gray-300 animate-pulse rounded-full"/>
-                  <div className="flex-1 h-2 bg-gray-300 animate-pulse rounded-full"/>
-                </div>
-                <div className="flex justify-end items-center h-12 w-12"/>
-              </div>
               <div className="text-center">
-                <p className="text-2xl font-cal text-gray-600">
+                <p className="font-cal text-gray-600 text-sm p-6">
                   {'No profiles yet. Click "Create New Profile" to create one.'}
                 </p>
               </div>

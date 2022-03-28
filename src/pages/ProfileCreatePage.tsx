@@ -46,7 +46,7 @@ export function ProfileCreatePage() {
               </div>
             </div>
           </div>
-          <div className="text-right text-xs mt-2 opacity-50">Powered by Sessions Protocol</div>
+          <div className="text-right text-xs mt-2 opacity-50">Powered by Lens Protocol</div>
         </div>
       </div>
     </SessionLayout>
