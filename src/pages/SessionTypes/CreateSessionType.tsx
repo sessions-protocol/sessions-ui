@@ -80,7 +80,7 @@ export default function CreateSessionType({
                 description: "",
                 durationInSlot: 5,
                 openBookingDeltaDays: 14,
-                token: "0",
+                token: "0x0000000000000000000000000000000000000000",
                 price: 0,
 								validateFollow: false,
               }}
@@ -98,7 +98,7 @@ export default function CreateSessionType({
                   amount: values.price,
                   decimals: 18
                 }
-                if (values.token && values.token != "0x0000000000000000000000000000000000000000") {
+                if (values.token != "0x0000000000000000000000000000000000000000") {
                   const erc20Contract = new ethers.Contract(
                     values.token,
                     erc20ABI,
@@ -193,11 +193,8 @@ export default function CreateSessionType({
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
                         <FormLabel htmlFor="token">Token</FormLabel>
-                        <RadioGroup {...field} id="token" defaultValue='0' >
+                        <RadioGroup {...field} id="token" defaultValue='0x0000000000000000000000000000000000000000' >
                           <Stack spacing={5} direction='row'>
-                            <Radio {...field} colorScheme='blue' value='0'>
-                              FREE
-                            </Radio>
                             <Radio {...field} colorScheme='blue' value='0x0000000000000000000000000000000000000000'>
                               MATIC
                             </Radio>

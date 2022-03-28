@@ -290,11 +290,8 @@ function SessionTypeItem({
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
                         <FormLabel htmlFor="token">Token</FormLabel>
-                        <RadioGroup {...field} id="token" defaultValue='0' >
+                        <RadioGroup {...field} id="token" defaultValue='0x0000000000000000000000000000000000000000' >
                           <Stack spacing={5} direction='row'>
-                            <Radio {...field} colorScheme='blue' value='0'>
-                              FREE
-                            </Radio>
                             <Radio {...field} colorScheme='blue' value='0x0000000000000000000000000000000000000000'>
                               MATIC
                             </Radio>
