@@ -27,6 +27,7 @@ module.exports = {
         darkmodebrand: "var(--brand-color-dark-mode)",
         darkmodebrandcontrast: "var(--brand-text-color-dark-mode)",
         black: "#111111",
+        hint: "#FFFFFF08",
         gray: {
           50: "#F8F8F8",
           100: "#F5F5F5",
