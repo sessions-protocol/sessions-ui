@@ -68,7 +68,7 @@ export function SessionBook() {
                     </p> */}
                     <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
                       <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-                      { session.token.amount ? utils.formatEther(session.token.amount) : "" } {session.token.symbol || "..."}
+                      { session.token.amount ? utils.formatUnits(session.token.amount, session.token.decimals) : "" } {session.token.symbol || "..."}
                     </p>
                     {session.description && (
                       <p className="mt-3 mb-8 text-gray-600 dark:text-gray-200">

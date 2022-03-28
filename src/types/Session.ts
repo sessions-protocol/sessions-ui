@@ -20,7 +20,8 @@ export interface Session {
   token: {
     symbol: string,
     amount: any,
-    decimals: number
+    decimals: number,
+    contract: string | null;
   }
   sessionType: SessionType;
 }

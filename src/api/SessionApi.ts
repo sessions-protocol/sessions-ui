@@ -1,5 +1,6 @@
 import lensHubABI from "@/web3/abis/lensHub.json";
 import sessionsABI from "@/web3/abis/sessions.json";
+import erc20ABI from "@/web3/abis/erc20.json";
 import { LENS_HUB_CONTRACT, SESSIONS_CONTRACT } from "@/web3/contracts";
 import { add } from 'date-fns';
 import { ethers } from 'ethers';
@@ -20,6 +21,23 @@ class SessionApi {
   async getSession(sessionId: string) {
     const sessionType = await this.sessionsContract.getSessionType(sessionId)
     const profile = await this.lensHubContract.getProfile(sessionType.lensProfileId)
+    const tokenPrice = {
+      symbol: "MATIC",
+      amount: sessionType.amount,
+      decimals: 18,
+      contract: null
+    }
+    if (sessionType.token != "0x0000000000000000000000000000000000000000") {
+      const erc20Contract = new ethers.Contract(
+        sessionType.token,
+        erc20ABI,
+        this.provider,
+      );
+
+      tokenPrice.decimals = await erc20Contract.decimals();
+      tokenPrice.symbol = await erc20Contract.symbol();
+      tokenPrice.contract = sessionType.token
+    }
 
     return {
       id: sessionType.id,
@@ -35,11 +53,7 @@ class SessionApi {
       ],
       lensProfileId: sessionType.lensProfileId,
       validateFollow: sessionType.validateFollow,
-      token: {
-        symbol: "MATIC",
-        amount: sessionType.amount,
-        decimals: 18
-      },
+      token: tokenPrice,
       sessionType,
     }
   }

@@ -2,7 +2,7 @@ import { SessionBookPagePropsContext } from "@/pages/SessionBookPage.param";
 import { ConnectorList } from "@/web3/components/ConnectorList";
 import { Button } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TextAbbrLabel } from "../../../components/TextAbbrLabel";
 import { useFormik } from "formik";
 import { ClockIcon, CurrencyDollarIcon, CalendarIcon } from "@heroicons/react/solid";
@@ -12,6 +12,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import toast from 'react-hot-toast';
 
 import sessionsABI from "../../../web3/abis/sessions.json";
+import erc20ABI from "../../../web3/abis/erc20.json";
 import { Session } from "@/types/Session";
 import { add } from "date-fns";
 import { useTimezoneSettings } from "../../../hooks/useTimezoneSettings";
@@ -26,6 +27,8 @@ export function SessionBookFlow({ session }: { session: Session }) {
   const { chainId, account, deactivate, library } = useWeb3React()
   const { params } = SessionBookPagePropsContext.usePageContext()
 
+  const [requireApproval, setRequireApproval] = useState<boolean>(false)
+
   const [profile, setProfile] = useState<{ username: string } | null>(null)
 
   const formik = useFormik({
@@ -36,6 +39,110 @@ export function SessionBookFlow({ session }: { session: Session }) {
       setProfile({ username: values.username })
     }
   });
+
+  const checkRequireApproval = useMemo(() => {
+    return async () => {
+      if (session.token.contract) {
+        const signer = await library.getSigner()
+  
+        const erc20Contract = new ethers.Contract(
+          session.token.contract,
+          erc20ABI,
+          signer
+        );
+
+        const allowance = await erc20Contract.allowance(signer.getAddress(), SESSIONS_CONTRACT)
+
+        if (allowance > session.token.amount) {
+          return false
+        }
+        return true
+      }
+      return false
+    }
+  }, [session, library])
+
+
+  useEffect(() => {
+    if (account) {
+      checkRequireApproval().then((requireApproval) => {
+        setRequireApproval(requireApproval)
+      })
+    }
+  }, [account, checkRequireApproval])
+
+  const tokenApproval = useMutation(async () => {
+    const approval = async () => {
+      const signer = await library.getSigner()
+
+      const erc20Contract = new ethers.Contract(
+        session.token.contract!,
+        erc20ABI,
+        signer
+      );
+      const calldata = [
+        SESSIONS_CONTRACT,
+        ethers.constants.MaxUint256,
+      ];
+      const tx = await erc20Contract.approve(...calldata);
+
+      return tx;
+    }
+
+    try {
+      const transactionResponse = await approval();
+      const receiptPromise = transactionResponse.wait();
+      toast.promise(
+          receiptPromise,
+          {
+            loading: `Approve ${session.token.symbol}...`,
+            success: (receipt: TransactionReceipt) => {
+              return (
+                <div className="flex flex-row items-center">
+                  <div className="flex flex-col">
+                    <b className="mb-1">{`Successfully Approve ${session.token.symbol}`}</b>
+                    <a target="_blank" rel="noreferrer" className="text-gray-text-center text-sm leading-6 text-gray-light-10 dark:text-gray-dark-10">
+                      <span className="hover:underline">{receipt.status === 1 ? "Transaction is submitted" : "Something wrong with the receipt"}</span> &#8599;
+                    </a>
+                  </div>
+                </div>
+              );
+            },
+            error: (error: Error) => {
+              return (
+                <div className="flex flex-row items-center">
+                  <div className="flex flex-col">
+                    <b className="mb-1">{`Approve failed`}</b>
+                    <div>{error.message}</div>
+                  </div>
+                </div>
+              );
+            },
+          },
+          {
+            loading: {
+              duration: Infinity,
+            },
+            success: {
+              duration: 5000,
+            },
+          }
+      );
+      const receipt = await receiptPromise;
+      setRequireApproval(false)
+      return receipt;
+    } catch (error: any) {
+      toast.error(
+          <div className="flex flex-row items-center">
+            <div className="flex flex-col">
+              <b className="mb-1">{`Book failed`}</b>
+              <div>{error.message}</div>
+            </div>
+          </div>
+      );
+      return null;
+    }
+  })
 
   const bookSession = useMutation(async () => {
     const booking = async () => {
@@ -58,7 +165,7 @@ export function SessionBookFlow({ session }: { session: Session }) {
         new Date(params.time).getTime() / 1000,
         params.sessionId
       ];
-      const tx = await sessionsContract.book(...calldata, {
+      const tx = await sessionsContract.book(...calldata, session?.token.contract ? {} : {
         value: session?.token.amount,
       });
 
@@ -187,17 +294,30 @@ export function SessionBookFlow({ session }: { session: Session }) {
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              { session?.token.amount ? utils.formatEther(session?.token.amount) : "" } {session?.token.symbol || "..."}
+              { session?.token.amount ? utils.formatUnits(session?.token.amount, session?.token.decimals) : "" } {session?.token.symbol || "..."}
             </p>
             <div className="flex-grow mb-2"></div>
-            <Button
-              isFullWidth
-              disabled={bookSession.isLoading}
-              colorScheme={"green"}
-              onClick={async () => {
-                return await bookSession.mutateAsync()
-              }}
-            >{ bookSession.isLoading ? `Waiting Transaction...` : `Confirm Booking`}</Button>
+
+            {
+              requireApproval ?
+              <Button
+                isFullWidth
+                disabled={tokenApproval.isLoading}
+                colorScheme={"green"}
+                onClick={async () => {
+                  return await tokenApproval.mutateAsync()
+                }}
+              >{ tokenApproval.isLoading ? `Waiting Transaction...` : `Approve ${session.token.symbol}`}</Button>
+              :
+              <Button
+                isFullWidth
+                disabled={bookSession.isLoading}
+                colorScheme={"green"}
+                onClick={async () => {
+                  return await bookSession.mutateAsync()
+                }}
+              >{ bookSession.isLoading ? `Waiting Transaction...` : `Confirm Booking`}</Button>
+            }
           </div>
         )}
       </div>
