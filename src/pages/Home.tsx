@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="Home-header container mx-auto flex flex-row items-center justify-between py-4">
           <img className="max-w-full h-12" src={LogoDark} alt={`Sessions Logo`} />
           <a
-            className="bg-black rounded-full px-6 py-2 cursor-pointer"
+            className="bg-black rounded-full px-6 py-2 cursor-pointer text-white"
             href="/session-types"
             >
             Seller Management
