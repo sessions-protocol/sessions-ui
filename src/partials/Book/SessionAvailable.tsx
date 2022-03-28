@@ -26,7 +26,7 @@ export function SessionAvailable() {
 
   const yearMonthInfo = useMemo(() => {
     const label = format(yearMonth, "yyyy-MMM");
-    const startTime = Math.round(startOfMonth(yearMonth).getTime() / 1000)
+    const startTime = Math.round(new Date().getTime() / 1000)
     const endTime = Math.round(endOfMonth(yearMonth).getTime() / 1000)
     return { label, startTime, endTime }
   }, [yearMonth])
@@ -101,6 +101,7 @@ export function SessionAvailable() {
           if (sindex % session.sessionType.durationInSlot !== 0) return null
           if (slot !== "1") return null
           const time = add(startOfDay(date), { minutes: sindex * 6 })
+          if (time < new Date()) return null
           return {
             time: time,
             slot: sindex,
