@@ -66,7 +66,7 @@ export default function Shell(props: {
   ]
   if (loading) {
     return (
-      <div className="absolute z-50 flex h-screen w-full items-center bg-gray-50">
+      <div className="absolute z-50 flex h-screen w-full items-center bg-gray-50 justify-center items-center flex">
         <Spinner />
       </div>
     );
@@ -125,32 +125,31 @@ export default function Shell(props: {
                           "text-neutral-500 hover:text-neutral-900",
                           "group flex-1 flex-shrink-1 flex justify-center items-center py-2 my-2 text-sm font-medium"
                         )}>
-                        {profilePictureSrc ? (
-                          <img className="h-6 w-6 rounded-full" src={profilePictureSrc} />
-                        ) : (
-                          <UserCircleIcon
-                            className={classNames(
-                              "text-neutral-400 group-hover:text-neutral-500",
-                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                          <div className="flex-shrink-0">
+                            {profilePictureSrc ? (
+                              <img className="h-6 w-6 rounded-full" src={profilePictureSrc} />
+                            ) : (
+                              <UserCircleIcon
+                                className={classNames(
+                                  "text-neutral-400 group-hover:text-neutral-500",
+                                  "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                                )}
+                                aria-hidden="true"
+                              />
                             )}
-                            aria-hidden="true"
-                          />
-                        )}
-
-                        <div className="hidden lg:flex lg:flex-1">
-                          <div className="ml-2 flex-1 flex flex-row items-center">
-                            <div className="text-sm flex-1 flex-grow truncate">{profile.handle}</div>
-                            <div><SelectorIcon
+                          </div>
+                          <div className="hidden lg:flex ml-2 flex-row items-center flex-grow">
+                            <div className="items-center justify-center flex-grow">
+                              <span className="text-sm block max-w-24 overflow-hidden truncate">{profile.handle}</span>
+                            </div>
+                            <SelectorIcon
                               className={classNames(
                                 "text-neutral-400 group-hover:text-neutral-500",
                                 "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
                               )}
                               aria-hidden="true"
-                            /></div>
+                            />
                           </div>
-
-                        </div>
-
                       </div>
                     </Link>
                 )}
