@@ -1,4 +1,5 @@
 import sessionsABI from "@/web3/abis/sessions.json";
+import erc20ABI from "@/web3/abis/erc20.json";
 import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -23,13 +24,16 @@ import {
   Select,
   Textarea,
   Spinner,
+  RadioGroup,
+  Stack,
+  Radio,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon, ClockIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import { ethers, utils } from "ethers";
 import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from 'react-router-dom';
 import { sessionApi } from "../../api/SessionApi";
@@ -106,11 +110,44 @@ function SessionTypeItem({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const durationInSlotOptions = range(1, 20);
   const { account, library } = useWeb3React();
-  const formData = {
-    ...omit(sessionType, "amount"),
-    price: +utils.formatEther(sessionType.amount.toString()),
-  };
-  console.log('price ', formData.price)
+  
+  const getFormData = useMemo(() => {
+    return async () => {
+      const tokenPrice = {
+        symbol: "MATIC",
+        amount: sessionType.amount,
+        decimals: 18
+      }
+      if (sessionType.token != "0x0000000000000000000000000000000000000000") {
+        const signer = await library.getSigner()
+        const erc20Contract = new ethers.Contract(
+          sessionType.token,
+          erc20ABI,
+          signer,
+        );
+  
+        tokenPrice.decimals = await erc20Contract.decimals();
+        tokenPrice.symbol = await erc20Contract.symbol();
+      }
+
+      console.log("utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals)", utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals))
+ 
+      return {
+        ...omit(sessionType, "amount"),
+        price: +utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals),
+        symbol: tokenPrice.symbol
+      };
+    }
+  }, [library, sessionType])
+
+  const [formData, setFormData] = useState<any>({}); 
+
+  useEffect(() => {
+    getFormData().then((data) => {
+      setFormData(data)
+    })
+  }, [getFormData])
+  
   return (
     <>
       <div className="flex flex-row border-b border-gray-200 text-gray-700 p-4 cursor-pointer" onClick={onOpen}>
@@ -157,13 +194,28 @@ function SessionTypeItem({
                   sessionsABI,
                   signer
                 );
+                const tokenPrice = {
+                  symbol: "MATIC",
+                  amount: values.price,
+                  decimals: 18
+                }
+                if (values.token && values.token != "0x0000000000000000000000000000000000000000") {
+                  const erc20Contract = new ethers.Contract(
+                    values.token,
+                    erc20ABI,
+                    signer,
+                  );
+            
+                  tokenPrice.decimals = await erc20Contract.decimals();
+                  tokenPrice.symbol = await erc20Contract.symbol();
+                }
                 if (!account) return;
                 const calldata: [string, ISessionTypeCallData] = [
                   sessionType.id,
                   {
                     ...omit(values, "price"),
-                    amount: utils.parseEther(`${values.price}`).toString(),
-                  },
+                    amount: utils.parseUnits(`${values.price}`, tokenPrice.decimals).toString(),
+                  } as any,
                 ];
                 const tx = await sessionsContract.updateSessionType(
                   ...calldata
@@ -234,15 +286,35 @@ function SessionTypeItem({
                       </FormControl>
                     )}
                   </Field>
+                  <Field name="token">
+                    {({ field, form }: any) => (
+                      <FormControl className="mb-5">
+                        <FormLabel htmlFor="token">Token</FormLabel>
+                        <RadioGroup {...field} id="token" defaultValue='0' >
+                          <Stack spacing={5} direction='row'>
+                            <Radio {...field} colorScheme='blue' value='0'>
+                              FREE
+                            </Radio>
+                            <Radio {...field} colorScheme='blue' value='0x0000000000000000000000000000000000000000'>
+                              MATIC
+                            </Radio>
+                            <Radio {...field} colorScheme='yellow' value='0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F' title="0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F">
+                              DAI
+                            </Radio>
+                            <Radio {...field} colorScheme='green' value='0x326C977E6efc84E512bB9C30f76E30c160eD06FB' title="0x326C977E6efc84E512bB9C30f76E30c160eD06FB">
+                              LINK
+                            </Radio>
+                          </Stack>
+                        </RadioGroup>
+                      </FormControl>
+                    )}
+                  </Field>
                   <Field name="price">
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
-                        <FormLabel htmlFor="price">Price(Matic)</FormLabel>
-                        <NumberInput defaultValue={formData.price} min={1} className="flex-1 mr-2">
-                          <NumberInputField
-                            {...field}
-                            id="price"
-                          />
+                        <FormLabel htmlFor="price">Price</FormLabel>
+                        <NumberInput {...field} defaultValue={0} className="flex-1 mr-2">
+                          <NumberInputField {...field} id="price" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
                             <NumberDecrementStepper />

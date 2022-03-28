@@ -1,4 +1,5 @@
 import sessionsABI from "@/web3/abis/sessions.json";
+import erc20ABI from "@/web3/abis/erc20.json";
 import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -20,7 +21,10 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
   Switch,
   Textarea,
 } from "@chakra-ui/react";
@@ -76,6 +80,7 @@ export default function CreateSessionType({
                 description: "",
                 durationInSlot: 5,
                 openBookingDeltaDays: 14,
+                token: "0",
                 price: 0,
 								validateFollow: false,
               }}
@@ -87,19 +92,35 @@ export default function CreateSessionType({
                   sessionsABI,
                   signer
                 );
+
+                const tokenPrice = {
+                  symbol: "MATIC",
+                  amount: values.price,
+                  decimals: 18
+                }
+                if (values.token && values.token != "0x0000000000000000000000000000000000000000") {
+                  const erc20Contract = new ethers.Contract(
+                    values.token,
+                    erc20ABI,
+                    signer,
+                  );
+            
+                  tokenPrice.decimals = await erc20Contract.decimals();
+                  tokenPrice.symbol = await erc20Contract.symbol();
+                }
                 if (!account || !profileId) return;
                 console.log(
                   `Amount: `,
                   utils.parseEther(`${values.price}`).toString()
                 );
+
                 const calldata: [string, ISessionTypeCallData] = [
                   profileId,
                   {
                     ...omit(values, "price"),
-                    amount: utils.parseEther(`${values.price}`).toString(),
+                    amount: utils.parseUnits(`${values.price}`, tokenPrice.decimals).toString(),
                     recipient: account,
                     availabilityId: 0,
-                    token: "0x0000000000000000000000000000000000000000",
                     locked: false,
                   },
                 ];
@@ -168,11 +189,34 @@ export default function CreateSessionType({
                       </FormControl>
                     )}
                   </Field>
+                  <Field name="token">
+                    {({ field, form }: any) => (
+                      <FormControl className="mb-5">
+                        <FormLabel htmlFor="token">Token</FormLabel>
+                        <RadioGroup {...field} id="token" defaultValue='0' >
+                          <Stack spacing={5} direction='row'>
+                            <Radio {...field} colorScheme='blue' value='0'>
+                              FREE
+                            </Radio>
+                            <Radio {...field} colorScheme='blue' value='0x0000000000000000000000000000000000000000'>
+                              MATIC
+                            </Radio>
+                            <Radio {...field} colorScheme='yellow' value='0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F' title="0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F">
+                              DAI
+                            </Radio>
+                            <Radio {...field} colorScheme='green' value='0x326C977E6efc84E512bB9C30f76E30c160eD06FB' title="0x326C977E6efc84E512bB9C30f76E30c160eD06FB">
+                              LINK
+                            </Radio>
+                          </Stack>
+                        </RadioGroup>
+                      </FormControl>
+                    )}
+                  </Field>
                   <Field name="price">
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
-                        <FormLabel htmlFor="price">Price(Matic)</FormLabel>
-                        <NumberInput min={1} defaultValue={0} className="flex-1 mr-2">
+                        <FormLabel htmlFor="price">Price</FormLabel>
+                        <NumberInput defaultValue={0} className="flex-1 mr-2">
                           <NumberInputField {...field} id="price" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
