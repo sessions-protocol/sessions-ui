@@ -154,9 +154,9 @@ export default function CreateSessionType({
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
                         <FormLabel htmlFor="openBookingDeltaDays">
-                          Invitees can schedule in (Days)
+                          Sessions can be booked in (Days)
                         </FormLabel>
-                        <NumberInput min={1} className="flex-1 mr-2">
+                        <NumberInput defaultValue={14} min={1} className="flex-1 mr-2">
                           <NumberInputField
                             {...field}
                             id="openBookingDeltaDays"
@@ -173,7 +173,7 @@ export default function CreateSessionType({
                     {({ field, form }: any) => (
                       <FormControl className="mb-5">
                         <FormLabel htmlFor="price">Price(Matic)</FormLabel>
-                        <NumberInput min={1} className="flex-1 mr-2">
+                        <NumberInput min={1} defaultValue={0} className="flex-1 mr-2">
                           <NumberInputField {...field} id="price" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />

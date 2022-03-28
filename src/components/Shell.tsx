@@ -13,7 +13,10 @@ import {
 } from "react-router-dom";
 import { ConnectorList } from "../web3/components/ConnectorList";
 import Loader from './Loader'
-import Logo from "./Logo";
+
+import Logo from "@/assets/logo-dark.svg";
+import FavIcon from "@/assets/favicon.svg";
+
 import { TextAbbrLabel } from "./TextAbbrLabel";
 export default function Shell(props: {
   centered?: boolean;
@@ -51,12 +54,12 @@ export default function Shell(props: {
       icon: ClockIcon,
       current: pathname.startsWith("/availability"),
     },
-    {
-      name: "settings",
-      href: "/settings/profile",
-      icon: CogIcon,
-      current: pathname.startsWith("/settings"),
-    },
+    // {
+    //   name: "settings",
+    //   href: "/settings/profile",
+    //   icon: CogIcon,
+    //   current: pathname.startsWith("/settings"),
+    // },
   ]
   if (loading) {
     return (
@@ -74,8 +77,13 @@ export default function Shell(props: {
           <div className="flex h-0 flex-1 flex-col border-r border-gray-200 bg-white">
             <div className="flex flex-1 flex-col overflow-y-auto pt-3 pb-4 lg:pt-5">
               <Link to="/session-types">
-                <a className="block w-1/2 pl-4">
-                  <Logo small />
+                <a className="block px-2">
+                  <span className="inline lg:hidden">
+                    <img className="mx-auto" alt="Sessions" title="Session" src={FavIcon} />
+                  </span>
+                  <span className="hidden lg:inline">
+                    <img className="mx-auto" alt="Sessions" title="Session" src={Logo} />
+                  </span>
                 </a>
               </Link>
               {<nav className="mt-2 flex-1 space-y-1 bg-white px-2 lg:mt-5">
@@ -87,7 +95,7 @@ export default function Shell(props: {
                           item.current
                             ? "bg-neutral-100 text-neutral-900"
                             : "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
-                          "group flex items-center rounded-sm px-2 py-2 text-sm font-medium"
+                          "group flex items-center rounded-sm px-2 py-2 my-2 rounded text-sm font-medium"
                         )}>
                         <item.icon
                           className={classNames(
@@ -98,7 +106,7 @@ export default function Shell(props: {
                           )}
                           aria-hidden="true"
                         />
-                        <span className="hidden lg:inline">{item.name}</span>
+                        <span className="hidden lg:inline ml-2">{item.name}</span>
                       </a>
                     </Link>
                   </Fragment>
