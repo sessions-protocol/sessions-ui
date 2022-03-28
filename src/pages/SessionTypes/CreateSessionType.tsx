@@ -46,7 +46,7 @@ export default function CreateSessionType({ onCreated }: { onCreated: () => void
 								signer
 							);
 							if (!account) return
-							const calldata: [string, ISessionTypeCallData] = [
+							const calldata: [string, ISessionTypeData] = [
 								profileId,
 								{
 									...values,
@@ -118,7 +118,7 @@ export default function CreateSessionType({ onCreated }: { onCreated: () => void
 }
 
 
-export interface ISessionTypeCallData {
+export interface ISessionTypeData {
 	title: string,
 	description: string,
 	durationInSlot: number,
