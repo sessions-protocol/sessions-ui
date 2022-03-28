@@ -134,8 +134,8 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
                 }}
               >
                 <div className={classNames(
-                  "absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center select-none text-gray-400 font-medium",
-                  day.available ? "rounded cursor-pointer dark:text-white hover:border-brand hover:border dark:hover:border-white" : "",
+                  "absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center select-none font-medium",
+                  day.available ? "text-gray-600 rounded cursor-pointer dark:text-white hover:border-brand hover:border dark:hover:border-white" : "text-gray-400",
                   day.selected ? "text-brandcontrast dark:text-darkmodebrandcontrast" : "",
                   day.available ? (day.selected ? "bg-brand dark:bg-darkmodebrand" : "bg-gray-100 dark:bg-gray-600") : "",
                   {

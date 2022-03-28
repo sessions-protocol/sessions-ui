@@ -133,8 +133,8 @@ export function SessionBookFlow({ session }: { session: Session }) {
       return receipt;
     } catch (error: any) {
       toast.error(
-          <div className="flex flex-row items-center">
-            <div className="flex flex-col">
+          <div className="flex flex-row items-start">
+            <div className="flex flex-col items-start">
               <b className="mb-1">{`Book failed`}</b>
               <div>{error.message}</div>
             </div>
@@ -193,8 +193,8 @@ export function SessionBookFlow({ session }: { session: Session }) {
             },
             error: (error: Error) => {
               return (
-                <div className="flex flex-row items-center">
-                  <div className="flex flex-col">
+                <div className="flex flex-row items-start">
+                  <div className="flex flex-col items-start">
                     <b className="mb-1">{`Book failed`}</b>
                     <div>{error.message}</div>
                   </div>
@@ -216,8 +216,8 @@ export function SessionBookFlow({ session }: { session: Session }) {
       return receipt;
     } catch (error: any) {
       toast.error(
-          <div className="flex flex-row items-center">
-            <div className="flex flex-col">
+          <div className="flex flex-row items-start">
+            <div className="flex flex-col items-start">
               <b className="mb-1">{`Book failed`}</b>
               <div>{error.message}</div>
             </div>
@@ -280,7 +280,7 @@ export function SessionBookFlow({ session }: { session: Session }) {
         )} */}
         {chainId && account && (
           <div className="text-left flex flex-col h-full">
-            <div className="text-lg font-medium mb-4">Book your session with {session?.user.handle}</div>
+            <div className="text-lg font-medium mb-4">Book your session with @{session?.user.handle}</div>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CalendarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
               {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "EEEE, MMMM d, yyyy")}

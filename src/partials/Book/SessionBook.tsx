@@ -49,7 +49,7 @@ export function SessionBook() {
                 <div className="max-w-96 min-w-[240px]">
                   <div className="pr-8 border-r dark:border-gray-800 flex flex-col items-start text-left h-full">
                     <h2 className="font-medium text-gray-500 dark:text-gray-300">
-                      {session.user.handle}
+                      @{session.user.handle}
                     </h2>
                     <h1 className="font-cal mb-4 text-3xl font-semibold">
                       {session.title || "Loading..."}
