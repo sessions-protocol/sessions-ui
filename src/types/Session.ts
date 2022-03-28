@@ -13,6 +13,8 @@ export interface Session {
   description?: string;
   duration: number;
   availableDates: string[];
+  lensProfileId: number;
+  validateFollow: boolean;
   token: {
     symbol: string,
     amount: any,

@@ -36,10 +36,18 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
       const signer = await library.getSigner()
 
       const sessionsContract = new ethers.Contract(
-        "0xf19C27C92EEA361F8e2FD246283CD058e4d78F00",
+        "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
         sessionsABI,
         signer
       );
+
+      if (session?.validateFollow) {
+        const isFollowed = await sessionsContract.checkFollowValidity(session.lensProfileId, signer.getAddress())
+        if (!isFollowed) {
+          return alert("You must follow the lens before you can book a session")
+        }
+      }
+
       const calldata = [
         "1648730747",
         params.sessionId
@@ -52,7 +60,7 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
 
       navigate(`/session/${params.sessionId}/scheduled${location.search}`);
     }
-  }, [library, navigate, location, params.sessionId])
+  }, [library, navigate, location, session, params.sessionId])
 
   return (
     <div>

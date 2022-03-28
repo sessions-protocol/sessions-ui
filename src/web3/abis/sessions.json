@@ -176,6 +176,30 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "checkFollowValidity",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "lensProfileId",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
         "name": "name",
         "type": "string"

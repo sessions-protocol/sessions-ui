@@ -7,7 +7,7 @@ class SessionApi {
   async getSession(sessionId: string) {
     const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
     const sessionsContract = new ethers.Contract(
-      "0xf19C27C92EEA361F8e2FD246283CD058e4d78F00",
+      "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
       sessionsABI,
       provider
     );
@@ -32,6 +32,8 @@ class SessionApi {
         new Date().toISOString(),
         add(new Date(), { days: 1}).toISOString(),
       ],
+      lensProfileId: sessionType.lensProfileId,
+      validateFollow: sessionType.validateFollow,
       token: {
         symbol: "MATIC",
         amount: sessionType.amount,
