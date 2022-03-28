@@ -61,7 +61,7 @@ function App() {
 
           <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
 
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
         </ConnectProvider>
         </ChakraProvider>
