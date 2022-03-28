@@ -21,14 +21,14 @@ export function ProfileCreatePage() {
           <div className="SessionScheduled transition-all duration-500 ease-in-out">
             <div className="flex flex-col text-center p-4 rounded-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border min-h-[356px] min-w-[480px]">
 
-              <div className="flex flex-col text-center text-green-500 my-4">
-                <ClipboardCheckIcon className="mx-auto -mt-1 inline-block h-12 w-12" />
-              </div>
-              <div className="flex flex-col text-center h-full px-4">
-                <h2 className="font-bold text-2xl text-gray-700 dark:text-gray-200">
+              <div className="flex flex-row items-center my-4 mx-4">
+                <ClipboardCheckIcon className="text-green-500 mx-auto -mt-1 inline-block h-12 w-12" />
+                <h2 className="ml-4 text-left flex-1 font-bold text-2xl text-gray-700 dark:text-gray-200">
                   Create New Profile
                 </h2>
+              </div>
 
+              <div className="flex flex-col text-center h-full px-4">
                 {(!chainId || !account) ? (
                   <div>
                     <div className="text-lg font-medium mb-4">Connect Wallet</div>
@@ -143,7 +143,7 @@ const CreateProfileView: FunctionComponent = () => {
 
         <FormControl>
           <FormLabel htmlFor='profile-input-picture'>PROFILE PICTURE</FormLabel>
-          <Input id='profile-input-picture' placeholder="" ref={profilePictureRef} />
+          <Input id='profile-input-picture' placeholder="https://cc0.crypto.punks/lol.jpg" ref={profilePictureRef} />
         </FormControl>
 
       </div>

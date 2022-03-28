@@ -21,14 +21,14 @@ export function ProfilePage() {
           <div className="SessionScheduled transition-all duration-500 ease-in-out">
             <div className="flex flex-col text-center p-4 rounded-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-[#3f3f3f] border min-h-[356px] min-w-[480px]">
 
-              <div className="flex flex-col text-center text-green-500 my-4">
-                <UserCircleIcon className="mx-auto -mt-1 inline-block h-12 w-12" />
-              </div>
-              <div className="flex flex-col text-center h-full px-4">
-                <h2 className="font-bold text-2xl text-gray-700 dark:text-gray-200">
+              <div className="flex flex-row items-center my-4 mx-4">
+                <UserCircleIcon className="text-green-500 mx-auto -mt-1 inline-block h-12 w-12" />
+                <h2 className="ml-4 text-left flex-1 font-bold text-2xl text-gray-700 dark:text-gray-200">
                   Profiles
                 </h2>
+              </div>
 
+              <div className="flex flex-col h-full px-4">
                 {(!chainId || !account) ? (
                   <div>
                     <div className="text-lg font-medium mb-4">Connect Wallet</div>
@@ -79,7 +79,7 @@ const ProfileListView: FunctionComponent = () => {
                     <div className="mb-6">@{profile.handle}</div>
                   </div>
                   <div className="flex justify-end items-center h-12 w-12">
-                    {profileState.profile?.id === profile.id && (<CheckCircleIcon className="mx-auto -mt-1 inline-block h-6 w-6" />)}
+                    {profileState.profile?.id === profile.id && (<CheckCircleIcon className="mx-auto text-green-500 -mt-1 inline-block h-6 w-6" />)}
                   </div>
                 </div>
               </a>
