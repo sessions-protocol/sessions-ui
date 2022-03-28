@@ -4,7 +4,7 @@ import { TimezoneSwitcher } from "@/components/TimezoneSwitcher";
 import { SessionLayout } from "@/layout/SessionLayout";
 import { SessionAvailablePagePropsContext } from "@/pages/SessionAvailablePage.param";
 import { Availability, ParsedDateSlot, ParsedSlot, Session, SessionSlot } from "@/types/Session";
-import { ClockIcon } from "@heroicons/react/solid";
+import { ClockIcon, CurrencyDollarIcon } from "@heroicons/react/solid";
 import { add, endOfMonth, format, isSameDay, startOfDay, startOfMonth } from "date-fns";
 import { chain, padStart } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -14,6 +14,7 @@ import { useTimezoneSettings } from "../../hooks/useTimezoneSettings";
 import { SessionDayPicker } from "./components/SessionDayPicker";
 import { SessionSlotList } from "./components/SessionSlotList";
 import { Spinner } from '@chakra-ui/react'
+import { utils } from "ethers";
 
 
 export function SessionAvailable() {
@@ -187,6 +188,10 @@ export function SessionAvailable() {
                     <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
                       <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
                       {(session.duration || 0) / 60} minutes
+                    </p>
+                    <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
+                      <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+                      { session?.token.amount ? utils.formatUnits(session?.token.amount, session?.token.decimals) : "" } {session?.token.symbol || "..."}
                     </p>
                     {session.description && (
                       <p className="mt-3 mb-8 text-gray-500">
