@@ -30,6 +30,7 @@ import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 import { sessionApi } from "../../api/SessionApi";
 import Loader from "../../components/Loader";
 import Shell from "../../components/Shell";
@@ -37,6 +38,8 @@ import { useProfileState } from "../../context/ProfileContext";
 import CreateSessionType, { ISessionTypeCallData, ISessionTypeReturnData } from "./CreateSessionType";
 
 export default function SessionTypesPage() {
+  const navigate = useNavigate();
+  const { chainId, account } = useWeb3React();
   const [{ profile }] = useProfileState();
   const profileId = profile?.id;
   const [sessionTypes, setSessionTypes] = useState<
@@ -55,7 +58,12 @@ export default function SessionTypesPage() {
   useEffect(() => {
     fetchList();
   }, []);
-  if (!profile) return null;
+
+  // goto profile list page if not connected to wallet or no selected profile
+  if (!chainId || !account || !profile) {
+    navigate('/profile');
+    return null;
+  }
   return (
     <Shell
       heading="Session Types"
