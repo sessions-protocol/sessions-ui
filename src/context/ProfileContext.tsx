@@ -21,12 +21,14 @@ export const ProfileSettingsStore = atom<ProfileSettings>({
 
 export const useProfileState = () => useRecoilState(ProfileSettingsStore);
 
+export const useProfileValue = () => useRecoilValue(ProfileSettingsStore);
+
 export const ProfileContext = React.createContext<ProfileSettings>({
   profile: undefined,
 });
 
 export const ProfileProvider: FunctionComponent = (props) => {
-  const settings = useRecoilValue(ProfileSettingsStore)
+  const settings = useProfileValue();
   return (
     <ProfileContext.Provider value={settings}>
       {props.children}

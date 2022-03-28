@@ -1,8 +1,9 @@
 import { Button } from "@chakra-ui/button";
 import {
+  UsersIcon,
   ArrowLeftIcon,
   ClockIcon,
-  CogIcon, LinkIcon
+  LinkIcon
 } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
@@ -12,12 +13,14 @@ import {
   useLocation
 } from "react-router-dom";
 import { ConnectorList } from "../web3/components/ConnectorList";
+import { useProfileValue } from '@/context/ProfileContext';
 import Loader from './Loader'
 
 import Logo from "@/assets/logo-dark.svg";
 import FavIcon from "@/assets/favicon.svg";
 
 import { TextAbbrLabel } from "./TextAbbrLabel";
+
 export default function Shell(props: {
   centered?: boolean;
   large?: boolean;
@@ -33,7 +36,7 @@ export default function Shell(props: {
 }) {
   const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
-  const [profile, setProfile] = useState<{ username: string } | null>(null)
+  const { profile } = useProfileValue();
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
@@ -134,10 +137,29 @@ export default function Shell(props: {
                   <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 mb-2">
                     <div className="text-xs dark:text-gray-300">Lens logged in</div>
                     <div className="flex flex-row items-center">
-                      <div className="text-sm">{profile.username}</div>
+                      <div className="text-sm">{profile.handle}</div>
                     </div>
                   </div>
                 )}
+                <Fragment>
+                  <Link to={'/profile'}>
+                    <a
+                      className={classNames(
+                          "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
+                        "group flex items-center rounded-sm px-2 py-2 my-2 rounded text-sm font-medium"
+                      )}>
+                      <UsersIcon
+                        className={classNames(
+                            "text-neutral-400 group-hover:text-neutral-500",
+                          "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="hidden lg:inline ml-2">{"Change Profile"}</span>
+                    </a>
+                  </Link>
+                </Fragment>
+
               </div>
             </div>
           </div>
