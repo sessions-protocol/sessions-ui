@@ -1,7 +1,7 @@
 import { useProfileState } from '@/context/ProfileContext';
 import { SessionLayout } from '@/layout/SessionLayout';
 import { getAddressFromSigner } from '@/lens/ethers.service';
-import { profiles } from '@/lens/profile';
+import { Profile, profiles } from '@/lens/profile';
 import { ConnectorList } from '@/web3/components/ConnectorList';
 import { Button } from '@chakra-ui/react';
 import { UserCircleIcon } from '@heroicons/react/solid';
@@ -48,6 +48,15 @@ export function ProfilePage() {
   );
 }
 
+function getProfileSrc(profile: Profile | undefined) {
+  if (!profile || !profile.picture) {
+    return undefined;
+  }
+  if ((profile.picture as { uri?: string }).uri) {
+    return (profile.picture as { uri?: string }).uri;
+  }
+  return (profile.picture as { original: { url: string }}).original?.url;
+}
 
 const ProfileListView: FunctionComponent = () => {
   const [profileState, setProfileState] = useProfileState();
@@ -65,7 +74,7 @@ const ProfileListView: FunctionComponent = () => {
       <div className="my-10 grid">
         {loadProfilesError && (
           <p className="px-5 text-left text-red-500">
-            {loadProfilesError}
+            {String(loadProfilesError)}
           </p>
         )}
         {!isLoadingProfiles ? (
@@ -73,7 +82,7 @@ const ProfileListView: FunctionComponent = () => {
             profilesData.items.map((profile) => (
               <a key={profile.id}  onClick={() => setProfileState({ profile })}>
                 <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
-                  <img className="h-12 w-12 rounded-full" src={profile.picture?.uri || profile.picture?.original?.url}/>
+                  <img className="h-12 w-12 rounded-full" src={getProfileSrc(profile)} />
                   <div className="col-span-3">
                     <div className="mb-6">{profile.name}</div>
                     <div className="mb-6">@{profile.handle}</div>
@@ -97,7 +106,7 @@ const ProfileListView: FunctionComponent = () => {
               </div>
               <div className="text-center">
                 <p className="text-2xl font-cal text-gray-600">
-                  No profiles yet. Click "New Profile" to create one.
+                  {'No profiles yet. Click "Create New Profile" to create one.'}
                 </p>
               </div>
             </>
