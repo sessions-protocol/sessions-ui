@@ -55,10 +55,11 @@ class SessionApi {
   }
   async getSessionTypesByProfileId(profileId: string) {
     const sessionTypes = await this.sessionsContract.getSessionTypesByProfile(profileId)
-    return sessionTypes.sessionTypeIds.map((id: any, i: number) => ({
-      id:id.toNumber(),
+    const data = sessionTypes.sessionTypeIds.map((id: any, i: number) => ({
+      id:id.toString(),
       ...sessionTypes.sessionTypesByProfile[i]
     })).reverse()
+    return data
   }
 }
 

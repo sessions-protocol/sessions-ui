@@ -1,30 +1,35 @@
-import { ChakraProvider, ColorModeScript, extendTheme, localStorageManager } from '@chakra-ui/react';
+import {
+  ChakraProvider, extendTheme,
+  localStorageManager
+} from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 import { Toaster } from "react-hot-toast";
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import './App.css';
-import { AppColorModeScript, APP_INITIAL_COLOR_MODE } from './components/AppColorModeScript';
-import Router from './Router';
-import { ConnectProvider } from './web3/components/ConnectProvider';
-import { useEagerConnect, useInactiveListener } from './web3/components/hooks';
-import { mode } from '@chakra-ui/theme-tools'
-import { RecoilRoot } from 'recoil';
-import { TimezoneProvider } from './context/TimezoneContext';
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { RecoilRoot } from "recoil";
+import "./App.css";
+import {
+  AppColorModeScript
+} from "./components/AppColorModeScript";
+import { TimezoneProvider } from "./context/TimezoneContext";
+import Router from "./Router";
+import { ConnectProvider } from "./web3/components/ConnectProvider";
+import { useEagerConnect, useInactiveListener } from "./web3/components/hooks";
 
 const theme = extendTheme({
   styles: {
     global: (props: any) => ({
       body: {
-        bg: mode('#f5f5f5', '#292929')(props),
+        bg: mode("#f5f5f5", "#292929")(props),
       },
     }),
   },
   breakpoints: {
-    'sm': '640px',
-    'md': '768px',
-    'lg': '1024px',
-    'xl': '1280px',
-    '2xl': '1536px',
+    sm: "640px",
+    md: "768px",
+    lg: "1024px",
+    xl: "1280px",
+    "2xl": "1536px",
   },
 });
 
@@ -35,40 +40,42 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: false,
     },
-  }
-})
+  },
+});
 
 function App() {
-
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect()
+  const triedEager = useEagerConnect();
 
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager)
+  useInactiveListener(!triedEager);
 
   return (
     <div className="App">
       <div className="text-gray-700 dark:text-white">
         <RecoilRoot>
-        <TimezoneProvider>
-        <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
-        <ConnectProvider>
-        <QueryClientProvider client={queryClient}>
-          <AppColorModeScript />
-
-          <Router />
-
-          <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
-
-        <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-        </ConnectProvider>
-        </ChakraProvider>
-        </TimezoneProvider>
+          <TimezoneProvider>
+            <ChakraProvider
+              theme={theme}
+              colorModeManager={localStorageManager}
+            >
+              <ConnectProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AppColorModeScript />
+                  <Router />
+                  <Toaster
+                    position="top-center"
+                    toastOptions={{ duration: 3000 }}
+                  />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+              </ConnectProvider>
+            </ChakraProvider>
+          </TimezoneProvider>
         </RecoilRoot>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

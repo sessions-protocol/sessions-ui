@@ -9,7 +9,7 @@ import SessionTypesPage from './pages/SessionTypes';
 
 export default function Router() {
   return (
-    <div className='Router'>
+    <div className="Router">
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
@@ -24,5 +24,5 @@ export default function Router() {
         </Routes>
       </BrowserRouter>
     </div>
-  )
+  );
 }
