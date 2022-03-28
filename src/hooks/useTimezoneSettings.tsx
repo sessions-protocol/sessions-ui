@@ -2,6 +2,7 @@ import React, { useMemo } from "react"
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from 'recoil-persist';
 import timezones from "timezones-list";
+import { getTimezoneOffset } from 'date-fns-tz';
 
 const { persistAtom } = recoilPersist();
 
@@ -29,13 +30,17 @@ export const TimezoneContext = React.createContext<TimezoneSettings>({
 export function useTimezoneSettings() {
   const [settings, setSettings] = useRecoilState(TimezoneSettingsStore)
 
-  const currentTimezone = useMemo(() => {
-    return timezones.find((tz) => tz.tzCode === settings.timezone)
-  }, [settings])
+  const current = useMemo(() => {
+    const timezone = timezones.find((tz) => tz.tzCode === settings.timezone)
+    const offset = getTimezoneOffset(settings.timezone)
+    return {
+      timezone, offset
+    }
+  }, [settings.timezone])
 
   return {
     settings, setSettings,
-    currentTimezone,
     timezones,
+    current,
   }
 }

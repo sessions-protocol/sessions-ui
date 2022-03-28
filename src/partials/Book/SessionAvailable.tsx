@@ -3,19 +3,33 @@ import { ColorModeSwitcher } from "@/components/ColorModeSwitcher";
 import { TimezoneSwitcher } from "@/components/TimezoneSwitcher";
 import { SessionLayout } from "@/layout/SessionLayout";
 import { SessionAvailablePagePropsContext } from "@/pages/SessionAvailablePage.param";
-import { Session, SessionSlot } from "@/types/Session";
+import { Availability, ParsedDateSlot, ParsedSlot, Session, SessionSlot } from "@/types/Session";
 import { ClockIcon } from "@heroicons/react/solid";
-import { useCallback } from "react";
+import { add, endOfMonth, format, isSameDay, startOfDay, startOfMonth } from "date-fns";
+import { chain, padStart } from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useTimezoneSettings } from "../../hooks/useTimezoneSettings";
 import { SessionDayPicker } from "./components/SessionDayPicker";
 import { SessionSlotList } from "./components/SessionSlotList";
 
 
 export function SessionAvailable() {
   const navigate = useNavigate()
+  const { current } = useTimezoneSettings()
   const [searchParams, setSearchParams] = useSearchParams();
   const { params } = SessionAvailablePagePropsContext.usePageContext()
+
+  const [selectedDateSlot, setSelectedDateSlot] = useState<ParsedDateSlot | null>(null)
+  const [yearMonth, setYearMonth] = useState<Date>(searchParams.get("date") ? new Date(searchParams.get("date") as any) : new Date());
+
+  const yearMonthInfo = useMemo(() => {
+    const label = format(yearMonth, "yyyy-MMM");
+    const startTime = Math.round(startOfMonth(yearMonth).getTime() / 1000)
+    const endTime = Math.round(endOfMonth(yearMonth).getTime() / 1000)
+    return { label, startTime, endTime }
+  }, [yearMonth])
 
   const {
     data: session,
@@ -25,17 +39,99 @@ export function SessionAvailable() {
     return await sessionApi.getSession(params.sessionId)
   })
   const {
-    data: slots,
-    isLoading: isLoadingSlots,
-  } = useQuery<SessionSlot[], Error>(`SessionSlots:${params.sessionId}:${params.date}`, async () => {
-    return [
-      { time: "09:00", booked: false },
-      { time: "09:30", booked: false },
-      { time: "10:00", booked: false },
-    ]
-  }, {
-    enabled: !!params.date,
+    data: availability,
+    isLoading: isLoadingAvailability,
+    error: errorAvailability,
+  } = useQuery<Availability[], Error>(`Session:Availability:${params.sessionId}:${yearMonthInfo.label}`, async () => {
+    return await sessionApi.getSessionAvailability(params.sessionId, yearMonthInfo.startTime, yearMonthInfo.endTime)
   })
+
+  const dateSlots: { date: Date; slots: ParsedSlot[] }[] = useMemo(() => {
+    if (!session) return [];
+    if (!availability) return [];
+
+    const utcAvailability = availability
+    const utcDates = utcAvailability.map((i) => new Date(i.date))
+    const utcSlotsChain = utcAvailability.map((i) => {
+      const slotBigNum = i.availableSlot
+      const slotsShort = slotBigNum.toBigInt().toString(2)
+      const slotsFull = padStart(slotsShort, 240, "0")
+      return slotsFull
+    }).reduce((chain, i) => chain + i, "")
+
+    const timezoneOffset = current.offset
+    const slotOffset = timezoneOffset / 1000 / 60 / 6
+
+    const timezoneDates = (() => {
+      if (slotOffset < 0) {
+        return [
+          add(new Date(), { days: -1 }),
+          ...utcDates,
+        ]
+      } else if (slotOffset > 0) {
+        return [
+          ...utcDates,
+          add(utcDates[utcDates.length-1], { days: 1 }),
+        ]
+      } else {
+        return Array.from(utcDates)
+      }
+    })()
+    const timezoneSlotsChain = (() => {
+      if (timezoneOffset > 0) {
+        let slotsChain = String(utcSlotsChain)
+        slotsChain = padStart("0", slotOffset, "0") + slotsChain
+        slotsChain = slotsChain + padStart("0", 240 - slotOffset, "0")
+        return slotsChain
+      } else if (timezoneOffset < 0) {
+        let slotsChain = String(utcSlotsChain)
+        slotsChain = padStart("0", 240 + slotOffset, "0") + slotsChain
+        slotsChain = slotsChain + padStart("0", -slotOffset, "0")
+        return slotsChain
+      } else {
+        return String(utcSlotsChain)
+      }
+    })()
+    const data = timezoneDates.map((date, index) => {
+      const availableSlot = timezoneSlotsChain.slice(index * 240, (index + 1) * 240)
+      const slots = chain(availableSlot)
+        .split("")
+        .reverse()
+        .map((slot, sindex): ParsedSlot | null => {
+          if (sindex % session.sessionType.durationInSlot !== 0) return null
+          if (slot !== "1") return null
+          const time = add(startOfDay(date), { minutes: sindex * 6 })
+          const label = format(time, "HH:mm")
+          return {
+            label,
+            time: time,
+            slot: sindex,
+          }
+        })
+        .compact()
+        .value()
+      return {
+        date,
+        slots,
+      }
+    })
+    return data
+  }, [current.offset, session, availability])
+
+  const availableDates = useMemo(() => {
+    return dateSlots
+      .filter((i) => i.slots.length > 0)
+      .map((i) => i.date)
+  }, [dateSlots])
+
+  useEffect(() => {
+    if (!params.date) return;
+    if (!dateSlots || dateSlots.length === 0) return;
+    const dateSlot = dateSlots.find((i) => isSameDay(i.date, new Date(params.date as any)))
+    if (dateSlot) {
+      setSelectedDateSlot(dateSlot)
+    }
+  }, [params.date, dateSlots])
 
   const setSelectedDate = useCallback((date: Date) => {
     setSearchParams({
@@ -44,10 +140,12 @@ export function SessionAvailable() {
     })
   }, [searchParams, setSearchParams])
 
-  const gotoBookPage = useCallback((slot: string) => {
+  const gotoBookPage = useCallback((slot: Date) => {
     if (!params.date) return;
-    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
+    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot.toISOString()}`)
   }, [navigate, params])
+
+  console.log({session})
 
   return (
     <SessionLayout>
@@ -94,19 +192,22 @@ export function SessionAvailable() {
                 </div>
                 <div className="px-8">
                   <SessionDayPicker
-                    availableDates={session.availableDates || []}
+                    isLoading={isLoadingAvailability}
+                    session={session}
+                    availableDates={availableDates}
+                    yearMonth={yearMonth}
+                    onYearMonthChange={(date) => { setYearMonth(date) }}
                     selected={(params.date && new Date(params.date)) || null}
                     onSelect={(date) => {
                       setSelectedDate(date);
                     }}
                   />
                 </div>
-                {params.date && (
+                {params.date && selectedDateSlot && (
                   <div className="mx-2">
                     <SessionSlotList
-                      selectedDate={new Date(params.date)}
-                      slots={slots}
-                      loading={isLoadingSlots}
+                      session={session}
+                      dateSlot={selectedDateSlot}
                       onSelect={(slot) => {
                         gotoBookPage(slot);
                       }}

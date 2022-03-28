@@ -1,37 +1,32 @@
-import { useMemo, useState } from "react";
+import { Availability, Session } from "@/types/Session";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { range } from "lodash";
-import {
-  getDay,
-  startOfWeek,
-  add,
-  format,
-  startOfMonth,
-  getDate,
-  isSameMonth,
-  isSameDay,
-  isBefore,
-} from "date-fns";
 import classNames from "classnames";
+import { add, format, getDate, getDay, isBefore, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek } from "date-fns";
+import { chain, padStart, range } from "lodash";
+import { useMemo } from "react";
+import { useTimezoneSettings } from "../../../hooks/useTimezoneSettings";
 
 export interface SessionDayPickerProps {
-  availableDates: string[];
+  session: Session;
+  isLoading?: boolean;
+  availableDates: Date[];
+  yearMonth: Date;
+  onYearMonthChange: (yearMonth: Date) => void;
   selected: Date | null;
   onSelect: (date: Date) => void;
 }
 
 export function SessionDayPicker(props: SessionDayPickerProps) {
-  const [yearMonth, setYearMonth] = useState<Date>(props.selected || new Date());
 
-  const yearLabel = format(yearMonth, 'yyyy')
-  const monthLabel = format(yearMonth, 'MMM')
+  const yearLabel = format(props.yearMonth, 'yyyy')
+  const monthLabel = format(props.yearMonth, 'MMM')
 
   const dateInfo = useMemo(() => {
-    const firstDayInMonth = startOfMonth(yearMonth);
+    const firstDayInMonth = startOfMonth(props.yearMonth);
     const weekdayOfFirstDayInMonth = getDay(firstDayInMonth);
 
     const weekdays = range(0, 7).map((i) => {
-      let date = new Date(yearMonth);
+      let date = new Date(props.yearMonth);
       date = startOfWeek(date);
       date = add(date, { days: i });
       return {
@@ -47,11 +42,11 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
     ).map((i) => {
       const date = add(firstDayInMonth, { days: i - 1 });
       const selected = !!(props.selected && isSameDay(date, props.selected));
-      const available = props.availableDates.some((d) => isSameDay(date, new Date(d)))
+      const available = props.availableDates.some((d) => isSameDay(date, d))
       const whichMonth = (() => {
-        if (isSameMonth(date, yearMonth)) {
+        if (isSameMonth(date, props.yearMonth)) {
           return "current" as const;
-        } else if (isBefore(date, yearMonth)) {
+        } else if (isBefore(date, props.yearMonth)) {
           return "prev" as const;
         } else {
           return "next" as const;
@@ -71,7 +66,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
       weekdays,
       days,
     };
-  }, [yearMonth, props.selected, props.availableDates]);
+  }, [props.yearMonth, props.selected, props.availableDates]);
 
   return (
     <div className="SessionDayPicker max-w-[420px]">
@@ -81,9 +76,21 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
           <span className="text-gray-500">{yearLabel}</span>
         </span>
         <div className="w-1/2 text-right text-gray-600 dark:text-gray-400">
+          {props.isLoading && (
+            <button
+              onClick={() => {
+                props.onYearMonthChange(add(props.yearMonth, { months: -1 }));
+              }}
+              className={classNames(
+                "group p-1 ltr:mr-2 rtl:ml-2 text-sm",
+              )}
+            >
+              loading...
+            </button>
+          )}
           <button
             onClick={() => {
-              setYearMonth((date) => add(date, { months: -1 }));
+              props.onYearMonthChange(add(props.yearMonth, { months: -1 }));
             }}
             className={classNames(
               "group p-1 ltr:mr-2 rtl:ml-2",
@@ -96,7 +103,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
           <button
             className="group p-1"
             onClick={() => {
-              setYearMonth((date) => add(date, { months: 1 }));
+              props.onYearMonthChange(add(props.yearMonth, { months: 1 }));
             }}
           >
             <ChevronRightIcon className="h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
@@ -126,7 +133,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
                 key={day.key}
                 onClick={() => {
                   if (day.whichMonth !== 'current') return;
-                  if (!props.availableDates.some((i) => isSameDay(day.date, new Date(i)))) return;
+                  if (!day.available) return;
                   props.onSelect(day.date);
                 }}
               >

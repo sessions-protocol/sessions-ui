@@ -4,21 +4,21 @@ import sessionsABI from "@/web3/abis/sessions.json";
 import { add } from 'date-fns';
 
 class SessionApi {
-  async getSession(sessionId: string) {
-    const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
-    const sessionsContract = new ethers.Contract(
-      "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
-      sessionsABI,
-      provider
-    );
-    const lensHubContract = new ethers.Contract(
-      "0xd7B3481De00995046C7850bCe9a5196B7605c367",
-      lensHubABI,
-      provider
-    );
+  private provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
+  private sessionsContract = new ethers.Contract(
+    "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
+    sessionsABI,
+    this.provider,
+  );
+  private lensHubContract = new ethers.Contract(
+    "0xd7B3481De00995046C7850bCe9a5196B7605c367",
+    lensHubABI,
+    this.provider,
+  );
 
-    const sessionType = await sessionsContract.getSessionType(sessionId)
-    const profile = await lensHubContract.getProfile(sessionType.lensProfileId)
+  async getSession(sessionId: string) {
+    const sessionType = await this.sessionsContract.getSessionType(sessionId)
+    const profile = await this.lensHubContract.getProfile(sessionType.lensProfileId)
 
     return {
       id: sessionType.id,
@@ -38,8 +38,19 @@ class SessionApi {
         symbol: "MATIC",
         amount: sessionType.amount,
         decimals: 18
-      }
+      },
+      sessionType,
     }
+  }
+
+  async getSessionAvailability(sessionId: string, startTime: number, endTime: number) {
+    const availability = await this.sessionsContract.getAvailabilityBySessionTypeId(sessionId, startTime, endTime)
+    return availability.map((i: any) => {
+      return {
+        availableSlot: i.availableSlot,
+        date: new Date(i.date.toNumber() * 1000).toISOString(),
+      }
+    })
   }
 }
 
