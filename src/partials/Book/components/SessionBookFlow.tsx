@@ -53,7 +53,7 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
         params.sessionId
       ];
       const tx =  await sessionsContract.book(...calldata, {
-        value: utils.parseEther("0.1"),
+        value: session?.token.amount,
       });
 
       await tx.wait();
