@@ -1,7 +1,7 @@
 import { useProfileState } from '@/context/ProfileContext';
 import { SessionLayout } from '@/layout/SessionLayout';
 import { getAddressFromSigner } from '@/lens/ethers.service';
-import { Profile, profiles } from '@/lens/profile';
+import { getProfilePictureSrc, Profile, profiles } from '@/lens/profile';
 import { ConnectorList } from '@/web3/components/ConnectorList';
 import { Button } from '@chakra-ui/react';
 import { UserCircleIcon } from '@heroicons/react/solid';
@@ -55,16 +55,6 @@ export function ProfilePage() {
   );
 }
 
-function getProfileSrc(profile: Profile | undefined) {
-  if (!profile || !profile.picture) {
-    return undefined;
-  }
-  if ((profile.picture as { uri?: string }).uri) {
-    return (profile.picture as { uri?: string }).uri;
-  }
-  return (profile.picture as { original: { url: string }}).original?.url;
-}
-
 const ProfileListView: FunctionComponent = () => {
   const [profileState, setProfileState] = useProfileState();
 
@@ -97,7 +87,7 @@ const ProfileListView: FunctionComponent = () => {
                 <div className={
                   `${"items-center flex text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300" + (index !== profilesData.items.length - 1 ? " border-b": "")}`
                 }>
-                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={getProfileSrc(profile) || FavIcon} />
+                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={getProfilePictureSrc(profile) || FavIcon} />
                   <div className="flex-grow">
                     <div className="mb-6">{profile.name}</div>
                     <div className="mb-6">@{profile.handle}</div>

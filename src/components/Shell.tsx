@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import {
-  UsersIcon,
+  UserCircleIcon,
+  SelectorIcon,
   ArrowLeftIcon,
   ClockIcon,
   LinkIcon
@@ -14,6 +15,7 @@ import {
 } from "react-router-dom";
 import { ConnectorList } from "../web3/components/ConnectorList";
 import { useProfileValue } from '@/context/ProfileContext';
+import { getProfilePictureSrc } from '@/lens/profile';
 import Loader from './Loader'
 
 import Logo from "@/assets/logo-dark.svg";
@@ -37,6 +39,7 @@ export default function Shell(props: {
   const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
   const { profile } = useProfileValue();
+  const profilePictureSrc = getProfilePictureSrc(profile);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
@@ -134,31 +137,43 @@ export default function Shell(props: {
                 )}
 
                 {profile && (
-                  <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 mb-2">
-                    <div className="text-xs dark:text-gray-300">Lens logged in</div>
-                    <div className="flex flex-row items-center">
-                      <div className="text-sm">{profile.handle}</div>
-                    </div>
-                  </div>
-                )}
-                <Fragment>
-                  <Link to={'/profile'}>
-                    <a
-                      className={classNames(
-                          "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
-                        "group flex items-center rounded-sm px-2 py-2 my-2 rounded text-sm font-medium"
-                      )}>
-                      <UsersIcon
+                  <Fragment>
+                    <Link to={'/profile'}>
+                      <div
                         className={classNames(
-                            "text-neutral-400 group-hover:text-neutral-500",
-                          "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                          "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
+                          "group flex-1 flex-shrink-1 flex justify-center items-center rounded-sm py-2 my-2 rounded text-sm font-medium"
+                        )}>
+                        {profilePictureSrc ? (
+                          <img className="h-6 w-6 rounded-full" src={profilePictureSrc} />
+                        ) : (
+                          <UserCircleIcon
+                            className={classNames(
+                              "text-neutral-400 group-hover:text-neutral-500",
+                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                            )}
+                            aria-hidden="true"
+                          />
                         )}
-                        aria-hidden="true"
-                      />
-                      <span className="hidden lg:inline ml-2">{"Change Profile"}</span>
-                    </a>
-                  </Link>
-                </Fragment>
+
+                        <div className="hidden lg:flex lg:flex-1">
+                          <div className="ml-2 flex-1 flex flex-row items-center">
+                            <div className="text-sm flex-1 flex-grow truncate">{profile.handle}</div>
+                            <div><SelectorIcon
+                              className={classNames(
+                                "text-neutral-400 group-hover:text-neutral-500",
+                                "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                              )}
+                              aria-hidden="true"
+                            /></div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                    </Link>
+                  </Fragment>
+                )}
 
               </div>
             </div>

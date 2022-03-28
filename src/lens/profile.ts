@@ -154,6 +154,16 @@ export interface Profile {
   ownedBy: string;
 }
 
+export function getProfilePictureSrc(profile: Profile | undefined) {
+  if (!profile || !profile.picture) {
+    return undefined;
+  }
+  if ((profile.picture as { uri?: string }).uri) {
+    return (profile.picture as { uri?: string }).uri;
+  }
+  return (profile.picture as { original: { url: string }}).original?.url;
+}
+
 const getProfilesRequest = (request: ProfilesRequest) => {
   return apolloClient.query<{ profiles: { items: Profile[] } }>({
     query: gql(GET_PROFILES),
