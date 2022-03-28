@@ -22,6 +22,7 @@ import {
   NumberInputStepper,
   Select,
   Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 import { ClockIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
@@ -32,7 +33,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import { sessionApi } from "../../api/SessionApi";
-import Loader from "../../components/Loader";
+
 import Shell from "../../components/Shell";
 import { useProfileState } from "../../context/ProfileContext";
 import CreateSessionType, { ISessionTypeCallData, ISessionTypeReturnData } from "./CreateSessionType";
@@ -67,12 +68,16 @@ export default function SessionTypesPage() {
   return (
     <Shell
       heading="Session Types"
-      subtitle="Create events to share for people to book on your calendar."
+      subtitle="Create sessions to share for people to book on your calendar."
       CTA={<CreateSessionType onCreated={fetchList} />}
     >
-      <div className="bg-white border border-gray-200">
+      <div className="bg-white border border-gray-200 border-b-0">
         {loading ? (
-          <Loader />
+          <div
+          className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
+          >
+            <Spinner />
+          </div>
         ) : (
           sessionTypes.map((s) => (
             <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
@@ -199,7 +204,7 @@ function SessionTypeItem({
                         <FormLabel htmlFor="openBookingDeltaDays">
                           Sessions can be booked in (Days)
                         </FormLabel>
-                        <NumberInput defaultValue={formData.durationInSlot} min={1} className="flex-1 mr-2">
+                        <NumberInput defaultValue={formData.openBookingDeltaDays} min={1} className="flex-1 mr-2">
                           <NumberInputField
                             {...field}
                             id="openBookingDeltaDays"
@@ -244,15 +249,14 @@ function SessionTypeItem({
                     )}
                   </Field>
 
-                  <div className="my-2 text-right">
+                  <div className="my-6 text-left">
                     <Button
                       isLoading={isSubmitting}
                       disabled={isSubmitting}
                       type="submit"
                       colorScheme="green"
-                      rounded={0}
                     >
-                      Continue
+                      Update Session Type 
                     </Button>
                   </div>
                 </Form>

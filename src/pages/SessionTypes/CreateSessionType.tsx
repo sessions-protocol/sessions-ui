@@ -48,8 +48,7 @@ export default function CreateSessionType({
     <>
       <Button
         leftIcon={<Icon as={PlusIcon} />}
-        colorScheme={"green"}
-        rounded={0}
+        colorScheme={"blue"}
         onClick={onOpen}
       >
         New session type
@@ -75,8 +74,8 @@ export default function CreateSessionType({
               initialValues={{
                 title: "",
                 description: "",
-                durationInSlot: 3,
-                openBookingDeltaDays: 10,
+                durationInSlot: 5,
+                openBookingDeltaDays: 14,
                 price: 0,
 								validateFollow: false,
               }}
@@ -194,15 +193,14 @@ export default function CreateSessionType({
                     )}
                   </Field>
 
-                  <div className="my-2 text-right">
+                  <div className="my-6 text-left">
                     <Button
                       isLoading={isSubmitting}
                       disabled={isSubmitting}
                       type="submit"
                       colorScheme="green"
-                      rounded={0}
                     >
-                      Continue
+                      Create Session Type
                     </Button>
                   </div>
                 </Form>
