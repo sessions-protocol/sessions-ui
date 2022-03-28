@@ -78,7 +78,7 @@ export function SessionDayPicker(props: SessionDayPickerProps) {
         </span>
         <div className="w-1/2 text-right text-gray-600 dark:text-gray-400">
           <div className="inline-block align-top mx-2">
-          {props.isLoading || true && (
+          {props.isLoading && (
             <Spinner size={'xs'}/>
           )}
           </div>

@@ -287,15 +287,25 @@ export function SessionBookFlow({ session }: { session: Session }) {
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "h:mm aaa")}
+              {formatInTimeZone(
+                new Date(params.time),
+                timezoneSettings.settings.timezone, 
+                timezoneSettings.settings.clock24hour ? "HH:mm": "hh:mm aaa"
+              )}
               {" to "}
-              {formatInTimeZone(add(new Date(params.time), { minutes: session.sessionType.durationInSlot * 6 }), timezoneSettings.settings.timezone, "h:mm aaa")}
-              {` (${timezoneSettings.settings.timezone})`}
+              {formatInTimeZone(
+                add(new Date(params.time), { minutes: session.sessionType.durationInSlot * 6 }),
+                timezoneSettings.settings.timezone, 
+                timezoneSettings.settings.clock24hour ? "HH:mm": "hh:mm aaa"
+              )}
+              <span className="text-gray-500">{` (${timezoneSettings.settings.timezone})`}</span>
             </p>
-            <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
-              <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              { session?.token.amount ? utils.formatUnits(session?.token.amount, session?.token.decimals) : "" } {session?.token.symbol || "..."}
-            </p>
+            {session.token.amount > 0 ? (
+               <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
+                <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+                { session?.token.amount ? utils.formatUnits(session?.token.amount, session?.token.decimals) : "" } {session?.token.symbol || "..."}
+              </p>
+            ): null}
             <div className="flex-grow mb-2"></div>
 
             {

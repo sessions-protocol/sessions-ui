@@ -189,10 +189,12 @@ export function SessionAvailable() {
                       <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
                       {(session.duration || 0) / 60} minutes
                     </p>
-                    <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
-                      <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-                      { session?.token.amount ? utils.formatUnits(session?.token.amount, session?.token.decimals) : "" } {session?.token.symbol || "..."}
-                    </p>
+                    {session.token.amount > 0 ? (
+                      <p className="mb-1 -ml-2 px-2 py-1 text-gray-500">
+                        <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
+                        { session.token.amount ? utils.formatUnits(session.token.amount, session.token.decimals) : "" } {session.token.symbol || "..."}
+                      </p>
+                    ): null}
                     {session.description && (
                       <p className="mt-3 mb-8 text-gray-500">
                         {session.description}
