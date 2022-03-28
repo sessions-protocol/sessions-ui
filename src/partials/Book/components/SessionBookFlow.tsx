@@ -36,7 +36,7 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
       const signer = await library.getSigner()
 
       const sessionsContract = new ethers.Contract(
-        "0x6dc0424c5beb6bfadd150633e2e99522ddc0802d",
+        "0xf19C27C92EEA361F8e2FD246283CD058e4d78F00",
         sessionsABI,
         signer
       );

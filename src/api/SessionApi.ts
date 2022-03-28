@@ -7,7 +7,7 @@ class SessionApi {
   async getSession(sessionId: string) {
     const provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
     const sessionsContract = new ethers.Contract(
-      "0xF3bF2EA8Df05716a2e5EC39A747Cb54726a49fcE",
+      "0xf19C27C92EEA361F8e2FD246283CD058e4d78F00",
       sessionsABI,
       provider
     );

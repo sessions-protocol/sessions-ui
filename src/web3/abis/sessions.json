@@ -312,6 +312,88 @@
       },
       {
         "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAvailabilityBySessionTypeId",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "date",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableSlot",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct SessionAvailability[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "lensProfileId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAvailablitysByProfile",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "availabilityIds",
+        "type": "uint256[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256[7]",
+            "name": "availableSlots",
+            "type": "uint256[7]"
+          },
+          {
+            "internalType": "bool",
+            "name": "archived",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct Availability[]",
+        "name": "availabilitysByProfile",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "sessionTypeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "sessionNFTId",
         "type": "uint256"
       }
@@ -331,7 +413,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "sessionTypeId",
         "type": "uint256"
       }
     ],
@@ -408,6 +490,97 @@
         "internalType": "struct SessionType",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "lensProfileId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSessionTypesByProfile",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "sessionTypeIds",
+        "type": "uint256[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "durationInSlot",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint32",
+            "name": "openBookingDeltaDays",
+            "type": "uint32"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "archived",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "locked",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "validateFollow",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "sessionNFT",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availabilityId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lensProfileId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct SessionType[]",
+        "name": "sessionTypesByProfile",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
