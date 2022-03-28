@@ -10,13 +10,15 @@ export function useEagerConnect() {
   useEffect(() => {
     metamask.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
-        activate(metamask, undefined, true).catch(() => {
+        activate(metamask, undefined, true).catch((error) => {
+          console.error(error)
           setTried(true)
         })
       } else {
         setTried(true)
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // intentionally only running on mount (make sure it's only mounted once :))
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
@@ -49,22 +51,16 @@ export function useInactiveListener(suppress = false) {
           activate(metamask)
         }
       }
-      const handleNetworkChanged = (networkId: string | number) => {
-        console.log("Handling 'networkChanged' event with payload", networkId)
-        activate(metamask)
-      }
 
       ethereum.on('connect', handleConnect)
       ethereum.on('chainChanged', handleChainChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
-      ethereum.on('networkChanged', handleNetworkChanged)
 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('connect', handleConnect)
           ethereum.removeListener('chainChanged', handleChainChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
-          ethereum.removeListener('networkChanged', handleNetworkChanged)
         }
       }
     }

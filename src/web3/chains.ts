@@ -35,7 +35,7 @@ export const CHAINS: { [chainId: number]: Chain } = {
   1: CHAIN_ETH,
   // Polygon
   137: CHAIN_POLYGON,
-  // Polygon
+  // Polygon Numbai
   80001: CHAIN_POLYGON_TESTNET,
 }
 
