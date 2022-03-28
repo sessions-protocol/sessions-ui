@@ -8,12 +8,16 @@ import { useFormik } from "formik";
 import { ClockIcon, CurrencyDollarIcon, CalendarIcon, GlobeAltIcon } from "@heroicons/react/solid";
 import { ethers, utils } from "ethers";
 import { useLocation, useNavigate } from "react-router-dom";
+import { formatInTimeZone } from 'date-fns-tz'
 
 import sessionsABI from "../../../web3/abis/sessions.json";
 import { Session } from "@/types/Session";
+import { add, format } from "date-fns";
+import { useTimezoneSettings } from "../../../hooks/useTimezoneSettings";
 
-export function SessionBookFlow({ session }: { session?: Session | null }) {
+export function SessionBookFlow({ session }: { session: Session }) {
   const navigate = useNavigate();
+  const timezoneSettings = useTimezoneSettings()
   const location = useLocation();
   const { chainId, account, deactivate, library } = useWeb3React()
   const { params } = SessionBookPagePropsContext.usePageContext()
@@ -118,11 +122,16 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
             <div className="text-lg font-medium mb-4">Book your session with {session?.user.handle}</div>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CalendarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              Monday, March 28, 2020
+              {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "EEEE, MMMM d, yyyy")}
+              {/* Monday, March 28, 2020 */}
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <ClockIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
-              9:00 AM to 9:30 AM (Asia/Tokyo)
+              {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "h:mm aaa")}
+              {" to "}
+              {formatInTimeZone(add(new Date(params.time), { minutes: session.sessionType.durationInSlot * 6 }), timezoneSettings.settings.timezone, "h:mm aaa")}
+              {/* 9:00 AM to 9:30 AM (Asia/Tokyo) */}
+              {` (${timezoneSettings.settings.timezone})`}
             </p>
             <p className="mb-1 -ml-2 px-2 py-1 text-green-500">
               <CurrencyDollarIcon className="mr-1 -mt-1 inline-block h-4 w-4" />
