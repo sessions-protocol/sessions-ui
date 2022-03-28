@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client/core";
-import { apolloClient } from "./apollo-client";
+import { apolloClient, apolloClientCache } from './apollo-client';
 import { login } from "./auth";
 import { getAddressFromSigner } from "./ethers.service";
 import { prettyJSON } from "./helpers";
@@ -24,6 +24,7 @@ const createProfileRequest = (createProfileRequest: {
   profilePictureUri?: string;
   followNFTURI?: string;
 }) => {
+  apolloClientCache.reset();
   return apolloClient.mutate({
     mutation: gql(CREATE_PROFILE),
     variables: {
