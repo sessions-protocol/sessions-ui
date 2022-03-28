@@ -69,6 +69,11 @@ const ProfileListView: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
+  const onClickProfile = (profile: Profile) => {
+    setProfileState({ profile });
+    navigate(`/session-types`);
+  };
+
   return (
     <>
       <div className="my-10 grid">
@@ -78,9 +83,10 @@ const ProfileListView: FunctionComponent = () => {
           </p>
         )}
         {!isLoadingProfiles ? (
+          // profile list content
           profilesData && profilesData?.items?.length > 0 ? (
             profilesData.items.map((profile) => (
-              <a key={profile.id}  onClick={() => setProfileState({ profile })}>
+              <a key={profile.id}  onClick={() => onClickProfile(profile)}>
                 <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
                   <img className="h-12 w-12 rounded-full" src={getProfileSrc(profile)} />
                   <div className="col-span-3">
@@ -94,6 +100,7 @@ const ProfileListView: FunctionComponent = () => {
               </a>
             ))
           ) : (
+            // TODO empty: No profiles yet
             <>
               <div className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200">
                 <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300" />
@@ -112,6 +119,7 @@ const ProfileListView: FunctionComponent = () => {
             </>
           )
         ) : (
+          // loading
           [0, 1].map((i) => (
             <div key={i}>
               <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">

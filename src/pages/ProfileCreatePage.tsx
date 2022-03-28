@@ -86,7 +86,7 @@ const CreateProfileView: FunctionComponent = () => {
       )).items[0];
       setProfileState({ profile });
 
-      navigate("/"); // TODO goto session page?
+      navigate("/session-types");
     } catch (e: any) {
       console.log("create profile error", e);
       if (e.message === "HANDLE_TAKEN") {
