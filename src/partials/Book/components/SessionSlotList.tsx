@@ -33,7 +33,6 @@ export function SessionSlotList(props: SessionSlotListProps) {
                 )}
                 data-testid="time"
                 onClick={() => {
-                  console.log({slot})
                   props.onSelect(slot.time);
                 }}
               >

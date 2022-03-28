@@ -25,7 +25,7 @@ export function SessionAvailable() {
   const [yearMonth, setYearMonth] = useState<Date>(searchParams.get("date") ? new Date(searchParams.get("date") as any) : new Date());
 
   const yearMonthInfo = useMemo(() => {
-    const label = format(yearMonth, "yyyy-MMM");
+    const label = format(yearMonth, "yyyy-MM");
     const startTime = Math.round(new Date().getTime() / 1000)
     const endTime = Math.round(endOfMonth(yearMonth).getTime() / 1000)
     return { label, startTime, endTime }
@@ -123,6 +123,18 @@ export function SessionAvailable() {
       .map((i) => i.date)
   }, [dateSlots])
 
+  const setSelectedDate = useCallback((date: Date | null) => {
+    setSearchParams(JSON.parse(JSON.stringify({
+      ...searchParams,
+      date: date ? date.toISOString() : undefined,
+    })))
+  }, [searchParams, setSearchParams])
+
+  const gotoBookPage = useCallback((slot: Date) => {
+    if (!params.date) return;
+    navigate(`/session/${params.sessionId}/book?time=${slot.toISOString()}`)
+  }, [navigate, params])
+
   useEffect(() => {
     if (!params.date) return;
     if (!dateSlots || dateSlots.length === 0) return;
@@ -132,19 +144,13 @@ export function SessionAvailable() {
     }
   }, [params.date, dateSlots])
 
-  const setSelectedDate = useCallback((date: Date) => {
-    setSearchParams({
-      ...searchParams,
-      date: date.toISOString(),
-    })
-  }, [searchParams, setSearchParams])
-
-  const gotoBookPage = useCallback((slot: Date) => {
+  useEffect(() => {
     if (!params.date) return;
-    navigate(`/session/${params.sessionId}/book?time=${slot.toISOString()}`)
-  }, [navigate, params])
-
-  console.log({session})
+    if (!availability) return;
+    if (!availableDates.some((i) => isSameDay(i, new Date(params.date as any)))) {
+      setSelectedDate(null)
+    }
+  }, [availability, availableDates, params.date, setSelectedDate])
 
   return (
     <SessionLayout>

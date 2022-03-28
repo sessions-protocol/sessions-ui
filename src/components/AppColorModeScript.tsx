@@ -10,7 +10,6 @@ export function AppColorModeScript() {
   const { toggle: toggleTailwindColorMode } = useTailwindColorMode()
 
   useEffect(() => {
-    console.log("chakraColorMode changed", chakraColorMode)
     toggleTailwindColorMode(chakraColorMode)
   }, [chakraColorMode, toggleTailwindColorMode])
 
