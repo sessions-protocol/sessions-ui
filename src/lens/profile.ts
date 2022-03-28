@@ -32,15 +32,17 @@ const createProfileRequest = (createProfileRequest: {
   });
 };
 
-export const createProfile = async (handle: string) => {
+export const createProfile = async (request: {
+  handle: string;
+  profilePictureUri?: string;
+  followNFTURI?: string;
+}) => {
   const address = await getAddressFromSigner();
   console.log("create profile: address", address);
 
   await login(address);
 
-  const result = await createProfileRequest({
-    handle: handle,
-  });
+  const result = await createProfileRequest(request);
 
   prettyJSON("create profile: result", result.data);
 
