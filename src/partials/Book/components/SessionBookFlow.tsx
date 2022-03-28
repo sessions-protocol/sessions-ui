@@ -40,7 +40,10 @@ export function SessionBookFlow({ session }: { session?: Session | null }) {
         sessionsABI,
         signer
       );
-      const calldata = ["1648730747", "1"];
+      const calldata = [
+        "1648730747",
+        params.sessionId
+      ];
       const tx =  await sessionsContract.book(...calldata, {
         value: utils.parseEther("0.1"),
       });

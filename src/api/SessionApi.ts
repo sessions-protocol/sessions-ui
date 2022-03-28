@@ -27,7 +27,7 @@ class SessionApi {
         address: sessionType.recipient,
       },
       title: sessionType.title,
-      duration: 60 * sessionType.durationInSlot,
+      duration: 60 * 6 * sessionType.durationInSlot,
       availableDates: [
         new Date().toISOString(),
         add(new Date(), { days: 1}).toISOString(),
