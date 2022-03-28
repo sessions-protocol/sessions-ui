@@ -1,6 +1,7 @@
 import { ParsedDateSlot, Session } from "@/types/Session";
 import classNames from "classnames";
 import { format } from "date-fns";
+import { useTimezoneSettings } from "../../../hooks/useTimezoneSettings";
 
 
 export interface SessionSlotListProps {
@@ -9,6 +10,7 @@ export interface SessionSlotListProps {
   onSelect: (slot: Date) => void;
 }
 export function SessionSlotList(props: SessionSlotListProps) {
+  const { settings } = useTimezoneSettings()
 
   return (
     <div className="flex flex-col text-center w-48">
@@ -21,6 +23,7 @@ export function SessionSlotList(props: SessionSlotListProps) {
       <div className="flex-grow overflow-y-auto h-full max-h-[300px] pr-4">
         {props.dateSlot.slots.length > 0 &&
           props.dateSlot.slots.map((slot) => {
+            const label = format(slot.time, settings.clock24hour ? "HH:mm" : "hh:mm aa")
             return (
               <div
                 key={slot.slot}
@@ -34,7 +37,7 @@ export function SessionSlotList(props: SessionSlotListProps) {
                   props.onSelect(slot.time);
                 }}
               >
-                {slot.label}
+                {label}
               </div>
             );
           })}

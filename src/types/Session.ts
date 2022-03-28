@@ -47,7 +47,6 @@ export interface Availability {
 }
 
 export interface ParsedSlot {
-  label: string;
   time: Date;
   slot: number;
 }

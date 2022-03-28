@@ -101,9 +101,7 @@ export function SessionAvailable() {
           if (sindex % session.sessionType.durationInSlot !== 0) return null
           if (slot !== "1") return null
           const time = add(startOfDay(date), { minutes: sindex * 6 })
-          const label = format(time, "HH:mm")
           return {
-            label,
             time: time,
             slot: sindex,
           }
@@ -142,7 +140,7 @@ export function SessionAvailable() {
 
   const gotoBookPage = useCallback((slot: Date) => {
     if (!params.date) return;
-    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot.toISOString()}`)
+    navigate(`/session/${params.sessionId}/book?time=${slot.toISOString()}`)
   }, [navigate, params])
 
   console.log({session})
