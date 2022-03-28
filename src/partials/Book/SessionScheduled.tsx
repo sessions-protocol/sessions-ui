@@ -44,12 +44,16 @@ export function SessionScheduled() {
                   <div className="col-span-2">
                     {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "EEEE, MMMM d, yyyy")}
                     <br/>
-                    {formatInTimeZone(new Date(params.time), timezoneSettings.settings.timezone, "h:mm aaa")}
-                    {session && (
-                      <>
-                        {" to "}
-                        {formatInTimeZone(add(new Date(params.time), { minutes: (session?.sessionType.durationInSlot || 1) * 6 }), timezoneSettings.settings.timezone, "h:mm aaa")}
-                      </>
+                    {formatInTimeZone(
+                      new Date(params.time),
+                      timezoneSettings.settings.timezone, 
+                      timezoneSettings.settings.clock24hour ? "HH:mm": "hh:mm aaa"
+                    )}
+                    {" to "}
+                    {formatInTimeZone(
+                      add(new Date(params.time), { seconds: session?.duration }),
+                      timezoneSettings.settings.timezone, 
+                      timezoneSettings.settings.clock24hour ? "HH:mm": "hh:mm aaa"
                     )}
                     <span className="text-gray-500">{` (${timezoneSettings.settings.timezone})`}</span>
                   </div>
