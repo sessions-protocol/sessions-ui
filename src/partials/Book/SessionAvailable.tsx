@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SessionDayPicker } from "./components/SessionDayPicker";
 import { ClockIcon } from "@heroicons/react/solid";
 import { SessionAvailablePagePropsContext } from "@/pages/SessionAvailablePage.param";
@@ -10,6 +9,7 @@ import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ColorModeSwitcher } from "../../components/ColorModeSwitcher";
 import { SessionLayout } from "../../layout/SessionLayout";
+import { TimezoneSwitcher } from "../../components/TimezoneSwitcher";
 
 
 
@@ -21,19 +21,24 @@ export function SessionAvailable() {
   const {
     data: session,
     isLoading: isLoadingSession,
-  } = useQuery<Session>(`Session:${params.sessionId}`, async () => {
+  } = useQuery<Session>(`Profile:${params.profileId}:Session:${params.sessionId}`, async () => {
     return {
       id: "1",
       user: {
-        email: "@jack",
         address: "0x28Ba69e289c15f8a751eb929D81ec35e891A80e2",
+        handle: "jack",
       },
       title: "Tech Mentoring",
       duration: 60 * 30,
       availableDates: [
         new Date().toISOString(),
         add(new Date(), { days: 1}).toISOString(),
-      ]
+      ],
+      token: {
+        symbol: "TKN",
+        amount: "1000000",
+        decimals: 6,
+      }
     }
   })
   const {
@@ -58,8 +63,8 @@ export function SessionAvailable() {
 
   const gotoBookPage = useCallback((slot: string) => {
     if (!params.date) return;
-    navigate(`/session/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
-  }, [navigate, params.date, params.sessionId])
+    navigate(`/session/${params.profileId}/${params.sessionId}/book?date=${params.date}&slot=${slot}`)
+  }, [navigate, params])
 
   return (
     <SessionLayout>
@@ -73,7 +78,7 @@ export function SessionAvailable() {
               <div className="max-w-96">
                 <div className="pr-8 border-r dark:border-gray-600 flex flex-col items-start text-left h-full">
                   <h2 className="mt-3 font-medium text-gray-500 dark:text-gray-300">
-                    {session?.user.email}
+                    @{session?.user.handle}
                   </h2>
                   <h1 className="font-cal mb-4 text-3xl font-semibold">
                     {session?.title}
@@ -83,10 +88,11 @@ export function SessionAvailable() {
                     {(session?.duration || 0) / 60} minutes
                   </p>
                   {session?.description && (
-                    <p className="mt-3 mb-8 text-gray-600 dark:text-gray-200">
+                    <p className="mt-3 mb-8 text-gray-500">
                       {session?.description}
                     </p>
                   )}
+                  <TimezoneSwitcher />
                 </div>
               </div>
               <div className="px-8">

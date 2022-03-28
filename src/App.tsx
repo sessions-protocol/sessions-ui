@@ -8,6 +8,8 @@ import Router from './Router';
 import { ConnectProvider } from './web3/components/ConnectProvider';
 import { useEagerConnect, useInactiveListener } from './web3/components/hooks';
 import { mode } from '@chakra-ui/theme-tools'
+import { RecoilRoot } from 'recoil';
+import { TimezoneProvider } from './context/TimezoneContext';
 
 const theme = extendTheme({
   config: {
@@ -51,11 +53,13 @@ function App() {
   return (
     <div className="App">
       <div className="text-gray-700 dark:text-white">
-        <AppColorModeScript />
-
+        <RecoilRoot>
+        <TimezoneProvider>
         <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
         <ConnectProvider>
         <QueryClientProvider client={queryClient}>
+
+          <AppColorModeScript />
 
           <Router />
 
@@ -65,6 +69,8 @@ function App() {
         </QueryClientProvider>
         </ConnectProvider>
         </ChakraProvider>
+        </TimezoneProvider>
+        </RecoilRoot>
       </div>
     </div>
   )

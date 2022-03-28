@@ -4084,6 +4084,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+recoil-persist@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/recoil-persist/-/recoil-persist-4.1.0.tgz#7406ce14f448783fbff9f9011da8235c84838249"
+  integrity sha512-7ruOsLhrEqBpl8EM6j5OITSKJXvH7BfSDxO5m1Heb3dJo6mnCJ3t4ln1KDJhZrvFOkqyO37Ufv3VB1wU06tfCA==
+
 recoil@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.6.1.tgz#6fdf1ba6cb20b5a2e54ec4abcbdaa287e8a03fa2"
@@ -4393,6 +4398,11 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+timezones-list@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/timezones-list/-/timezones-list-3.0.1.tgz#ce17c0f3c0d45ccfbd63e79b1370d55effc300a1"
+  integrity sha512-yfOzyuVwzgD0LkldD3Epkr+JUdUIxEUL147Fa6ZgG/23KU28iOv3e3M7vQOCFMPyopAhDX7dqOLWttIP7tkTKg==
 
 tiny-invariant@^1.0.6:
   version "1.2.0"

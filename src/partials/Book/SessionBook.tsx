@@ -19,11 +19,11 @@ import { useEffect, useMemo, useState } from "react";
 export function SessionBook() {
   const { toggleColorMode } = useAppColorMode()
   const { params } = SessionBookPagePropsContext.usePageContext()
-  
+
   const provider = useMemo(() => {
     return new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
   }, [])
-         
+
 
   const sessionsContract = useMemo(() => {
     return new ethers.Contract(
@@ -78,7 +78,7 @@ export function SessionBook() {
   const {
     data: slots,
     isLoading: isLoadingSlots,
-  } = useQuery<SessionSlot[]>(`SessionSlots:${params.sessionId}:${params.date}`, async () => {
+  } = useQuery<SessionSlot[]>(`Profile:${params.profileId}:SessionSlots:${params.sessionId}:${params.date}`, async () => {
     return [
       { time: "09:00", booked: false },
       { time: "09:30", booked: false },
