@@ -14,11 +14,11 @@ export function SessionSlotList(props: SessionSlotListProps) {
     <div className="flex flex-col text-center w-48">
       <div className="mb-8 text-left text-lg font-light text-gray-600">
         <div className="text-gray-600 dark:text-white">
-          <span className="font-bold">{format(props.dateSlot.date, "EEEE")}</span>
+          <span className="font-bold">{format(props.dateSlot.date, "EEE")}</span>
           <span className="text-gray-500">{format(props.dateSlot.date, ", d LLLL")}</span>
         </div>
       </div>
-      <div className="flex-grow overflow-y-auto h-full max-h-[360px] pr-4">
+      <div className="flex-grow overflow-y-auto h-full max-h-[300px] pr-4">
         {props.dateSlot.slots.length > 0 &&
           props.dateSlot.slots.map((slot) => {
             return (

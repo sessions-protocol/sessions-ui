@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme, localStorageManager } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, extendTheme, localStorageManager } from '@chakra-ui/react';
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -12,10 +12,6 @@ import { RecoilRoot } from 'recoil';
 import { TimezoneProvider } from './context/TimezoneContext';
 
 const theme = extendTheme({
-  config: {
-    useSystemColorMode: true,
-    initialColorMode: APP_INITIAL_COLOR_MODE,
-  },
   styles: {
     global: (props: any) => ({
       body: {
@@ -58,7 +54,6 @@ function App() {
         <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
         <ConnectProvider>
         <QueryClientProvider client={queryClient}>
-
           <AppColorModeScript />
 
           <Router />
