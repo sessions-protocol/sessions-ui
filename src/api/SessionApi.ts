@@ -1,17 +1,18 @@
 import lensHubABI from "@/web3/abis/lensHub.json";
 import sessionsABI from "@/web3/abis/sessions.json";
+import { LENS_HUB_CONTRACT, SESSIONS_CONTRACT } from "@/web3/contracts";
 import { add } from 'date-fns';
 import { ethers } from 'ethers';
 
 class SessionApi {
   private provider = new ethers.providers.JsonRpcProvider("https://rpc-mumbai.matic.today")
   private sessionsContract = new ethers.Contract(
-    "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
+    SESSIONS_CONTRACT,
     sessionsABI,
     this.provider,
   );
   private lensHubContract = new ethers.Contract(
-    "0xd7B3481De00995046C7850bCe9a5196B7605c367",
+    LENS_HUB_CONTRACT,
     lensHubABI,
     this.provider,
   );

@@ -14,6 +14,7 @@ import sessionsABI from "../../../web3/abis/sessions.json";
 import { Session } from "@/types/Session";
 import { add, format } from "date-fns";
 import { useTimezoneSettings } from "../../../hooks/useTimezoneSettings";
+import { SESSIONS_CONTRACT } from "@/web3/contracts";
 
 export function SessionBookFlow({ session }: { session: Session }) {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export function SessionBookFlow({ session }: { session: Session }) {
       const signer = await library.getSigner()
 
       const sessionsContract = new ethers.Contract(
-        "0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
+        SESSIONS_CONTRACT,
         sessionsABI,
         signer
       );

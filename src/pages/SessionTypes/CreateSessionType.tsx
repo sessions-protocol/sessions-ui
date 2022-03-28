@@ -1,4 +1,5 @@
 import sessionsABI from "@/web3/abis/sessions.json";
+import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Icon } from "@chakra-ui/icon";
@@ -41,7 +42,7 @@ export default function CreateSessionType({ onCreated }: { onCreated: () => void
 						onSubmit={async (values, { setSubmitting }) => {
 							const signer = await library.getSigner()
 							const sessionsContract = new ethers.Contract(
-								"0x54f6Fb3E799ed5A1FedeeF26E647801911BcB36d",
+								SESSIONS_CONTRACT,
 								sessionsABI,
 								signer
 							);
