@@ -113,16 +113,14 @@ const ProfileListView: FunctionComponent = () => {
           )
         ) : (
           [0, 1].map((i) => (
-            <div
-              key={i}
-              className="flex flex-col md:flex-row md:h-60 rounded-lg overflow-hidden border border-gray-200"
-            >
-              <div className="relative w-full h-60 md:h-auto md:w-1/3 md:flex-none bg-gray-300 animate-pulse" />
-              <div className="relative p-10 grid gap-5">
-                <div className="w-28 h-10 rounded-md bg-gray-300 animate-pulse" />
-                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
-                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
-                <div className="w-48 h-6 rounded-md bg-gray-300 animate-pulse" />
+            <div key={i}>
+              <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
+                <div className="h-12 w-12 rounded-rounded-full bg-gray-300 animate-pulse" />
+                <div className="col-span-3">
+                  <div className="flex-1 mb-2 h-3 bg-gray-300 animate-pulse"/>
+                  <div className="flex-1 h-2 bg-gray-300 animate-pulse"/>
+                </div>
+                <div className="flex justify-end items-center h-12 w-12"/>
               </div>
             </div>
           ))
