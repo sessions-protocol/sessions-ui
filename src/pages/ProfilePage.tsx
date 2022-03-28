@@ -73,7 +73,7 @@ const ProfileListView: FunctionComponent = () => {
             profilesData.items.map((profile) => (
               <a key={profile.id}  onClick={() => setProfileState({ profile })}>
                 <div className="items-center my-2 grid grid-cols-5 border-t border-b text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300">
-                  <img className="h-12 w-12 rounded-full" src={profile.picture?.uri || profile.picture?.url}/>
+                  <img className="h-12 w-12 rounded-full" src={profile.picture?.uri || profile.picture?.original?.url}/>
                   <div className="col-span-3">
                     <div className="mb-6">{profile.name}</div>
                     <div className="mb-6">@{profile.handle}</div>

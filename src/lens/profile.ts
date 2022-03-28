@@ -150,7 +150,7 @@ export interface Profile {
   id: string;
   handle: string;
   name: string | null;
-  picture: null | { uri?: string; url?: string } ;
+  picture: null | { uri?: string; } | { original: { url: string } };
   ownedBy: string;
 }
 
