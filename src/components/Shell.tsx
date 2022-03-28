@@ -4,14 +4,17 @@ import {
   ClockIcon,
   CogIcon, LinkIcon
 } from "@heroicons/react/solid";
+import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { Fragment, ReactNode, useEffect, useState } from "react";
 import {
   Link,
   useLocation
 } from "react-router-dom";
+import { ConnectorList } from "../web3/components/ConnectorList";
 import Loader from './Loader'
 import Logo from "./Logo";
+import { TextAbbrLabel } from "./TextAbbrLabel";
 export default function Shell(props: {
   centered?: boolean;
   large?: boolean;
@@ -27,11 +30,13 @@ export default function Shell(props: {
 }) {
   const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
+  const [profile, setProfile] = useState<{ username: string } | null>(null)
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
     }, 1000)
   }, [])
+  const { chainId, account, library } = useWeb3React()
 
   const navigation = [
     {
@@ -101,12 +106,31 @@ export default function Shell(props: {
               </nav>}
             </div>
             <div className="rounded-sm pb-2 pl-3 pt-2 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2">
-              <span className="hidden lg:inline">
-                UserDropdown
-              </span>
-              <span className="hidden md:inline lg:hidden">
-                UserDropdown
-              </span>
+              {(!chainId || !account) && (
+                <div>
+                  <div className="text-lg font-medium mb-4">Connect Wallet</div>
+                  <ConnectorList />
+                </div>
+              )}
+              <div className="text-left">
+                {chainId && account && (
+                  <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-2 mb-2">
+                    <div className="text-xs dark:text-gray-300">Wallet Connected</div>
+                    <div className="flex flex-row items-center">
+                      <div className="text-sm"><TextAbbrLabel text={account} front={6} end={4} /></div>
+                    </div>
+                  </div>
+                )}
+
+                {profile && (
+                  <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 mb-2">
+                    <div className="text-xs dark:text-gray-300">Lens logged in</div>
+                    <div className="flex flex-row items-center">
+                      <div className="text-sm">{profile.username}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
