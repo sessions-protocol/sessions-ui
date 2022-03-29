@@ -37,7 +37,7 @@ export default function CreateAvailability({
     <>
       <Button
         leftIcon={<Icon as={PlusIcon} />}
-        colorScheme={"green"}
+        colorScheme={"blue"}
         rounded={0}
         onClick={onOpen}
       >
@@ -108,7 +108,7 @@ export default function CreateAvailability({
                       isLoading={isSubmitting}
                       disabled={isSubmitting}
                       type="submit"
-                      colorScheme="green"
+                      colorScheme="blue"
                       rounded={0}
                     >
                       Continue
