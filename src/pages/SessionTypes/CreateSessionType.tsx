@@ -1,5 +1,5 @@
-import sessionsABI from "@/web3/abis/sessions.json";
 import erc20ABI from "@/web3/abis/erc20.json";
+import sessionsABI from "@/web3/abis/sessions.json";
 import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -10,7 +10,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
+  ModalOverlay
 } from "@chakra-ui/modal";
 import {
   FormControl,
@@ -26,7 +26,7 @@ import {
   Select,
   Stack,
   Switch,
-  Textarea,
+  Textarea
 } from "@chakra-ui/react";
 import { PlusIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
@@ -34,7 +34,7 @@ import { BigNumber, ethers, utils } from "ethers";
 import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import toast from "react-hot-toast";
-import { useProfileState } from "../../context/ProfileContext";
+import { useProfileValue } from "../../context/ProfileContext";
 
 export default function CreateSessionType({
   onCreated,
@@ -44,9 +44,8 @@ export default function CreateSessionType({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const durationInSlotOptions = range(1, 20);
   const { account, library } = useWeb3React();
-  const [{ profile }] = useProfileState();
+  const { profile } = useProfileValue();
   const profileId = profile?.id;
-  console.log(account, profileId);
 
   return (
     <>
