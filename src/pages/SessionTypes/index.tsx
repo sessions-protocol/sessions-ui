@@ -30,6 +30,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon, ClockIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
+import { useWeb3ClientStateValue } from '@/context/Web3ClientState';
 import { ethers, utils } from "ethers";
 import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
@@ -46,6 +47,7 @@ import CreateSessionType, { ISessionTypeCallData, ISessionTypeReturnData } from 
 export default function SessionTypesPage() {
   const navigate = useNavigate();
   const { chainId, account } = useWeb3React();
+  const web3ClientState = useWeb3ClientStateValue();
   const [{ profile }] = useProfileState();
   const profileId = profile?.id;
   const [sessionTypes, setSessionTypes] = useState<
@@ -65,9 +67,11 @@ export default function SessionTypesPage() {
     fetchList();
   }, []);
 
-  // goto profile list page if not connected to wallet or no selected profile
   if (!chainId || !account || !profile) {
-    navigate('/profile');
+    // goto profile list page if not connected to wallet after EagerConnectTried or no selected profile
+    if (web3ClientState.isEagerConnectTried) {
+      navigate('/profile');
+    }
     return null;
   }
   return (
