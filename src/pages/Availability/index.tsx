@@ -42,7 +42,7 @@ export default function AvailabilitiesPage() {
   const fetchList = async () => {
     setLoading(true);
     const data = await sessionApi.getAvailabilitiesByProfile(profileId!);
-    setList(data.slice(0, 1));
+    setList(data);
     setLoading(false);
   };
 
