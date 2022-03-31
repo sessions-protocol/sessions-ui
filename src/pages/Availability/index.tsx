@@ -162,6 +162,7 @@ function AvailabilityForm(props: {
             }, "0".repeat(240).split(""))
             .join("")
         );
+        console.log(slots)
         slots = moveSlots(slots, new Date().getTimezoneOffset() / 10);
         const signer = await library.getSigner();
         const sessionsContract = new ethers.Contract(

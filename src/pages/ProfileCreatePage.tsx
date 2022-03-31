@@ -1,6 +1,6 @@
 import { useProfileState } from '@/context/ProfileContext';
+import profileABI from "@/web3/abis/sessions.json";
 import { SessionLayout } from '@/layout/SessionLayout';
-import { createProfile, profiles } from '@/lens/profile';
 import { ConnectorList } from '@/web3/components/ConnectorList';
 import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { ClipboardCheckIcon } from '@heroicons/react/solid';
@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 import toast, { Toaster } from "react-hot-toast";
+import { ethers } from 'ethers';
+import { PROFILE_CONTRACT } from '../web3/contracts';
 
 export function ProfileCreatePage() {
   const { chainId, account, deactivate, library } = useWeb3React();
@@ -46,7 +48,6 @@ export function ProfileCreatePage() {
               </div>
             </div>
           </div>
-          <div className="text-right text-xs mt-2 opacity-50">Powered by Lens Protocol</div>
         </div>
       </div>
     </SessionLayout>
@@ -57,25 +58,25 @@ export function ProfileCreatePage() {
 const CreateProfileView: FunctionComponent = () => {
   const [profileState, setProfileState] = useProfileState();
 
-  const [creatingSite, setCreatingSite] = useState<boolean>(false);
+  const [creating, setCreating] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
 
   const profileHandleRef = useRef<HTMLInputElement | null>(null);
-  const profileNameRef = useRef<HTMLInputElement | null>(null);
   const profilePictureRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
+  const { account, library } = useWeb3React();
 
-  /*const { data: session }: any = useSession();
-  const sessionId = session?.user.id;
-
-  const { data: sites } = useSWR<Array<Site>>(
-    sessionId && `/api/site`,
-    fetcher
-  );*/
-
+  const createProfile = async () => {
+    const signer = await library.getSigner();
+    const sessionsContract = new ethers.Contract(
+      PROFILE_CONTRACT,
+      profileABI,
+      signer
+    );
+  }
 
   async function onSubmitProfile() {
     try {
@@ -83,6 +84,7 @@ const CreateProfileView: FunctionComponent = () => {
         throw new Error("Missing required HANDLE");
       }
       // create profile
+      const signer = await library.getSigner();
       const res = await createProfile({ handle: profileHandleRef.current?.value, profilePictureUri: profilePictureRef.current?.value });
       console.log("profile created", res);
       // query profile
@@ -96,33 +98,14 @@ const CreateProfileView: FunctionComponent = () => {
       console.log("create profile error", e);
       if (e.message === "HANDLE_TAKEN") {
         setProfileError(name);
-        setCreatingSite(false);
+        setCreating(false);
       } else {
         toast.error("Failed to Create Profile", e.message);
-        setCreatingSite(false);
+        setCreating(false);
       }
 
       return;
     }
-
-    // TODO delete example code
-    /*const res = await fetch("/api/site", {
-      method: HttpMethod.POST,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        profileId,
-        userId: sessionId,
-        name: profileHandleRef.current?.value,
-        subdomain: siteSubdomainRef.current?.value,
-        description: siteDescriptionRef.current?.value,
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      navigate(`/site/${data.siteId}`);
-    }*/
   }
 
   return (
@@ -131,7 +114,7 @@ const CreateProfileView: FunctionComponent = () => {
 
         <FormControl>
           <FormLabel htmlFor='profile-input-handle'><span className='text-sm opacity-80'>HANDLE</span></FormLabel>
-          <Input id='profile-input-handle' placeholder="youruniquehandle" ref={profileHandleRef} onInput={() => setName(profileHandleRef.current!.value)} />
+          <Input id='profile-input-handle' placeholder="your unique handle" ref={profileHandleRef} onInput={() => setName(profileHandleRef.current!.value)} />
         </FormControl>
 
         {profileError && (
@@ -157,13 +140,13 @@ const CreateProfileView: FunctionComponent = () => {
         isFullWidth
         colorScheme={"green"}
         onClick={() => {
-          setCreatingSite(true);
+          setCreating(true);
           onSubmitProfile();
         }}
-        disabled={creatingSite || error !== null}
-        className={creatingSite || error ? "cursor-not-allowed text-gray-400 bg-gray-50" : undefined}
+        disabled={creating || validationError !== null}
+        className={creating || validationError ? "cursor-not-allowed text-gray-400 bg-gray-50" : undefined}
       >
-        {creatingSite ? <LoadingDots /> : "Create Profile"}
+        {creating ? <LoadingDots /> : "Create Profile"}
       </Button>
 
       <Toaster />

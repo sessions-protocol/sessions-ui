@@ -1,16 +1,16 @@
+import FavIcon from "@/assets/favicon.svg";
 import { useProfileState } from '@/context/ProfileContext';
 import { SessionLayout } from '@/layout/SessionLayout';
-import { getAddressFromSigner } from '@/lens/ethers.service';
-import { getProfilePictureSrc, Profile, profiles } from '@/lens/profile';
 import { ConnectorList } from '@/web3/components/ConnectorList';
 import { Button } from '@chakra-ui/react';
-import { UserCircleIcon } from '@heroicons/react/solid';
 import { CheckCircleIcon } from '@heroicons/react/outline';
+import { UserCircleIcon } from '@heroicons/react/solid';
 import { useWeb3React } from '@web3-react/core';
 import { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import FavIcon from "@/assets/favicon.svg";
+import { sessionApi } from '../api/SessionApi';
+import { ProfileWithId } from '../types';
 
 
 export function ProfilePage() {
@@ -48,7 +48,6 @@ export function ProfilePage() {
               </div>
             </div>
           </div>
-          <div className="text-right text-xs mt-2 opacity-50">Powered by Lens Protocol</div>
         </div>
       </div>
     </SessionLayout>
@@ -57,16 +56,15 @@ export function ProfilePage() {
 
 const ProfileListView: FunctionComponent = () => {
   const [profileState, setProfileState] = useProfileState();
-
+  const {account} =useWeb3React()
   const { isLoading: isLoadingProfiles, error: loadProfilesError, data: profilesData } = useQuery('Profile:list', async () => {
-      const address = await getAddressFromSigner();
-      return await profiles({ ownedBy: address });
-    }
+      return sessionApi.getUserProfiles(account!);
+    }, {enabled: !!account}
   );
 
   const navigate = useNavigate();
 
-  const onClickProfile = (profile: Profile) => {
+  const onClickProfile = (profile: ProfileWithId) => {
     setProfileState({ profile });
     navigate(`/session-types`);
   };
@@ -81,15 +79,15 @@ const ProfileListView: FunctionComponent = () => {
         )}
         {!isLoadingProfiles ? (
           // profile list content
-          profilesData && profilesData?.items?.length > 0 ? (
-            profilesData.items.map((profile, index) => (
-              <a key={profile.id} className="hover:bg-hint" onClick={() => onClickProfile(profile)}>
+          profilesData && profilesData.length > 0 ? (
+            profilesData.map((profile, index) => (
+              <a key={profile.id.toString()} className="hover:bg-hint" onClick={() => onClickProfile(profile)}>
                 <div className={
-                  `${"items-center flex text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300" + (index !== profilesData.items.length - 1 ? " border-b": "")}`
+                  `${"items-center flex text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300" + (index !== profilesData.length - 1 ? " border-b": "")}`
                 }>
-                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={getProfilePictureSrc(profile) || FavIcon} />
+                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={profile.imgURI || FavIcon} />
                   <div className="flex-grow">
-                    <div className="mb-6">{profile.name}</div>
+                    <div className="mb-6">{profile.handle}</div>
                     <div className="mb-6">@{profile.handle}</div>
                   </div>
                   <div className="flex justify-end items-center h-12 w-12 mr-2">
@@ -102,7 +100,7 @@ const ProfileListView: FunctionComponent = () => {
             // TODO empty: No profiles yet
             <>
               <div className="text-center">
-                <p className="font-cal text-gray-600 text-sm p-6">
+                <p className="font-cal text-gray-600 dark:text-gray-300 text-sm p-6">
                   {'No profiles yet. Click "Create New Profile" to create one.'}
                 </p>
               </div>

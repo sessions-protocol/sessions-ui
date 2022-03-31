@@ -13,7 +13,6 @@ import {
   useLocation
 } from "react-router-dom";
 import { useProfileValue } from '@/context/ProfileContext';
-import { getProfilePictureSrc } from '@/lens/profile';
 
 import Logo from "@/assets/logo-dark.svg";
 import FavIcon from "@/assets/favicon.svg";
@@ -37,7 +36,7 @@ export default function Shell(props: {
   const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
   const { profile } = useProfileValue();
-  const profilePictureSrc = getProfilePictureSrc(profile);
+  const profilePictureSrc = profile?.imgURI;
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)

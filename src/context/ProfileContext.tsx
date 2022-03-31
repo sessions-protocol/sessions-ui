@@ -1,12 +1,12 @@
-import { Profile } from '@/lens/profile';
 import React, { FunctionComponent } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { ProfileWithId } from '../types';
 
 const { persistAtom } = recoilPersist();
 
 export interface ProfileSettings {
-  profile: Profile | undefined;
+  profile: ProfileWithId | undefined;
 }
 
 export const DEFAULT_PROFILE_SETTINGS = {

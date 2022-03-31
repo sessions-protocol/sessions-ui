@@ -54,18 +54,18 @@ export default function SessionTypesPage() {
     ({ id: string } & ISessionTypeReturnData)[]
   >([]);
   const [loading, setLoading] = useState(false);
-  const fetchList = async () => {
+  const fetchList = async (profileId: string) => {
+    if (!profileId) return
     setLoading(true);
-    const sessionTypesByProfile = await sessionApi.getSessionTypesByProfileId(
-      profileId!
-    );
+    const sessionTypesByProfile = await sessionApi.getSessionTypesByProfileId(profileId);
     setSessionTypes(sessionTypesByProfile);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchList();
-  }, []);
+    if (!profileId) return
+    fetchList(profileId.toString());
+  }, [profileId]);
 
   if (!chainId || !account || !profile) {
     // goto profile list page if not connected to wallet after EagerConnectTried or no selected profile
@@ -78,19 +78,19 @@ export default function SessionTypesPage() {
     <Shell
       heading="Session Types"
       subtitle="Create sessions to share for people to book on your calendar."
-      CTA={<CreateSessionType onCreated={fetchList} />}
+      CTA={<CreateSessionType onCreated={() => profileId && fetchList(profileId.toString())} />}
     >
       <div className="bg-white border border-gray-200 border-b-0">
         {loading ? (
           <div
-          className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
+            className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer"
           >
             <Spinner />
           </div>
         ) : (
           sessionTypes.length > 0 ? (
             sessionTypes.map((s) => (
-              <SessionTypeItem key={s.id} sessionType={s} onUpdated={fetchList} />
+              <SessionTypeItem key={s.id} sessionType={s} onUpdated={() => profileId && fetchList(profileId.toString())} />
             ))
           ) : (
             <div className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer">
@@ -110,11 +110,10 @@ function SessionTypeItem({
   sessionType: { id: string } & ISessionTypeReturnData;
   onUpdated: () => void;
 }) {
-  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const durationInSlotOptions = range(1, 20);
   const { account, library } = useWeb3React();
-  
+
   const getFormData = useMemo(() => {
     return async () => {
       const tokenPrice = {
@@ -129,13 +128,13 @@ function SessionTypeItem({
           erc20ABI,
           signer,
         );
-  
+
         tokenPrice.decimals = await erc20Contract.decimals();
         tokenPrice.symbol = await erc20Contract.symbol();
       }
 
       console.log("utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals)", utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals))
- 
+
       return {
         ...omit(sessionType, "amount"),
         price: +utils.formatUnits(sessionType.amount.toString(), tokenPrice.decimals),
@@ -144,14 +143,14 @@ function SessionTypeItem({
     }
   }, [library, sessionType])
 
-  const [formData, setFormData] = useState<any>({}); 
+  const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
     getFormData().then((data) => {
       setFormData(data)
     })
   }, [getFormData])
-  
+
   return (
     <>
       <div className="flex flex-row border-b border-gray-200 text-gray-700 p-4 cursor-pointer" onClick={onOpen}>
@@ -165,7 +164,7 @@ function SessionTypeItem({
             </div>
           </div>
         </div>
-        <div className="flex justify-center items-center" onClick={(e) => {e.stopPropagation()}}>
+        <div className="flex justify-center items-center" onClick={(e) => { e.stopPropagation() }}>
           <Link to={`/session/${sessionType.id}/available`} target="_blank" rel="noopener noreferrer">
             <Button
               size="sm"
@@ -190,7 +189,7 @@ function SessionTypeItem({
           <ModalBody>
             <Formik
               initialValues={formData}
-              validate={(values) => {}}
+              validate={(values) => { }}
               onSubmit={async (values, { setSubmitting }) => {
                 const signer = await library.getSigner();
                 const sessionsContract = new ethers.Contract(
@@ -209,7 +208,7 @@ function SessionTypeItem({
                     erc20ABI,
                     signer,
                   );
-            
+
                   tokenPrice.decimals = await erc20Contract.decimals();
                   tokenPrice.symbol = await erc20Contract.symbol();
                 }
@@ -346,7 +345,7 @@ function SessionTypeItem({
                       type="submit"
                       colorScheme="green"
                     >
-                      Update Session Type 
+                      Update Session Type
                     </Button>
                   </div>
                 </Form>

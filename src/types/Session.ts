@@ -15,7 +15,7 @@ export interface Session {
   description?: string;
   duration: number;
   availableDates: string[];
-  lensProfileId: number;
+  profileId: number;
   validateFollow: boolean;
   token: {
     symbol: string,
@@ -39,7 +39,7 @@ export interface SessionType {
   amount: string;
   sessionNFT: string;
   availabilityId: BigNumber;
-  lensProfileId: BigNumber;
+  profileId: BigNumber;
 }
 
 export interface Availability {
@@ -54,4 +54,14 @@ export interface ParsedSlot {
 export interface ParsedDateSlot {
   date: Date;
   slots: ParsedSlot[];
+}
+
+export interface Profile {
+  imgURI: string;
+  handle: string;
+
+}
+export interface ProfileWithId extends Profile {
+  id: BigNumber;
+
 }
