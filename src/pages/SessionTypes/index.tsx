@@ -36,7 +36,7 @@ import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { sessionApi } from "../../api/SessionApi";
 import { Icon } from "@chakra-ui/icon";
 
@@ -45,7 +45,6 @@ import { useProfileState } from "../../context/ProfileContext";
 import CreateSessionType, { ISessionTypeCallData, ISessionTypeReturnData } from "./CreateSessionType";
 
 export default function SessionTypesPage() {
-  const navigate = useNavigate();
   const { chainId, account } = useWeb3React();
   const web3ClientState = useWeb3ClientStateValue();
   const [{ profile }] = useProfileState();
@@ -63,8 +62,7 @@ export default function SessionTypesPage() {
   };
 
   useEffect(() => {
-    if (!profileId || !account) return navigate('/profile')
-    fetchList(profileId);
+    fetchList(profileId!);
   }, [profileId, account]);
 
   if (!chainId || !account || !profile) {

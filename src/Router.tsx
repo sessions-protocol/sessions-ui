@@ -10,7 +10,7 @@ import AvailabilityPage from "./pages/Availability";
 import { useLogout, useProfileValue } from "./context/ProfileContext";
 import { useWeb3React } from "@web3-react/core";
 import { useNavigate } from "react-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Router() {
   return (
@@ -49,11 +49,23 @@ export default function Router() {
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const settings = useProfileValue();
   const { account } = useWeb3React();
-  const logout = useLogout()
+  const logout = useLogout();
+  const navigate = useNavigate();
+  const [delayed, setDelayed] = useState(false)
+
+  // when refresh page, account will be set to `undefined` at first before it has value 
   useEffect(() => {
-    if (settings.profile?.wallet) {
-      if (account != settings.profile?.wallet) logout();
+    setTimeout(() => {
+      setDelayed(true)
+    }, 500)
+  }, [])
+
+  useEffect(() => {
+    if (!delayed) return
+    if (!account || account != settings.profile?.wallet) {
+      logout();
+      navigate("/profile");
     }
-  }, [account]);
+  }, [account, delayed]);
   return children;
 };
