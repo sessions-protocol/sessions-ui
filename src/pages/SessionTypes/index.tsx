@@ -64,7 +64,7 @@ export default function SessionTypesPage() {
 
   useEffect(() => {
     if (!profileId) return
-    fetchList(profileId.toString());
+    fetchList(profileId);
   }, [profileId]);
 
   if (!chainId || !account || !profile) {
@@ -78,7 +78,7 @@ export default function SessionTypesPage() {
     <Shell
       heading="Session Types"
       subtitle="Create sessions to share for people to book on your calendar."
-      CTA={<CreateSessionType onCreated={() => profileId && fetchList(profileId.toString())} />}
+      CTA={<CreateSessionType onCreated={() => profileId && fetchList(profileId)} />}
     >
       <div className="bg-white border border-gray-200 border-b-0">
         {loading ? (

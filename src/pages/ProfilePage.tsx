@@ -81,14 +81,13 @@ const ProfileListView: FunctionComponent = () => {
           // profile list content
           profilesData && profilesData.length > 0 ? (
             profilesData.map((profile, index) => (
-              <a key={profile.id.toString()} className="hover:bg-hint" onClick={() => onClickProfile(profile)}>
+              <a key={profile.id} className="hover:bg-hint" onClick={() => onClickProfile(profile)}>
                 <div className={
-                  `${"items-center flex text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300" + (index !== profilesData.length - 1 ? " border-b": "")}`
+                  `${"cursor-pointer items-center flex text-left text-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-300" + (index !== profilesData.length - 1 ? " border-b": "")}`
                 }>
-                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={profile.imgURI || FavIcon} />
+                  <img className="mx-4 my-2 h-12 w-12 rounded-full" src={profile.imageURI || FavIcon} />
                   <div className="flex-grow">
-                    <div className="mb-6">{profile.handle}</div>
-                    <div className="mb-6">@{profile.handle}</div>
+                    <div className="">@{profile.handle}</div>
                   </div>
                   <div className="flex justify-end items-center h-12 w-12 mr-2">
                     {profileState.profile?.id === profile.id && (<CheckCircleIcon className="mx-auto text-green-500 -mt-1 inline-block h-6 w-6" />)}

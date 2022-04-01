@@ -10,7 +10,9 @@ class SessionApi {
   private provider = new ethers.providers.JsonRpcProvider(
     "https://rpc-mumbai.matic.today"
   );
-  private browserProvider =  new ethers.providers.Web3Provider((window as unknown as { ethereum?: any }).ethereum)
+  private browserProvider = new ethers.providers.Web3Provider(
+    (window as unknown as { ethereum?: any }).ethereum
+  );
   private sessionsContract = new ethers.Contract(
     SESSIONS_CONTRACT,
     sessionsABI,
@@ -113,12 +115,32 @@ class SessionApi {
 
   async getUserProfiles(userAddress: string) {
     const profiles = await this.profileContract.getUserProfiles(userAddress);
-    console.log(profiles);
-    return profiles as ProfileWithId[];
+    return profiles.map((profile: any) => ({
+      id: profile.id.toString(),
+      imageURI: profile.imageURI,
+      handle: profile.handle,
+    })) as ProfileWithId[];
   }
 
-  async createUserProfile(handle: string, imgURI: string) {
-    
+  async getProfileByHandle(handle: string) {
+    const profile = await this.profileContract.getProfileByHandle(handle);
+    return {
+      id: profile.id.toString(),
+      imageURI: profile.imageURI,
+      handle: profile.handle,
+    };
+  }
+
+  async createUserProfile(handle: string, imageURI = "") {
+    console.log(this.signer, handle, imageURI);
+    if (!this.signer) return;
+    const profileContract = new ethers.Contract(
+      PROFILE_CONTRACT,
+      profileABI,
+      this.signer
+    );
+    const tx = await profileContract.createProfile(handle, imageURI);
+    await tx.wait();
   }
 }
 

@@ -114,7 +114,7 @@ export default function CreateSessionType({
                 );
 
                 const calldata: [string, ISessionTypeCallData] = [
-                  profileId.toString(),
+                  profileId,
                   {
                     ...omit(values, "price"),
                     amount: utils.parseUnits(`${values.price}`, tokenPrice.decimals).toString(),

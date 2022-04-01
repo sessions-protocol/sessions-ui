@@ -16,10 +16,7 @@ export default function Setup(props: SetupProps) {
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager)
 
-  useEffect(() => {
-    console.log('1')
-    setWeb3ClientState({ isEagerConnectTried: triedEager })
-  }, [setWeb3ClientState, triedEager]);
+  useEffect(() => setWeb3ClientState({ isEagerConnectTried: triedEager }), [setWeb3ClientState, triedEager]);
 
   return (
     <div className='Setup'>

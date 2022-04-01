@@ -36,7 +36,7 @@ export default function Shell(props: {
   const { pathname } = useLocation()
   const [loading, setLoading] = useState(true)
   const { profile } = useProfileValue();
-  const profilePictureSrc = profile?.imgURI;
+  const profilePictureSrc = profile?.imageURI;
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)

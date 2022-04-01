@@ -57,11 +57,11 @@ export interface ParsedDateSlot {
 }
 
 export interface Profile {
-  imgURI: string;
+  imageURI: string;
   handle: string;
 
 }
 export interface ProfileWithId extends Profile {
-  id: BigNumber;
+  id: string;
 
 }
