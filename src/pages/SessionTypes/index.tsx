@@ -63,14 +63,14 @@ export default function SessionTypesPage() {
   };
 
   useEffect(() => {
-    if (!profileId) return
+    if (!profileId || !account) return navigate('/profile')
     fetchList(profileId);
-  }, [profileId]);
+  }, [profileId, account]);
 
   if (!chainId || !account || !profile) {
     // goto profile list page if not connected to wallet after EagerConnectTried or no selected profile
     if (web3ClientState.isEagerConnectTried) {
-      navigate('/profile');
+      return null
     }
     return null;
   }
