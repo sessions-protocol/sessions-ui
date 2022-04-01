@@ -65,3 +65,8 @@ export interface ProfileWithId extends Profile {
   id: string;
 
 }
+
+export interface ProfileWithWallet extends ProfileWithId {
+  wallet: string;
+
+}

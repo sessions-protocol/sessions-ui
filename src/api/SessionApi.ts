@@ -1,10 +1,10 @@
+import { ProfileWithWallet } from './../types/Session';
 import profileABI from "@/web3/abis/profile.json";
 import sessionsABI from "@/web3/abis/sessions.json";
 import erc20ABI from "@/web3/abis/erc20.json";
 import { PROFILE_CONTRACT, SESSIONS_CONTRACT } from "@/web3/contracts";
 import { add } from "date-fns";
-import { ethers, Signer } from "ethers";
-import { ProfileWithId } from "../types";
+import { ethers } from "ethers";
 
 class SessionApi {
   private provider = new ethers.providers.JsonRpcProvider(
@@ -120,7 +120,8 @@ class SessionApi {
       id: profile.id.toString(),
       imageURI: profile.imageURI,
       handle: profile.handle,
-    })) as ProfileWithId[];
+      wallet: userAddress,
+    })) as ProfileWithWallet[];
   }
 
   async getProfileByHandle(handle: string) {

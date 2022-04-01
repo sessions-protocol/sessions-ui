@@ -1,12 +1,16 @@
-import { ChakraProvider, extendTheme, localStorageManager } from '@chakra-ui/react';
-import { mode } from '@chakra-ui/theme-tools';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { RecoilRoot } from 'recoil';
-import './App.css';
-import { TimezoneProvider } from './context/TimezoneContext';
-import Router from './Router';
-import Setup from './Setup';
-import { ConnectProvider } from './web3/components/ConnectProvider';
+import {
+  ChakraProvider,
+  extendTheme,
+  localStorageManager,
+} from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
+import "./App.css";
+import { TimezoneProvider } from "./context/TimezoneContext";
+import Router from "./Router";
+import Setup from "./Setup";
+import { ConnectProvider } from "./web3/components/ConnectProvider";
 
 const theme = extendTheme({
   styles: {
@@ -36,22 +40,24 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-
   return (
     <div className="App">
       <div className="text-gray-700 dark:text-white">
         <RecoilRoot>
-        <ConnectProvider>
-        <TimezoneProvider>
-        <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
-        <QueryClientProvider client={queryClient}>
-          <Setup>
-            <Router />
-          </Setup>
-        </QueryClientProvider>
-        </ChakraProvider>
-        </TimezoneProvider>
-        </ConnectProvider>
+          <ConnectProvider>
+            <TimezoneProvider>
+              <ChakraProvider
+                theme={theme}
+                colorModeManager={localStorageManager}
+              >
+                <QueryClientProvider client={queryClient}>
+                  <Setup>
+                    <Router />
+                  </Setup>
+                </QueryClientProvider>
+              </ChakraProvider>
+            </TimezoneProvider>
+          </ConnectProvider>
         </RecoilRoot>
       </div>
     </div>
