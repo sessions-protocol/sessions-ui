@@ -315,8 +315,6 @@ export const DayRanges = ({
                     ]}
                     onApply={(selected) =>
                       selected.forEach((day) => {
-                        // TODO: Figure out why this is different?
-                        // console.log(watcher, fields);
                         setValue(
                           name.substring(0, name.lastIndexOf(".") + 1) + day,
                           watcher

@@ -133,7 +133,6 @@ class SessionApi {
   }
 
   async createUserProfile(handle: string, imageURI = "") {
-    console.log(this.signer, handle, imageURI);
     if (!this.signer) return;
     const profileContract = new ethers.Contract(
       PROFILE_CONTRACT,
