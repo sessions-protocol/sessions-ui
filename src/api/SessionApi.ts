@@ -10,9 +10,10 @@ class SessionApi {
   private provider = new ethers.providers.JsonRpcProvider(
     "https://rpc-mumbai.matic.today"
   );
-  private browserProvider = new ethers.providers.Web3Provider(
-    (window as unknown as { ethereum?: any }).ethereum
-  );
+  get browserProvider() {
+    if (!(window as any).ethereum) return null;
+    return new ethers.providers.Web3Provider((window as any).ethereum);
+  }
   private sessionsContract = new ethers.Contract(
     SESSIONS_CONTRACT,
     sessionsABI,
@@ -25,7 +26,7 @@ class SessionApi {
   );
 
   get signer() {
-    return this.browserProvider.getSigner();
+    return this.browserProvider?.getSigner();
   }
   async getSession(sessionId: string) {
     const sessionType = await this.sessionsContract.getSessionType(sessionId);
