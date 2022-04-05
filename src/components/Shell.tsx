@@ -9,7 +9,7 @@ import {
   ClockIcon,
   LinkIcon,
   SelectorIcon,
-  UserCircleIcon
+  UserCircleIcon,
 } from "@heroicons/react/solid";
 import classNames from "classnames";
 import { Fragment, ReactNode } from "react";
@@ -63,7 +63,12 @@ export default function Shell(props: {
     <Box className={classNames("flex h-screen overflow-hidden text-left")}>
       <div className="hidden md:flex lg:flex-shrink-0">
         <Box className="flex w-14 flex-col lg:w-56" bg={navBg}>
-          <Box className={classNames("flex h-0 flex-1 flex-col border-r", colorMode === 'light' ? '': 'border-gray-700')}>
+          <Box
+            className={classNames(
+              "flex h-0 flex-1 flex-col border-r",
+              colorMode === "light" ? "" : "border-gray-700"
+            )}
+          >
             <div className="flex flex-1 flex-col overflow-y-auto pt-3 lg:pt-5">
               <Link to="/session-types" className="block px-2">
                 <span className="inline lg:hidden">
@@ -83,38 +88,34 @@ export default function Shell(props: {
                   />
                 </span>
               </Link>
-              {
-                <nav className="mt-2 flex-1 space-y-1 px-2">
-                  {navigation.map((item) => (
-                    <Fragment key={item.name}>
-                      <Link to={item.href}>
-                        <Box
-                          bg={item.current ? navItemCurrentBg : ""}
-                          color={item.current ? navItemCurrentColor: ""}
-                          opacity={item.current ? 1 : 0.7}
-                          _hover={{ bg: navItemCurrentBg, opacity: 0.9 }}
-                          className={classNames(
-                            "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
-                          )}
-                        >
-                          <item.icon
-                            className={classNames(
-                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3 opacity-60"
-                            )}
-                            aria-hidden="true"
-                          />
-                          <span className="hidden lg:inline ml-2">
-                            {item.name}
-                          </span>
-                        </Box>
-                      </Link>
-                    </Fragment>
-                  ))}
-                </nav>
-              }
+              <nav className="mt-2 flex-1 space-y-1 px-2">
+                {navigation.map((item) => (
+                  <Link to={item.href} key={item.name}>
+                    <Box
+                      bg={item.current ? navItemCurrentBg : ""}
+                      color={item.current ? navItemCurrentColor : ""}
+                      opacity={item.current ? 1 : 0.7}
+                      _hover={{ bg: navItemCurrentBg, opacity: 0.9 }}
+                      className={classNames(
+                        "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
+                      )}
+                    >
+                      <item.icon
+                        className={classNames(
+                          "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3 opacity-60"
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="hidden lg:inline ml-2">{item.name}</span>
+                    </Box>
+                  </Link>
+                ))}
+              </nav>
             </div>
-            <Box className="rounded-sm mb-4 pb-2 pl-3 pt-2 pr-2 lg:mx-2 lg:pl-3" _hover={{ bg: navItemCurrentBg, opacity: 1 }}
->
+            <Box
+              className="rounded-sm mb-4 pb-2 pl-3 pt-2 pr-2 lg:mx-2 lg:pl-3"
+              _hover={{ bg: navItemCurrentBg, opacity: 1 }}
+            >
               <div className="text-left">
                 {profile && (
                   <Link to={"/profile"}>
@@ -168,7 +169,43 @@ export default function Shell(props: {
             props.flexChildrenContainer && "flex flex-col"
           )}
         >
-          {/* show top navigation for md and smaller (tablet and phones) */}
+          <nav className="flex items-center justify-between border-b px-4 md:hidden">
+            <Link to="/session-types" className="block px-2">
+              <img
+                className="mx-auto transform scale-50 origin-left"
+                alt="Sessions"
+                title="Session"
+                src={FavIcon}
+              />
+            </Link>
+            <div className="flex items-center gap-3 self-center">
+              <Box mr={2}><ColorModeSwitcher /></Box>
+              <Link to={"/profile"}>
+                <div
+                  className={classNames(
+                    "group flex-1 flex-shrink-1 flex justify-center items-center text-sm font-medium"
+                  )}
+                >
+                  <div className="flex-shrink-0">
+                    {profilePictureSrc ? (
+                      <img
+                        className="h-6 w-6 rounded-full"
+                        src={profilePictureSrc}
+                      />
+                    ) : (
+                      <UserCircleIcon
+                        className={classNames(
+                          "text-neutral-400 group-hover:text-neutral-500",
+                          "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                        )}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </nav>
 
           <div
             className={classNames(
@@ -220,10 +257,36 @@ export default function Shell(props: {
             >
               {props.children}
             </div>
+            <nav className="md:hidden fixed bottom-0 z-30 flex w-full shadow">
+              {navigation.map((item) => (
+                <Link
+                  to={item.href}
+                  key={item.name}
+                  className={classNames(
+                    "border-t group relative min-w-0 flex-1 overflow-hidden text-center text-xs font-medium focus:z-10 sm:text-sm"
+                  )}
+                >
+                  <Box
+                    bg={navBg}
+                    opacity={item.current ? 1 : 0.5}
+                    className={classNames("p-2")}
+                    color={item.current ? navItemCurrentColor : ""}
+                  >
+                    <item.icon
+                      className={classNames(
+                        "mx-auto mb-1 block h-5 w-5 flex-shrink-0 text-center"
+                      )}
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">{item.name}</span>
+                  </Box>
+                </Link>
+              ))}
+            </nav>
           </div>
         </main>
       </div>
-      <div className="fixed right-3 bottom-3">
+      <div className="fixed right-3 md:block hidden bottom-3">
         <ColorModeSwitcher />
       </div>
     </Box>

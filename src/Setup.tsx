@@ -25,7 +25,7 @@ export default function Setup(props: SetupProps) {
       {props.children}
 
       <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
-      <ReactQueryDevtools initialIsOpen={false} position={'top-right'} />
+      <ReactQueryDevtools initialIsOpen={false} position={'top-left'} />
     </div>
   )
 }
