@@ -1,21 +1,21 @@
 import FavIcon from "@/assets/favicon.svg";
-import Logo from "@/assets/logo.svg";
 import LogoDark from "@/assets/logo-dark.svg";
+import Logo from "@/assets/logo.svg";
 import { useProfileValue } from "@/context/ProfileContext";
 import { Button } from "@chakra-ui/button";
-import { Spinner, Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import {
   ArrowLeftIcon,
   ClockIcon,
   LinkIcon,
   SelectorIcon,
-  UserCircleIcon,
+  UserCircleIcon
 } from "@heroicons/react/solid";
 import classNames from "classnames";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { useAppColorMode } from "../hooks/useColorMode";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
 
 export default function Shell(props: {
   centered?: boolean;
@@ -34,7 +34,8 @@ export default function Shell(props: {
   const { profile } = useProfileValue();
   const profilePictureSrc = profile?.imageURI;
   const navBg = useColorModeValue("white", "whiteAlpha.50");
-  const navItemCurrentBg = useColorModeValue("gray.50", "whiteAlpha.200");
+  const navItemCurrentBg = useColorModeValue("neutral.100", "whiteAlpha.200");
+  const navItemCurrentColor = useColorModeValue("black", "white");
   const { colorMode } = useAppColorMode();
   const logo = colorMode === "light" ? LogoDark : Logo;
 
@@ -62,8 +63,8 @@ export default function Shell(props: {
     <Box className={classNames("flex h-screen overflow-hidden text-left")}>
       <div className="hidden md:flex lg:flex-shrink-0">
         <Box className="flex w-14 flex-col lg:w-56" bg={navBg}>
-          <Box className="flex h-0 flex-1 flex-col border-r">
-            <div className="flex flex-1 flex-col overflow-y-auto pt-3 pb-4 lg:pt-5">
+          <Box className={classNames("flex h-0 flex-1 flex-col border-r", colorMode === 'light' ? '': 'border-gray-700')}>
+            <div className="flex flex-1 flex-col overflow-y-auto pt-3 lg:pt-5">
               <Link to="/session-types" className="block px-2">
                 <span className="inline lg:hidden">
                   <img
@@ -75,7 +76,7 @@ export default function Shell(props: {
                 </span>
                 <span className="hidden lg:inline">
                   <img
-                    className="mx-auto"
+                    className="transform origin-left scale-75"
                     alt="Sessions"
                     title="Session"
                     src={logo}
@@ -83,24 +84,22 @@ export default function Shell(props: {
                 </span>
               </Link>
               {
-                <nav className="mt-2 flex-1 space-y-1 px-2 lg:mt-5">
+                <nav className="mt-2 flex-1 space-y-1 px-2">
                   {navigation.map((item) => (
                     <Fragment key={item.name}>
                       <Link to={item.href}>
                         <Box
                           bg={item.current ? navItemCurrentBg : ""}
-                          opacity={item.current ? 1 : 0.5}
-                          _hover={{ bg: navItemCurrentBg, opacity: 1 }}
+                          color={item.current ? navItemCurrentColor: ""}
+                          opacity={item.current ? 1 : 0.7}
+                          _hover={{ bg: navItemCurrentBg, opacity: 0.9 }}
                           className={classNames(
                             "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
                           )}
                         >
                           <item.icon
                             className={classNames(
-                              item.current
-                                ? "text-neutral-500"
-                                : "text-neutral-400 group-hover:text-neutral-500",
-                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3 opacity-60"
                             )}
                             aria-hidden="true"
                           />
@@ -114,14 +113,14 @@ export default function Shell(props: {
                 </nav>
               }
             </div>
-            <div className="rounded-sm mb-2 pb-2 pl-3 pt-2 pr-2 hover:bg-gray-100 lg:mx-2 lg:pl-2">
+            <Box className="rounded-sm mb-4 pb-2 pl-3 pt-2 pr-2 lg:mx-2 lg:pl-3" _hover={{ bg: navItemCurrentBg, opacity: 1 }}
+>
               <div className="text-left">
                 {profile && (
                   <Link to={"/profile"}>
                     <div
                       className={classNames(
-                        "text-neutral-500 hover:text-neutral-900",
-                        "group flex-1 flex-shrink-1 flex justify-center items-center py-2 my-2 text-sm font-medium"
+                        "group flex-1 flex-shrink-1 flex justify-center items-center text-sm font-medium"
                       )}
                     >
                       <div className="flex-shrink-0">
@@ -158,7 +157,7 @@ export default function Shell(props: {
                   </Link>
                 )}
               </div>
-            </div>
+            </Box>
           </Box>
         </Box>
       </div>
@@ -166,7 +165,6 @@ export default function Shell(props: {
         <main
           className={classNames(
             "relative z-0 flex-1 overflow-y-auto focus:outline-none",
-            status === "authenticated" && "max-w-[1700px]",
             props.flexChildrenContainer && "flex flex-col"
           )}
         >
@@ -202,10 +200,10 @@ export default function Shell(props: {
                   <div className="ltr:mr-4">{props.HeadingLeftIcon}</div>
                 )}
                 <div className="mb-8 w-full">
-                  <h1 className="font-cal mb-1 text-xl font-bold capitalize tracking-wide text-gray-900">
+                  <h1 className="font-cal mb-1 text-xl font-bold capitalize tracking-wide">
                     {props.heading}
                   </h1>
-                  <p className="min-h-10 text-sm text-neutral-500 ltr:mr-4 rtl:ml-4">
+                  <p className="min-h-10 text-sm opacity-60 ltr:mr-4 rtl:ml-4">
                     {props.subtitle}
                   </p>
                 </div>
