@@ -1,7 +1,7 @@
 import {
   ChakraProvider,
   extendTheme,
-  localStorageManager,
+  localStorageManager
 } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -12,7 +12,11 @@ import Router from "./Router";
 import Setup from "./Setup";
 import { ConnectProvider } from "./web3/components/ConnectProvider";
 
+
 const theme = extendTheme({
+  config: {
+    cssVarPrefix: 'ck',
+  },
   styles: {
     global: (props: any) => ({
       body: {

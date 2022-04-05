@@ -1,8 +1,9 @@
 import FavIcon from "@/assets/favicon.svg";
-import Logo from "@/assets/logo-dark.svg";
+import Logo from "@/assets/logo.svg";
+import LogoDark from "@/assets/logo-dark.svg";
 import { useProfileValue } from "@/context/ProfileContext";
 import { Button } from "@chakra-ui/button";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, Box, useColorModeValue } from "@chakra-ui/react";
 import {
   ArrowLeftIcon,
   ClockIcon,
@@ -13,6 +14,8 @@ import {
 import classNames from "classnames";
 import { Fragment, ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { useAppColorMode } from "../hooks/useColorMode";
 
 export default function Shell(props: {
   centered?: boolean;
@@ -28,14 +31,12 @@ export default function Shell(props: {
   flexChildrenContainer?: boolean;
 }) {
   const { pathname } = useLocation();
-  const [loading, setLoading] = useState(true);
   const { profile } = useProfileValue();
   const profilePictureSrc = profile?.imageURI;
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 100);
-  }, []);
+  const navBg = useColorModeValue("white", "whiteAlpha.50");
+  const navItemCurrentBg = useColorModeValue("gray.50", "whiteAlpha.200");
+  const { colorMode } = useAppColorMode();
+  const logo = colorMode === "light" ? LogoDark : Logo;
 
   const navigation = [
     {
@@ -57,23 +58,11 @@ export default function Shell(props: {
     //   current: pathname.startsWith("/settings"),
     // },
   ];
-  if (loading) {
-    return (
-      <div className="absolute z-50 h-screen w-full bg-gray-50 justify-center items-center flex">
-        <Spinner />
-      </div>
-    );
-  }
   return (
-    <div
-      className={classNames(
-        "flex h-screen overflow-hidden text-left",
-        props.large ? "bg-white" : "bg-gray-100"
-      )}
-    >
+    <Box className={classNames("flex h-screen overflow-hidden text-left")}>
       <div className="hidden md:flex lg:flex-shrink-0">
-        <div className="flex w-14 flex-col lg:w-56">
-          <div className="flex h-0 flex-1 flex-col border-r border-gray-200 bg-white">
+        <Box className="flex w-14 flex-col lg:w-56" bg={navBg}>
+          <Box className="flex h-0 flex-1 flex-col border-r">
             <div className="flex flex-1 flex-col overflow-y-auto pt-3 pb-4 lg:pt-5">
               <Link to="/session-types" className="block px-2">
                 <span className="inline lg:hidden">
@@ -89,35 +78,36 @@ export default function Shell(props: {
                     className="mx-auto"
                     alt="Sessions"
                     title="Session"
-                    src={Logo}
+                    src={logo}
                   />
                 </span>
               </Link>
               {
-                <nav className="mt-2 flex-1 space-y-1 bg-white px-2 lg:mt-5">
+                <nav className="mt-2 flex-1 space-y-1 px-2 lg:mt-5">
                   {navigation.map((item) => (
                     <Fragment key={item.name}>
-                      <Link
-                        to={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-neutral-100 text-neutral-900"
-                            : "text-neutral-500 hover:bg-gray-50 hover:text-neutral-900",
-                          "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
-                        )}
-                      >
-                        <item.icon
+                      <Link to={item.href}>
+                        <Box
+                          bg={item.current ? navItemCurrentBg : ""}
+                          opacity={item.current ? 1 : 0.5}
+                          _hover={{ bg: navItemCurrentBg, opacity: 1 }}
                           className={classNames(
-                            item.current
-                              ? "text-neutral-500"
-                              : "text-neutral-400 group-hover:text-neutral-500",
-                            "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                            "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
                           )}
-                          aria-hidden="true"
-                        />
-                        <span className="hidden lg:inline ml-2">
-                          {item.name}
-                        </span>
+                        >
+                          <item.icon
+                            className={classNames(
+                              item.current
+                                ? "text-neutral-500"
+                                : "text-neutral-400 group-hover:text-neutral-500",
+                              "h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3"
+                            )}
+                            aria-hidden="true"
+                          />
+                          <span className="hidden lg:inline ml-2">
+                            {item.name}
+                          </span>
+                        </Box>
                       </Link>
                     </Fragment>
                   ))}
@@ -169,8 +159,8 @@ export default function Shell(props: {
                 )}
               </div>
             </div>
-          </div>
-        </div>
+          </Box>
+        </Box>
       </div>
       <div className="flex w-0 flex-1 flex-col overflow-hidden">
         <main
@@ -186,7 +176,7 @@ export default function Shell(props: {
             className={classNames(
               props.centered && "mx-auto md:max-w-5xl",
               props.flexChildrenContainer && "flex flex-1 flex-col",
-              !props.large && "py-8"
+              "py-8"
             )}
           >
             {!!props.backPath && (
@@ -205,7 +195,6 @@ export default function Shell(props: {
             {props.heading && props.subtitle && (
               <div
                 className={classNames(
-                  props.large && "bg-gray-100 py-8 lg:mb-8 lg:pt-16 lg:pb-7",
                   "block min-h-[80px] justify-between px-4 sm:flex sm:px-6 md:px-8"
                 )}
               >
@@ -236,6 +225,9 @@ export default function Shell(props: {
           </div>
         </main>
       </div>
-    </div>
+      <div className="fixed right-3 bottom-3">
+        <ColorModeSwitcher />
+      </div>
+    </Box>
   );
 }
