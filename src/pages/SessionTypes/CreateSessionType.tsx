@@ -10,12 +10,15 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay
+  ModalOverlay,
 } from "@chakra-ui/modal";
 import {
+  Flex,
   FormControl,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -26,7 +29,7 @@ import {
   Select,
   Stack,
   Switch,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react";
 import { PlusIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
@@ -35,7 +38,37 @@ import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import toast from "react-hot-toast";
 import { useProfileValue } from "../../context/ProfileContext";
+{
+  /* <RadioGroup
 
+>
+<Stack spacing={5} direction="row">
+  <Radio
+    {...field}
+    colorScheme="blue"
+    value="0x0000000000000000000000000000000000000000"
+  >
+    MATIC
+  </Radio>
+  <Radio
+    {...field}
+    colorScheme="yellow"
+    value="0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F"
+    title=""
+  >
+    DAI
+  </Radio>
+  <Radio
+    {...field}
+    colorScheme="green"
+    value=""
+    title="0x326C977E6efc84E512bB9C30f76E30c160eD06FB"
+  >
+    LINK
+  </Radio>
+</Stack>
+</RadioGroup> */
+}
 export default function CreateSessionType({
   onCreated,
 }: {
@@ -46,7 +79,11 @@ export default function CreateSessionType({
   const { account, library } = useWeb3React();
   const { profile } = useProfileValue();
   const profileId = profile?.id;
-
+  const payTokenOptions = [
+    { name: "MATIC", value: "0x0000000000000000000000000000000000000000" },
+    { name: "DAI", value: "0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F" },
+    { name: "LIN", value: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB" },
+  ];
   return (
     <>
       <Button
@@ -58,6 +95,7 @@ export default function CreateSessionType({
       </Button>
 
       <Modal
+        size="xl"
         blockScrollOnMount={false}
         closeOnOverlayClick={false}
         isOpen={isOpen}
@@ -81,7 +119,7 @@ export default function CreateSessionType({
                 openBookingDeltaDays: 14,
                 token: "0x0000000000000000000000000000000000000000",
                 price: 0,
-								validateFollow: false,
+                validateFollow: false,
               }}
               validate={(values) => {}}
               onSubmit={async (values, { setSubmitting }) => {
@@ -95,15 +133,17 @@ export default function CreateSessionType({
                 const tokenPrice = {
                   symbol: "MATIC",
                   amount: values.price,
-                  decimals: 18
-                }
-                if (values.token != "0x0000000000000000000000000000000000000000") {
+                  decimals: 18,
+                };
+                if (
+                  values.token != "0x0000000000000000000000000000000000000000"
+                ) {
                   const erc20Contract = new ethers.Contract(
                     values.token,
                     erc20ABI,
-                    signer,
+                    signer
                   );
-            
+
                   tokenPrice.decimals = await erc20Contract.decimals();
                   tokenPrice.symbol = await erc20Contract.symbol();
                 }
@@ -117,7 +157,9 @@ export default function CreateSessionType({
                   profileId,
                   {
                     ...omit(values, "price"),
-                    amount: utils.parseUnits(`${values.price}`, tokenPrice.decimals).toString(),
+                    amount: utils
+                      .parseUnits(`${values.price}`, tokenPrice.decimals)
+                      .toString(),
                     recipient: account,
                     availabilityId: 0,
                     locked: false,
@@ -136,30 +178,44 @@ export default function CreateSessionType({
               {({ isSubmitting }) => (
                 <Form>
                   <Field name="title">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="title">Title</FormLabel>
-                        <Input {...field} id="title" placeholder="Quick chat" />
+                    {({ field }: any) => (
+                      <FormControl className="mb-4">
+                        <FormLabel marginBottom={1} htmlFor="title">
+                          Title
+                        </FormLabel>
+                        <Input
+                          {...field}
+                          id="title"
+                          borderRadius={2}
+                          placeholder="Quick chat"
+                        />
                       </FormControl>
                     )}
                   </Field>
                   <Field name="description">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="description">Description</FormLabel>
+                    {({ field }: any) => (
+                      <FormControl className="mb-4">
+                        <FormLabel marginBottom={1} htmlFor="description">
+                          Description
+                        </FormLabel>
                         <Textarea
                           {...field}
                           id="description"
+                          borderRadius={2}
                           placeholder="A quick video meeting."
                         />
                       </FormControl>
                     )}
                   </Field>
+                  <Flex gap={5}>
+
                   <Field name="durationInSlot">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="durationInSlot">Length</FormLabel>
-                        <Select {...field} id="durationInSlot">
+                    {({ field }: any) => (
+                      <FormControl className="mb-4">
+                        <FormLabel marginBottom={1} htmlFor="durationInSlot">
+                          Length
+                        </FormLabel>
+                        <Select {...field} borderRadius={2} id="durationInSlot">
                           {durationInSlotOptions.map((d) => (
                             <option key={d} value={d}>
                               {d * 6} minutes
@@ -170,69 +226,75 @@ export default function CreateSessionType({
                     )}
                   </Field>
                   <Field name="openBookingDeltaDays">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="openBookingDeltaDays">
-                          Sessions can be booked in (Days)
+                    {({ field }: any) => (
+                      <FormControl className="mb-4">
+                        <FormLabel
+                          marginBottom={1}
+                          htmlFor="openBookingDeltaDays"
+                        >
+                          Only booked in
                         </FormLabel>
-                        <NumberInput defaultValue={14} min={1} className="flex-1 mr-2">
-                          <NumberInputField
-                            {...field}
-                            id="openBookingDeltaDays"
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
+                        <InputGroup>
+                          <NumberInput
+                            defaultValue={14}
+                            min={1}
+                            className="w-full"
+                          >
+                            <NumberInputField
+                              borderRadius={2}
+                              {...field}
+                              id="openBookingDeltaDays"
+                            />
+                          </NumberInput>
+                          <InputRightAddon bg="transparent" children="days" />
+                        </InputGroup>
                       </FormControl>
                     )}
                   </Field>
-                  <Field name="token">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="token">Token</FormLabel>
-                        <RadioGroup {...field} id="token" defaultValue='0x0000000000000000000000000000000000000000' >
-                          <Stack spacing={5} direction='row'>
-                            <Radio {...field} colorScheme='blue' value='0x0000000000000000000000000000000000000000'>
-                              MATIC
-                            </Radio>
-                            <Radio {...field} colorScheme='yellow' value='0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F' title="0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F">
-                              DAI
-                            </Radio>
-                            <Radio {...field} colorScheme='green' value='0x326C977E6efc84E512bB9C30f76E30c160eD06FB' title="0x326C977E6efc84E512bB9C30f76E30c160eD06FB">
-                              LINK
-                            </Radio>
-                          </Stack>
-                        </RadioGroup>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="price">
-                    {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="price">Price</FormLabel>
-                        <NumberInput defaultValue={0} className="flex-1 mr-2">
-                          <NumberInputField {...field} id="price" />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="validateFollow">
-                    {({ field, form }: any) => (
-                      <FormControl className="flex items-center">
-                        <FormLabel htmlFor="validateFollow" mb="0">
-													Require follow
-                        </FormLabel>
-                        <Switch {...field} id="validateFollow" />
-                      </FormControl>
-                    )}
-                  </Field>
+                  </Flex>
 
+                  <Field name="price">
+                    {({ field }: any) => (
+                      <FormControl className="mb-4">
+                        <FormLabel marginBottom={1} htmlFor="price">
+                          Price
+                        </FormLabel>
+                        <InputGroup className="w-full">
+                          <NumberInput className="w-full" defaultValue={0}>
+                            <NumberInputField
+                              borderRadius={2}
+                              {...field}
+                              id="price"
+                            />
+                          </NumberInput>
+                          <InputRightAddon
+                          p={0}
+                            bg="transparent"
+                            children={
+                              <Field name="token">
+                                {({ field }: any) => (
+                                  <Select
+                                    {...field}
+                                    border="none"
+                                    id="token"
+                                    defaultValue="0x0000000000000000000000000000000000000000"
+                                    borderRadius={2}
+                                  >
+                                    {payTokenOptions.map((d) => (
+                                      <option key={d.value} value={d.value}>
+                                        {d.name}
+                                      </option>
+                                    ))}
+                                  </Select>
+                                )}
+                              </Field>
+                            }
+                          />
+                        </InputGroup>
+                      </FormControl>
+                    )}
+                  </Field>
+                 
                   <div className="my-6 text-left">
                     <Button
                       isLoading={isSubmitting}

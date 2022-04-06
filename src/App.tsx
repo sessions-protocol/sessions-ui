@@ -1,50 +1,13 @@
-import {
-  ChakraProvider,
-  extendTheme,
-  localStorageManager,
-} from "@chakra-ui/react";
-import { mode } from "@chakra-ui/theme-tools";
+import { ChakraProvider, localStorageManager } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import "./App.css";
 import { TimezoneProvider } from "./context/TimezoneContext";
 import Router from "./Router";
 import Setup from "./Setup";
+import { chakraTheme } from "./styles/chakra";
 import { ConnectProvider } from "./web3/components/ConnectProvider";
 
-const theme = extendTheme({
-  config: {
-    cssVarPrefix: "ck",
-  },
-  colors: {
-    neutral: {
-      50: "#fafafa",
-      100: "#f5f5f5",
-      200: "#e5e5e5",
-      300: "#d4d4d4",
-      400: "#a3a3a3",
-      500: "#737373",
-      600: "#525252",
-      700: "#404040",
-      800: "#262626",
-      900: "#171717",
-    },
-  },
-  styles: {
-    global: (props: any) => ({
-      body: {
-        bg: mode("#f5f5f5", "#292929")(props),
-      },
-    }),
-  },
-  breakpoints: {
-    sm: "640px",
-    md: "768px",
-    lg: "1024px",
-    xl: "1280px",
-    "2xl": "1536px",
-  },
-});
 
 // Create a client
 const queryClient = new QueryClient({
@@ -64,7 +27,7 @@ function App() {
           <ConnectProvider>
             <TimezoneProvider>
               <ChakraProvider
-                theme={theme}
+                theme={chakraTheme}
                 colorModeManager={localStorageManager}
               >
                 <QueryClientProvider client={queryClient}>

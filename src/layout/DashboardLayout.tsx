@@ -3,21 +3,21 @@ import LogoDark from "@/assets/logo-dark.svg";
 import Logo from "@/assets/logo.svg";
 import { useProfileValue } from "@/context/ProfileContext";
 import { Button } from "@chakra-ui/button";
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import {
   ArrowLeftIcon,
   ClockIcon,
   LinkIcon,
   SelectorIcon,
-  UserCircleIcon,
+  UserCircleIcon
 } from "@heroicons/react/solid";
 import classNames from "classnames";
-import { Fragment, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAppColorMode } from "../hooks/useColorMode";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { useAppColorMode, useColor } from "../hooks/useColorMode";
+import { ColorModeSwitcher } from "../components/ColorModeSwitcher";
 
-export default function Shell(props: {
+export default function DashboardLayout(props: {
   centered?: boolean;
   large?: boolean;
   title?: string;
@@ -33,9 +33,7 @@ export default function Shell(props: {
   const { pathname } = useLocation();
   const { profile } = useProfileValue();
   const profilePictureSrc = profile?.imageURI;
-  const navBg = useColorModeValue("white", "whiteAlpha.50");
-  const navItemCurrentBg = useColorModeValue("neutral.100", "whiteAlpha.200");
-  const navItemCurrentColor = useColorModeValue("black", "white");
+  const { strongBg, selectedBg, strongColor, secondaryColor } = useColor();
   const { colorMode } = useAppColorMode();
   const logo = colorMode === "light" ? LogoDark : Logo;
 
@@ -62,7 +60,7 @@ export default function Shell(props: {
   return (
     <Box className={classNames("flex h-screen overflow-hidden text-left")}>
       <div className="hidden md:flex lg:flex-shrink-0">
-        <Box className="flex w-14 flex-col lg:w-56" bg={navBg}>
+        <Box className="flex w-14 flex-col lg:w-56" bg={strongBg}>
           <Box
             className={classNames(
               "flex h-0 flex-1 flex-col border-r",
@@ -92,10 +90,10 @@ export default function Shell(props: {
                 {navigation.map((item) => (
                   <Link to={item.href} key={item.name}>
                     <Box
-                      bg={item.current ? navItemCurrentBg : ""}
-                      color={item.current ? navItemCurrentColor : ""}
+                      bg={item.current ? selectedBg : ""}
+                      color={item.current ? strongColor : ""}
                       opacity={item.current ? 1 : 0.7}
-                      _hover={{ bg: navItemCurrentBg, opacity: 0.9 }}
+                      _hover={{ bg: selectedBg, opacity: 0.9 }}
                       className={classNames(
                         "group flex items-center rounded-sm px-2 py-2 my-2 text-sm font-medium"
                       )}
@@ -114,7 +112,7 @@ export default function Shell(props: {
             </div>
             <Box
               className="rounded-sm mb-4 pb-2 pl-3 pt-2 pr-2 lg:mx-2 lg:pl-3"
-              _hover={{ bg: navItemCurrentBg, opacity: 1 }}
+              _hover={{ bg: selectedBg, opacity: 1 }}
             >
               <div className="text-left">
                 {profile && (
@@ -179,7 +177,9 @@ export default function Shell(props: {
               />
             </Link>
             <div className="flex items-center gap-3 self-center">
-              <Box mr={2}><ColorModeSwitcher /></Box>
+              <Box mr={2}>
+                <ColorModeSwitcher />
+              </Box>
               <Link to={"/profile"}>
                 <div
                   className={classNames(
@@ -237,12 +237,12 @@ export default function Shell(props: {
                   <div className="ltr:mr-4">{props.HeadingLeftIcon}</div>
                 )}
                 <div className="mb-8 w-full">
-                  <h1 className="font-cal mb-1 text-xl font-bold capitalize tracking-wide">
+                  <Text color={strongColor} className="font-cal mb-1 text-xl font-bold capitalize tracking-wide">
                     {props.heading}
-                  </h1>
-                  <p className="min-h-10 text-sm opacity-60 ltr:mr-4 rtl:ml-4">
+                  </Text>
+                  <Text color={secondaryColor} className="min-h-10 text-sm opacity-60 ltr:mr-4 rtl:ml-4">
                     {props.subtitle}
-                  </p>
+                  </Text>
                 </div>
                 {props.CTA && (
                   <div className="mb-4 flex-shrink-0">{props.CTA}</div>
@@ -267,10 +267,10 @@ export default function Shell(props: {
                   )}
                 >
                   <Box
-                    bg={navBg}
+                    bg={strongBg}
                     opacity={item.current ? 1 : 0.5}
                     className={classNames("p-2")}
-                    color={item.current ? navItemCurrentColor : ""}
+                    color={item.current ? strongColor : ""}
                   >
                     <item.icon
                       className={classNames(

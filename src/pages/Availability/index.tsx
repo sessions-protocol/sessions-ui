@@ -21,7 +21,7 @@ import {
 } from "react-hook-form";
 import toast from "react-hot-toast";
 import { sessionApi } from "../../api/SessionApi";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../layout/DashboardLayout";
 import { useProfileState } from "../../context/ProfileContext";
 import { SESSIONS_CONTRACT } from "../../web3/contracts";
 import CreateAvailability from "./CreateAvailability";
@@ -51,7 +51,7 @@ export default function AvailabilitiesPage() {
   }, []);
   if (!profile) return null;
   return (
-    <Shell
+    <DashboardLayout
       heading="Availability"
       subtitle="Configure times when you are available for bookings."
       CTA={<CreateAvailability onCreated={fetchList} />}
@@ -71,7 +71,7 @@ export default function AvailabilitiesPage() {
           </div>
         )}
       </div>
-    </Shell>
+    </DashboardLayout>
   );
 }
 
