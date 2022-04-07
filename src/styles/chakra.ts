@@ -6,7 +6,7 @@ export const colors = {
   selectedBg: ["neutral.100", "neutral.800"],
   strongColor: ["black", "white"],
   secondaryColor: ["neutral.600", "neutral.400"],
-  bd: ["neutral.300", "neutral.700"],
+  bd: ["neutral.300", "neutral.600"],
 };
 const color =
   ([light, dark]: string[]) =>
@@ -40,7 +40,7 @@ export const chakraTheme = extendTheme({
       baseStyle: (p: any) => ({
         dialog: {
           borderRadius: 2,
-          bg: color(colors.strongBg)(p),
+          bg: color(colors.bg)(p),
         },
       }),
     },

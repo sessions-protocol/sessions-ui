@@ -1,4 +1,5 @@
-import { ProfileWithWallet } from './../types/Session';
+import { ISessionTypeCallData } from "./../pages/SessionTypes/CreateSessionType";
+import { ProfileWithWallet } from "./../types/Session";
 import profileABI from "@/web3/abis/profile.json";
 import sessionsABI from "@/web3/abis/sessions.json";
 import erc20ABI from "@/web3/abis/erc20.json";
@@ -141,6 +142,35 @@ class SessionApi {
       this.signer
     );
     const tx = await profileContract.createProfile(handle, imageURI);
+    await tx.wait();
+  }
+
+  async createSessionType(
+    profileId: string,
+    sessionType: ISessionTypeCallData
+  ) {
+    console.log(profileId, sessionType)
+    if (!this.signer) return;
+    const contract = new ethers.Contract(
+      SESSIONS_CONTRACT,
+      sessionsABI,
+      this.signer
+    );
+    const tx = await contract.createSessionType(profileId, sessionType);
+    await tx.wait();
+  }
+
+  async updateSessionType(
+    sessionTypeId: string,
+    sessionType: ISessionTypeCallData
+  ) {
+    if (!this.signer) return;
+    const contract = new ethers.Contract(
+      SESSIONS_CONTRACT,
+      sessionsABI,
+      this.signer
+    );
+    const tx = await contract.updateSessionType(sessionTypeId, sessionType);
     await tx.wait();
   }
 }
