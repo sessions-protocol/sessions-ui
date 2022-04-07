@@ -217,7 +217,7 @@ export default function SessionTypeForm({
               </FormControl>
             )}
           </Field>
-          <div className="mb-5 mt-8 text-center">
+          <div className="mb-5 mt-8">
             <Button
               isFullWidth
               isLoading={isSubmitting}

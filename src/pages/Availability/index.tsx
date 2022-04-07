@@ -1,6 +1,6 @@
 import sessionsABI from "@/web3/abis/sessions.json";
 import { Button } from "@chakra-ui/button";
-import { Spinner } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { add, startOfToday } from "date-fns";
 import { BigNumber, ethers } from "ethers";
@@ -11,13 +11,14 @@ import {
   Ref,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from "react";
 import {
   FieldValues,
   FormProvider,
   SubmitHandler,
-  useForm, UseFormReturn
+  useForm,
+  UseFormReturn,
 } from "react-hook-form";
 import toast from "react-hot-toast";
 import { sessionApi } from "../../api/SessionApi";
@@ -26,6 +27,8 @@ import { useProfileState } from "../../context/ProfileContext";
 import { SESSIONS_CONTRACT } from "../../web3/contracts";
 import CreateAvailability from "./CreateAvailability";
 import Schedule, { DEFAULT_SCHEDULE } from "./Schedule";
+import { useColor } from "../../hooks/useColorMode";
+import classNames from "classnames";
 
 export default function AvailabilitiesPage() {
   const [{ profile }] = useProfileState();
@@ -50,6 +53,7 @@ export default function AvailabilitiesPage() {
   useEffect(() => {
     fetchList();
   }, []);
+  const { strongBg } = useColor();
   if (!profile) return null;
   return (
     <DashboardLayout
@@ -57,21 +61,29 @@ export default function AvailabilitiesPage() {
       subtitle="Configure times when you are available for bookings."
       CTA={<CreateAvailability onCreated={fetchList} />}
     >
-      <div className="bg-white border border-gray-200 border-b-0">
+      <Box bg={strongBg} className="border">
         {loading ? (
-          <div className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer">
+          <div className="flex items-center justify-center p-4 cursor-pointer">
             <Spinner />
           </div>
         ) : list.length > 0 ? (
-          list.map((item) => (
-            <Item data={item} key={item.id} onUpdated={fetchList} />
+          list.map((item, i) => (
+            <div
+              key={item.id}
+              className={classNames(
+                "py-4 px-5 cursor-pointer",
+                i < list.length - 1 && "border-b"
+              )}
+            >
+              <Item data={item} onUpdated={fetchList} />
+            </div>
           ))
         ) : (
-          <div className="flex items-center justify-center border-b border-gray-200 text-gray-700 p-4 cursor-pointer">
+          <div className="flex items-center justify-center border-b p-4 cursor-pointer">
             <p>No availability created yet.</p>
           </div>
         )}
-      </div>
+      </Box>
     </DashboardLayout>
   );
 }
@@ -107,9 +119,7 @@ function Item({
   }, [data]);
 
   return (
-    <div
-      className={`border-b border-gray-100 text-gray-700 py-4 px-5 cursor-pointer`}
-    >
+    <>
       {!expand ? (
         <div onClick={() => setExpand(true)}>{data.name}</div>
       ) : (
@@ -120,7 +130,7 @@ function Item({
           schedule={schedule}
         />
       )}
-    </div>
+    </>
   );
 }
 
@@ -191,7 +201,7 @@ function AvailabilityForm(props: {
       <div className="col-span-3 space-y-2 lg:col-span-2">
         <div className="divide-y">
           <input
-            className="w-full py-2 px-2 border-b border-dashed"
+            className="w-full bg-transparent py-2 px-2 border-b border-dashed"
             {...form.register("name")}
           />
         </div>

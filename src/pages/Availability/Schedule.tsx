@@ -219,7 +219,7 @@ const CopyTimes = ({
                   }
                 }}
                 type="checkbox"
-                className="inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500 disabled:text-neutral-400"
+                className="inline-block rounded-sm text-neutral-900 focus:ring-neutral-500 disabled:text-neutral-400"
               />
             </label>
           </li>
@@ -356,7 +356,7 @@ const ScheduleBlock = ({ name, day, weekday }: ScheduleBlockProps) => {
                 e.target.checked ? [defaultDayRange] : []
               );
             }}
-            className="inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500"
+            className="inline-block rounded-sm text-neutral-900 focus:ring-neutral-500"
           />
           <span className="ml-2 inline-block text-sm capitalize">
             {weekday}
@@ -382,7 +382,7 @@ const ScheduleBlock = ({ name, day, weekday }: ScheduleBlockProps) => {
 
 const Schedule = ({ name }: { name: string }) => {
   return (
-    <fieldset className="divide-y divide-gray-200">
+    <fieldset className="divide-y">
       {weekdayNames.map((weekday, num) => (
         <ScheduleBlock key={num} name={name} weekday={weekday} day={num} />
       ))}

@@ -15,7 +15,7 @@ import { Box, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
 import { ClockIcon, ExternalLinkIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import { ethers, utils } from "ethers";
-import { omit, range } from "lodash";
+import { omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -50,7 +50,7 @@ export default function SessionTypesPage() {
     setAvailabilities(availabilities);
     setLoading(false);
   };
-  const itemBg = useColorModeValue("white", "whiteAlpha.50");
+  const { strongBg } = useColor();
 
   useEffect(() => {
     fetchList(profileId!);
@@ -76,7 +76,7 @@ export default function SessionTypesPage() {
         )
       }
     >
-      <Box bg={itemBg} className="border border-b-0">
+      <Box bg={strongBg} className="border border-b-0">
         {loading ? (
           <div className="flex items-center justify-center border-b  p-4 cursor-pointer">
             <Spinner />
@@ -201,29 +201,29 @@ function SessionTypeItem({
         </div>
       </div>
 
-      <Modal
-        size="lg"
-        blockScrollOnMount={false}
-        closeOnOverlayClick={false}
-        colorScheme={"dark"}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Update Session Type</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {formData && (
+      {formData && (
+        <Modal
+          size="lg"
+          blockScrollOnMount={false}
+          closeOnOverlayClick={false}
+          colorScheme={"dark"}
+          isOpen={isOpen}
+          onClose={onClose}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Update Session Type</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
               <SessionTypeForm
                 availabilities={availabilities}
                 value={formData}
                 onSubmit={onUpdate}
               />
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }

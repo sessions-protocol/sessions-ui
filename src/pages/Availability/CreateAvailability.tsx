@@ -11,16 +11,11 @@ import {
   ModalHeader,
   ModalOverlay
 } from "@chakra-ui/modal";
-import {
-  FormControl,
-  FormLabel,
-  Input
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { PlusIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { Field, Form, Formik } from "formik";
-import { range } from "lodash";
 import toast from "react-hot-toast";
 import { useProfileState } from "../../context/ProfileContext";
 
@@ -52,23 +47,13 @@ export default function CreateAvailability({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
-            Add a new schedule
-          </ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader>Add a new schedule</ModalHeader>
+          <ModalCloseButton borderRadius={0} />
           <ModalBody>
             <Formik
               initialValues={{
                 title: "",
-                schedules: [
-                  '0',
-                  '0',
-                  '0',
-                  '0',
-                  '0',
-                  '0',
-                  '0',
-                ]
+                schedules: ["0", "0", "0", "0", "0", "0", "0"],
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 const signer = await library.getSigner();
@@ -81,7 +66,7 @@ export default function CreateAvailability({
                 const calldata: [string, string, string[]] = [
                   profileId,
                   values.title,
-                  values.schedules
+                  values.schedules,
                 ];
                 const tx = await sessionsContract.createAvailability(
                   ...calldata
@@ -97,21 +82,29 @@ export default function CreateAvailability({
                 <Form>
                   <Field name="title">
                     {({ field, form }: any) => (
-                      <FormControl className="mb-5">
-                        <FormLabel htmlFor="title">Title</FormLabel>
-                        <Input {...field} id="title" placeholder="Quick chat" />
+                      <FormControl className="mb-4">
+                        <FormLabel marginBottom={1} htmlFor="title">
+                          Title
+                        </FormLabel>
+                        <Input
+                          {...field}
+                          borderRadius={2}
+                          id="title"
+                          placeholder="Working Hour"
+                        />
                       </FormControl>
                     )}
                   </Field>
-                  <div className="my-2 text-right">
+                  <div className="mb-5 mt-8">
                     <Button
+                      isFullWidth
                       isLoading={isSubmitting}
                       disabled={isSubmitting}
                       type="submit"
                       colorScheme="blue"
-                      rounded={0}
+                      rounded={2}
                     >
-                      Continue
+                      Create Schedule
                     </Button>
                   </div>
                 </Form>

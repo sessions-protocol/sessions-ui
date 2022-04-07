@@ -2,7 +2,7 @@ import { extendTheme } from "@chakra-ui/react";
 export const colors = {
   bg: ["#f5f5f5", "#292929"],
   focusBd: ["black", "#eee"],
-  strongBg: ["white", "neutral.900"],
+  strongBg: ["white", "whiteAlpha.50"],
   selectedBg: ["neutral.100", "neutral.800"],
   strongColor: ["black", "white"],
   secondaryColor: ["neutral.600", "neutral.400"],

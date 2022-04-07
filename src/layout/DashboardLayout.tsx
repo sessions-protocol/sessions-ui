@@ -167,7 +167,7 @@ export default function DashboardLayout(props: {
             props.flexChildrenContainer && "flex flex-col"
           )}
         >
-          <nav className="flex items-center justify-between border-b px-4 md:hidden">
+          <Box bg={strongBg} className="flex items-center justify-between border-b px-4 md:hidden">
             <Link to="/session-types" className="block px-2">
               <img
                 className="mx-auto transform scale-50 origin-left"
@@ -205,7 +205,7 @@ export default function DashboardLayout(props: {
                 </div>
               </Link>
             </div>
-          </nav>
+          </Box>
 
           <div
             className={classNames(
