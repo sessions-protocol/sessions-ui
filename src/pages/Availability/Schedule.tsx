@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/button";
+import { Box } from "@chakra-ui/react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/outline";
 import { DuplicateIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
@@ -198,8 +199,8 @@ const CopyTimes = ({
 }) => {
   const [selected, setSelected] = useState<number[]>([]);
   return (
-    <div className="m-4 space-y-2 py-4">
-      <p className="h6 text-xs font-medium uppercase text-neutral-400 mb-3">
+    <Box className="m-4 space-y-2 py-4">
+      <p className="h6 text-xs font-medium uppercase mb-3">
         Copy times to
       </p>
       <ol className="space-y-2">
@@ -219,7 +220,7 @@ const CopyTimes = ({
                   }
                 }}
                 type="checkbox"
-                className="inline-block rounded-sm text-neutral-900 focus:ring-neutral-500 disabled:text-neutral-400"
+                className="inline-block rounded-sm"
               />
             </label>
           </li>
@@ -237,7 +238,7 @@ const CopyTimes = ({
           Apply
         </Button>
       </div>
-    </div>
+    </Box>
   );
 };
 

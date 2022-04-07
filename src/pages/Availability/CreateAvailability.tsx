@@ -33,7 +33,7 @@ export default function CreateAvailability({
       <Button
         leftIcon={<Icon as={PlusIcon} />}
         colorScheme={"blue"}
-        rounded={0}
+        rounded={2}
         onClick={onOpen}
       >
         New schedule

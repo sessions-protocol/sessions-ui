@@ -213,7 +213,7 @@ function AvailabilityForm(props: {
             variant="outline"
             colorScheme="blue"
             onClick={props.onClose}
-            rounded={0}
+            rounded={2}
             size="sm"
             width={100}
             disabled={form.formState.isSubmitting}
@@ -223,7 +223,7 @@ function AvailabilityForm(props: {
           <Button
             type="submit"
             colorScheme="blue"
-            rounded={0}
+            rounded={2}
             size="sm"
             width={100}
             isLoading={form.formState.isSubmitting}

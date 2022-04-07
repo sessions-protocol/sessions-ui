@@ -193,6 +193,7 @@ function SessionTypeItem({
               size="sm"
               colorScheme={"dark"}
               variant="outline"
+              rounded={10}
               leftIcon={<Icon as={ExternalLinkIcon} />}
             >
               Open Book Page

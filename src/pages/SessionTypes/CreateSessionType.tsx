@@ -41,6 +41,7 @@ export default function CreateSessionType({
       <Button
         leftIcon={<Icon as={PlusIcon} />}
         colorScheme={"blue"}
+        rounded={2}
         onClick={onOpen}
       >
         New session type
