@@ -1,8 +1,8 @@
-import sessionsABI from "@/web3/abis/sessions.json";
+import { useWeb3ClientStateValue } from "@/context/Web3ClientState";
 import erc20ABI from "@/web3/abis/erc20.json";
-import { SESSIONS_CONTRACT } from "@/web3/contracts";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
+import { Icon } from "@chakra-ui/icon";
 import {
   Modal,
   ModalBody,
@@ -11,45 +11,22 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  NumberDecrementStepper,
-  Text,
-  NumberIncrementStepper,
-  Switch,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
-  Textarea,
-  Spinner,
-  RadioGroup,
-  Stack,
-  Radio,
-  useColorModeValue,
-  Box,
-} from "@chakra-ui/react";
-import { ExternalLinkIcon, ClockIcon } from "@heroicons/react/solid";
+import { Box, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
+import { ClockIcon, ExternalLinkIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
-import { useWeb3ClientStateValue } from "@/context/Web3ClientState";
 import { ethers, utils } from "ethers";
-import { Field, Form, Formik } from "formik";
 import { omit, range } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { sessionApi } from "../../api/SessionApi";
-import { Icon } from "@chakra-ui/icon";
-
-import DashboardLayout from "../../layout/DashboardLayout";
 import { useProfileState } from "../../context/ProfileContext";
+import { useColor } from "../../hooks/useColorMode";
+import DashboardLayout from "../../layout/DashboardLayout";
 import CreateSessionType, {
   ISessionTypeCallData,
   ISessionTypeReturnData,
 } from "./CreateSessionType";
-import { useColor } from "../../hooks/useColorMode";
 import SessionTypeForm, { ISessionTypeForm } from "./SessionTypeForm";
 
 export default function SessionTypesPage() {
@@ -60,14 +37,17 @@ export default function SessionTypesPage() {
   const [sessionTypes, setSessionTypes] = useState<
     ({ id: string } & ISessionTypeReturnData)[]
   >([]);
+  const [availabilities, setAvailabilities] = useState([]);
   const [loading, setLoading] = useState(false);
   const fetchList = async (profileId: string) => {
     if (!profileId) return;
     setLoading(true);
-    const sessionTypesByProfile = await sessionApi.getSessionTypesByProfileId(
-      profileId
-    );
+    const [sessionTypesByProfile, availabilities] = await Promise.all([
+      sessionApi.getSessionTypesByProfileId(profileId),
+      sessionApi.getAvailabilitiesByProfile(profileId),
+    ]);
     setSessionTypes(sessionTypesByProfile);
+    setAvailabilities(availabilities);
     setLoading(false);
   };
   const itemBg = useColorModeValue("white", "whiteAlpha.50");
@@ -88,9 +68,12 @@ export default function SessionTypesPage() {
       heading="Session Types"
       subtitle="Create sessions to share for people to book on your calendar."
       CTA={
-        <CreateSessionType
-          onCreated={() => profileId && fetchList(profileId)}
-        />
+        loading ? null : (
+          <CreateSessionType
+            availabilities={availabilities}
+            onCreated={() => profileId && fetchList(profileId)}
+          />
+        )
       }
     >
       <Box bg={itemBg} className="border border-b-0">
@@ -101,6 +84,7 @@ export default function SessionTypesPage() {
         ) : sessionTypes.length > 0 ? (
           sessionTypes.map((s) => (
             <SessionTypeItem
+              availabilities={availabilities}
               key={s.id}
               sessionType={s}
               onUpdated={() => profileId && fetchList(profileId.toString())}
@@ -119,13 +103,14 @@ export default function SessionTypesPage() {
 function SessionTypeItem({
   onUpdated,
   sessionType,
+  availabilities,
 }: {
   sessionType: { id: string } & ISessionTypeReturnData;
   onUpdated: () => void;
+  availabilities: { id: string; name: string }[];
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const durationInSlotOptions = range(1, 20);
-  const { account, library } = useWeb3React();
+  const { library } = useWeb3React();
 
   const getFormData: () => Promise<ISessionTypeForm> = useMemo(() => {
     return async () => {
@@ -229,7 +214,13 @@ function SessionTypeItem({
           <ModalHeader>Update Session Type</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {formData && <SessionTypeForm value={formData} onSubmit={onUpdate} />}
+            {formData && (
+              <SessionTypeForm
+                availabilities={availabilities}
+                value={formData}
+                onSubmit={onUpdate}
+              />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -1,4 +1,4 @@
-import { extendTheme, withDefaultProps, withDefaultSize } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
 export const colors = {
   bg: ["#f5f5f5", "#292929"],
   focusBd: ["black", "#eee"],

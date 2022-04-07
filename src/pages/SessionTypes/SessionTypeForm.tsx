@@ -23,53 +23,29 @@ export interface ISessionTypeForm {
   title: string;
   description: string;
   durationInSlot: number;
-  // availabilityId: number;
+  availabilityId: number;
   openBookingDeltaDays: number;
   token: string;
   price: number;
 }
 
-const formDataToSessionType = async (
-  formData: ISessionTypeForm,
-  account: string,
-  library: any
-): Promise<ISessionTypeCallData> => {
-  const signer = await library.getSigner();
-  const tokenPrice = {
-    symbol: "MATIC",
-    amount: +formData.price,
-    decimals: 18,
-  };
-  if (formData.token != "0x0000000000000000000000000000000000000000") {
-    const erc20Contract = new ethers.Contract(formData.token, erc20ABI, signer);
-    tokenPrice.decimals = await erc20Contract.decimals();
-    tokenPrice.symbol = await erc20Contract.symbol();
-  }
-  return {
-    ...omit(formData, "price"),
-    amount: utils
-      .parseUnits(`${formData.price}`, tokenPrice.decimals)
-      .toString(),
-    recipient: account,
-    availabilityId: 0,
-    locked: false,
-    validateFollow: false,
-  };
-};
 export default function SessionTypeForm({
+  availabilities,
   onSubmit,
   value,
 }: {
   onSubmit: (form: ISessionTypeCallData) => void;
   value?: ISessionTypeForm;
+  availabilities: { id: string; name: string }[];
 }) {
-  const emptyInitialValues = {
+  const emptyInitialValues: ISessionTypeForm = {
     title: "",
     description: "",
     durationInSlot: 5,
     openBookingDeltaDays: 14,
     token: "0x0000000000000000000000000000000000000000",
     price: 0,
+    availabilityId: 0,
   };
 
   const { bd } = useColor();
@@ -80,7 +56,8 @@ export default function SessionTypeForm({
     { name: "LIN", value: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB" },
   ];
   const { account, library } = useWeb3React();
-	const initialValues = value ?? emptyInitialValues
+  const initialValues = value ?? emptyInitialValues;
+  const availabilityOptions = [{ id: 0, name: "No Limit" }, ...availabilities];
   return (
     <Formik
       initialValues={initialValues}
@@ -160,7 +137,11 @@ export default function SessionTypeForm({
                     Only booked in
                   </FormLabel>
                   <InputGroup>
-                    <NumberInput defaultValue={initialValues.openBookingDeltaDays} min={1} className="w-full">
+                    <NumberInput
+                      defaultValue={initialValues.openBookingDeltaDays}
+                      min={1}
+                      className="w-full"
+                    >
                       <NumberInputField
                         borderRadius={2}
                         {...field}
@@ -186,7 +167,10 @@ export default function SessionTypeForm({
                   Price
                 </FormLabel>
                 <InputGroup className="w-full">
-                  <NumberInput className="w-full" defaultValue={initialValues.price}>
+                  <NumberInput
+                    className="w-full"
+                    defaultValue={initialValues.price}
+                  >
                     <NumberInputField borderRadius={2} {...field} id="price" />
                   </NumberInput>
                   <InputRightAddon
@@ -217,6 +201,22 @@ export default function SessionTypeForm({
               </FormControl>
             )}
           </Field>
+          <Field name="availabilityId">
+            {({ field }: any) => (
+              <FormControl className="mb-4">
+                <FormLabel marginBottom={1} htmlFor="availabilityId">
+                  Availability
+                </FormLabel>
+                <Select {...field} borderRadius={2} id="availabilityId">
+                  {availabilityOptions.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </Field>
           <div className="mb-5 mt-8 text-center">
             <Button
               isFullWidth
@@ -226,7 +226,7 @@ export default function SessionTypeForm({
               colorScheme="blue"
               borderRadius={2}
             >
-              { value ? 'Update' : 'Create' } Session Type
+              {value ? "Update" : "Create"} Session Type
             </Button>
           </div>
         </Form>
@@ -234,3 +234,31 @@ export default function SessionTypeForm({
     </Formik>
   );
 }
+
+
+const formDataToSessionType = async (
+  formData: ISessionTypeForm,
+  account: string,
+  library: any
+): Promise<ISessionTypeCallData> => {
+  const signer = await library.getSigner();
+  const tokenPrice = {
+    symbol: "MATIC",
+    amount: +formData.price,
+    decimals: 18,
+  };
+  if (formData.token != "0x0000000000000000000000000000000000000000") {
+    const erc20Contract = new ethers.Contract(formData.token, erc20ABI, signer);
+    tokenPrice.decimals = await erc20Contract.decimals();
+    tokenPrice.symbol = await erc20Contract.symbol();
+  }
+  return {
+    ...omit(formData, "price"),
+    amount: utils
+      .parseUnits(`${formData.price}`, tokenPrice.decimals)
+      .toString(),
+    recipient: account,
+    locked: false,
+    validateFollow: false,
+  };
+};

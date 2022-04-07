@@ -20,8 +20,10 @@ import SessionTypeForm from "./SessionTypeForm";
 
 export default function CreateSessionType({
   onCreated,
+  availabilities,
 }: {
   onCreated: () => void;
+  availabilities: { id: string; name: string }[];
 }) {
   const { secondaryColor } = useColor();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,7 +63,7 @@ export default function CreateSessionType({
           </ModalHeader>
           <ModalCloseButton borderRadius={0} />
           <ModalBody>
-            <SessionTypeForm onSubmit={onCreate} />
+            <SessionTypeForm availabilities={availabilities} onSubmit={onCreate} />
           </ModalBody>
         </ModalContent>
       </Modal>
