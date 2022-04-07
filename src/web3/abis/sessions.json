@@ -3,17 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_lensHub",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_sessionNFTImpl",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_gov",
+        "name": "session_profile",
         "type": "address"
       }
     ],
@@ -22,7 +12,7 @@
   },
   {
     "inputs": [],
-    "name": "LENS_HUB",
+    "name": "SESSION_PROFILE",
     "outputs": [
       {
         "internalType": "address",
@@ -172,31 +162,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "lensProfileId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "checkFollowValidity",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "lensProfileId",
+        "name": "profileId",
         "type": "uint256"
       },
       {
@@ -219,7 +185,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "lensProfileId",
+        "name": "profileId",
         "type": "uint256"
       },
       {
@@ -372,7 +338,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "lensProfileId",
+        "name": "profileId",
         "type": "uint256"
       }
     ],
@@ -507,7 +473,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "lensProfileId",
+            "name": "profileId",
             "type": "uint256"
           }
         ],
@@ -523,7 +489,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "lensProfileId",
+        "name": "profileId",
         "type": "uint256"
       }
     ],
@@ -598,7 +564,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "lensProfileId",
+            "name": "profileId",
             "type": "uint256"
           }
         ],
@@ -621,6 +587,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sessionNFTImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gov",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_treasury",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -799,7 +788,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "lensProfileId",
+        "name": "profileId",
         "type": "uint256"
       }
     ],
@@ -968,7 +957,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "lensProfileId",
+            "name": "profileId",
             "type": "uint256"
           }
         ],

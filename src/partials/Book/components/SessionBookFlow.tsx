@@ -154,13 +154,6 @@ export function SessionBookFlow({ session }: { session: Session }) {
         signer
       );
 
-      if (session?.validateFollow) {
-        const isFollowed = await sessionsContract.checkFollowValidity(session.lensProfileId, signer.getAddress())
-        if (!isFollowed) {
-          return alert("You must follow the lens before you can book a session")
-        }
-      }
-
       const calldata = [
         new Date(params.time).getTime() / 1000,
         params.sessionId
@@ -241,7 +234,6 @@ export function SessionBookFlow({ session }: { session: Session }) {
 
         {profile && (
           <div className="flex flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 mb-2">
-            <div className="text-xs dark:text-gray-300">Lens logged in</div>
             <div className="flex flex-row items-center">
               <div className="text-sm">{profile.username}</div>
             </div>
@@ -255,29 +247,6 @@ export function SessionBookFlow({ session }: { session: Session }) {
             <ConnectorList />
           </div>
         )}
-        {/* {chainId && account && !profile && (
-          <div>
-            <div className="text-lg font-medium mb-4">Create Lens Profile</div>
-            <form onSubmit={formik.handleSubmit}>
-              <VStack spacing={4} align="flex-start">
-                <FormControl>
-                  <FormLabel htmlFor="username">Username</FormLabel>
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    variant="filled"
-                    onChange={formik.handleChange}
-                    value={formik.values.username}
-                  />
-                </FormControl>
-                <Button type="submit" colorScheme="green" isFullWidth>
-                  Create
-                </Button>
-              </VStack>
-            </form>
-          </div>
-        )} */}
         {chainId && account && (
           <div className="text-left flex flex-col h-full">
             <div className="text-lg font-medium mb-4">Book your session with @{session?.user.handle}</div>

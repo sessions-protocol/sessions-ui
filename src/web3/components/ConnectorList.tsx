@@ -1,4 +1,4 @@
-import { metamask, walletconnect } from "../connectors";
+import { injectedConnector, walletConnect } from "../connectors";
 import { Connector } from "./Connector";
 import MetamaskLogo from "@/assets/wallet/Metamask.svg";
 import WalletConnectLogo from "@/assets/wallet/WalletConnect.svg";
@@ -12,13 +12,13 @@ export function ConnectorList(props: ConnectorListProps) {
       <Connector
         name="Metamask"
         logo={MetamaskLogo}
-        connector={metamask}
+        connector={injectedConnector}
         onConnected={() => {}}
       />
       <Connector
         name="Wallet Connect"
         logo={WalletConnectLogo}
-        connector={walletconnect}
+        connector={walletConnect}
         onConnected={() => {}}
       />
     </div>

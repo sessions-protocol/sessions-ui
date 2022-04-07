@@ -16,8 +16,6 @@ sessions is a web3-based platform for selling 1:1 sessions to anyone.
 ## Features
 
 - 💰 **paid sessions**: sell sessions with USDC or whatever tokens you want.
-- 🍀 **login with Lens**: use [Lens Protocol](https://lens.dev/) to create profiles;
-- 🚪 **follow-gated sessions**: must follow on Lens before booking.
 - 🛒 **sessions marketplace**: decentralized professional service aggregator.
 
 ## Development

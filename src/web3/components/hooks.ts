@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { metamask } from '../connectors'
+import { injectedConnector } from '../connectors'
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()
@@ -8,9 +8,9 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
-    metamask.isAuthorized().then((isAuthorized: boolean) => {
+    injectedConnector.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
-        activate(metamask, undefined, true).catch((error) => {
+        activate(injectedConnector, undefined, true).catch((error) => {
           console.error(error)
           setTried(true)
         })
@@ -33,22 +33,21 @@ export function useEagerConnect() {
 
 export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3React()
-
   useEffect((): any => {
     const { ethereum } = window as any
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("Handling 'connect' event")
-        activate(metamask)
+        activate(injectedConnector)
       }
       const handleChainChanged = (chainId: string | number) => {
         console.log("Handling 'chainChanged' event with payload", chainId)
-        activate(metamask)
+        activate(injectedConnector)
       }
       const handleAccountsChanged = (accounts: string[]) => {
         console.log("Handling 'accountsChanged' event with payload", accounts)
         if (accounts.length > 0) {
-          activate(metamask)
+          activate(injectedConnector)
         }
       }
 
